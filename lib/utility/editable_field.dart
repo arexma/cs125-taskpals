@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 // An editable text field constrained by a box
 
-// Todo: Make sure box surrounding text doesn't expand when a TextField is being shown
-// Add method for customization of text box (border, radius, color, etc)
+// Can make it so that if the user clicks outside the box midway through editing text, don't save current changes
 class EditableTextField extends StatefulWidget {
   // Widget variables for customization
   final String? initialText;

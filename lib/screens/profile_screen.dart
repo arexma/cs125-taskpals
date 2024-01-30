@@ -17,6 +17,13 @@ height/weight
 import 'package:flutter/material.dart';
 import '../utility/editable_field.dart';
 
+// Need to create map based on saved user data
+const Map<String, String> userInfo = {
+  'Name': 'Alexander Rex Ma',
+  'Height': '5\' 8"',
+  'Weight': '135'
+};
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -48,19 +55,26 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
           ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Name:', // Add padding
-              ),
-              EditableTextField(
-                initialText: 'Alexander Rex Ma',
-              ), // Initial text set to saved user name
-            ],
+          Column(
+            children: userInfo.entries
+                .map((entry) => buildRow(entry.key, entry.value))
+                .toList(),
           ),
         ],
       ),
     );
   }
+}
+
+Widget buildRow(String label, String initialText) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+      Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: Text(label),
+      ),
+      EditableTextField(initialText: initialText)
+    ],
+  );
 }
