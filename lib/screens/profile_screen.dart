@@ -14,6 +14,9 @@ pals collected (owned/possible)
 height/weight
 */
 
+// TODO:
+// Maybe remove box around text unless the user is updating it
+
 import 'package:flutter/material.dart';
 import '../utility/editable_field.dart';
 
@@ -21,7 +24,8 @@ import '../utility/editable_field.dart';
 const Map<String, String> userInfo = {
   'Name': 'Alexander Rex Ma',
   'Height': '5\' 8"',
-  'Weight': '135'
+  'Weight': '135',
+  'Pals Collected': '4/20',
 };
 
 class ProfileScreen extends StatelessWidget {
@@ -57,7 +61,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           Column(
             children: userInfo.entries
-                .map((entry) => buildRow(entry.key, entry.value))
+                .map((entry) => buildColumn(entry.key, entry.value))
                 .toList(),
           ),
         ],
@@ -66,15 +70,19 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-Widget buildRow(String label, String initialText) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-      Padding(
-        padding: const EdgeInsets.only(right: 8.0),
-        child: Text(label),
-      ),
-      EditableTextField(initialText: initialText)
-    ],
+Widget buildColumn(String label, String initialText) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4.0),
+        EditableTextField(initialText: initialText),
+      ],
+    ),
   );
 }
