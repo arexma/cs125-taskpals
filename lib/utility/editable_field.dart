@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
+// An editable text field constrained by a box
+
+// Todo: Make sure box surrounding text doesn't expand when a TextField is being shown
+// Get new text to be shown
+// Add method for customization of text box (border, radius, color, etc)
 class EditableTextField extends StatefulWidget {
   // Widget variables for customization
-  final String initialText;
+  final String? initialText;
 
   const EditableTextField({
     Key? key,
-    required this.initialText,
+    this.initialText,
   }) : super(key: key);
 
   @override
@@ -42,7 +47,7 @@ class _EditableTextField extends State<EditableTextField> {
   void _handleSave(String newText) {
     _toggleEdit();
     setState(() {
-      _controller = TextEditingController(text: newText);
+      _controller.text = newText;
     });
   }
 
@@ -53,28 +58,26 @@ class _EditableTextField extends State<EditableTextField> {
       width: 250,
       child: GestureDetector(
         onTap: _toggleEdit,
-        child: IntrinsicHeight(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(10),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.black,
+              width: 2,
             ),
-            padding: const EdgeInsets.all(5),
-            child: _isEditing
-                ? TextField(
-                    controller: _controller,
-                    focusNode: _focusNode,
-                    autofocus: true,
-                    onTapOutside: (PointerDownEvent event) {
-                      _toggleEdit();
-                    },
-                    onSubmitted: (String newText) => _handleSave(newText),
-                  )
-                : Text(widget.initialText),
+            borderRadius: BorderRadius.circular(10),
           ),
+          padding: const EdgeInsets.all(5),
+          child: _isEditing
+              ? TextField(
+                  controller: _controller,
+                  focusNode: _focusNode,
+                  autofocus: true,
+                  onTapOutside: (PointerDownEvent event) {
+                    _toggleEdit();
+                  },
+                  onSubmitted: (String newText) => _handleSave(newText),
+                )
+              : Text(_controller.text),
         ),
       ),
     );
