@@ -68,17 +68,22 @@ class _EditableTextField extends State<EditableTextField> {
             borderRadius: BorderRadius.circular(10),
           ),
           padding: const EdgeInsets.all(5),
-          child: _isEditing
-              ? TextField(
-                  controller: _controller,
-                  focusNode: _focusNode,
-                  autofocus: true,
-                  onTapOutside: (PointerDownEvent event) {
-                    _toggleEdit();
-                  },
-                  onSubmitted: (String newText) => _handleSave(newText),
-                )
-              : Text(_controller.text),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: _isEditing
+                ? TextField(
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    autofocus: true,
+                    onTapOutside: (PointerDownEvent event) {
+                      _toggleEdit();
+                    },
+                    onSubmitted: (String newText) => _handleSave(newText),
+                  )
+                : Text(
+                    _controller.text,
+                  ),
+          ),
         ),
       ),
     );
