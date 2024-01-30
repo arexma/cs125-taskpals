@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 // An editable text field constrained by a box
 
 // Todo: Make sure box surrounding text doesn't expand when a TextField is being shown
-// Get new text to be shown
 // Add method for customization of text box (border, radius, color, etc)
 class EditableTextField extends StatefulWidget {
   // Widget variables for customization
@@ -56,9 +55,11 @@ class _EditableTextField extends State<EditableTextField> {
     return SizedBox(
       // Can use MediaQuery to dynamically resize box based on screen size
       width: 250,
+      height: 40,
       child: GestureDetector(
         onTap: _toggleEdit,
         child: Container(
+          constraints: const BoxConstraints.expand(),
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.black,
