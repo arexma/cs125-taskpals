@@ -15,9 +15,11 @@ height/weight
 */
 
 import 'package:flutter/material.dart';
+import '../utility/editable_field.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +47,18 @@ class ProfileScreen extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-          )
+          ),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Name:', // Add padding
+              ),
+              EditableTextField(
+                  initialText:
+                      'Alexander Rex Ma'), // Initial text set to saved user name
+            ],
+          ),
         ],
       ),
     );
