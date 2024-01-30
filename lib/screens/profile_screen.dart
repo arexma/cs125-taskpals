@@ -55,8 +55,8 @@ class ProfileScreen extends StatelessWidget {
                 'Name:', // Add padding
               ),
               EditableTextField(
-                  initialText:
-                      'Alexander Rex Ma'), // Initial text set to saved user name
+                initialText: 'Alexander Rex Ma',
+              ), // Initial text set to saved user name
             ],
           ),
         ],

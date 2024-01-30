@@ -7,10 +7,24 @@ import 'package:flutter/material.dart';
 class EditableTextField extends StatefulWidget {
   // Widget variables for customization
   final String? initialText;
+  final double? boxWidth;
+  final double? boxHeight;
+  final Color? borderColor;
+  final double? borderWidth;
+  final double? borderRadius;
+  final double? edgeInsets;
+  final AlignmentGeometry? textAlignment;
 
   const EditableTextField({
     Key? key,
     this.initialText,
+    this.boxWidth,
+    this.boxHeight,
+    this.borderColor,
+    this.borderWidth,
+    this.borderRadius,
+    this.edgeInsets,
+    this.textAlignment,
   }) : super(key: key);
 
   @override
@@ -25,7 +39,7 @@ class _EditableTextField extends State<EditableTextField> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.initialText);
+    _controller = TextEditingController(text: widget.initialText ?? '');
     _focusNode = FocusNode();
   }
 
@@ -54,22 +68,22 @@ class _EditableTextField extends State<EditableTextField> {
   Widget build(BuildContext context) {
     return SizedBox(
       // Can use MediaQuery to dynamically resize box based on screen size
-      width: 250,
-      height: 40,
+      width: widget.boxWidth ?? 250,
+      height: widget.boxHeight ?? 40,
       child: GestureDetector(
         onTap: _toggleEdit,
         child: Container(
           constraints: const BoxConstraints.expand(),
           decoration: BoxDecoration(
             border: Border.all(
-              color: Colors.black,
-              width: 2,
+              color: widget.borderColor ?? Colors.black,
+              width: widget.borderWidth ?? 2,
             ),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(widget.borderRadius ?? 10),
           ),
-          padding: const EdgeInsets.all(5),
+          padding: EdgeInsets.all(widget.edgeInsets ?? 5),
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: widget.textAlignment ?? Alignment.centerLeft,
             child: _isEditing
                 ? TextField(
                     controller: _controller,
