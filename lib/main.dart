@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/login_page.dart';
+import 'screens/home_page.dart';
 import 'screens/tasks.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class TaskPals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(title: 'Task Pals', initialRoute: '/login', routes: {
-      '/login': (context) => const LoginPage(),
+      '/login': (context) => const HomePage(),
     });
   }
   // @override
