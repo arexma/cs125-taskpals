@@ -6,7 +6,6 @@ weight
 
 Non-user-editable:
 
-
 user data with healthkit stuff
 calendar with progress done per day?
 tasks done
@@ -16,11 +15,15 @@ height/weight
 
 // TODO:
 // Maybe remove box around text unless the user is updating it
+// Add task calendar
+// Add user data w/ health-kit stuff
+// Make pals collected not user editable
+// Create userInfo map based on stored user data
+// Maybe move screen up if the keyboard covers wherever the user is editing?
 
 import 'package:flutter/material.dart';
 import '../utility/editable_field.dart';
 
-// Need to create map based on saved user data
 const Map<String, String> userInfo = {
   'Name': 'Alexander Rex Ma',
   'Height': '5\' 8"',
