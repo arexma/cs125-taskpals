@@ -20,8 +20,19 @@ class TaskPals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Task Pals', initialRoute: '/profile', routes: {
-      '/profile': (context) => const ProfileScreen(),
-    });
+    return MaterialApp(
+      title: 'Task Pals',
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.amber,
+        ), // Customize global color theming
+        textTheme: const TextTheme(), // Customize global text theming
+      ),
+      initialRoute: '/profile',
+      routes: {
+        '/profile': (context) => const ProfileScreen(),
+      },
+    );
   }
 }

@@ -57,7 +57,7 @@ class ProfileScreen extends StatelessWidget {
             height: 200.0,
             child: ClipOval(
               child: Image.asset(
-                ('lib/assets/pfp.png'),
+                ('lib/assets/pfp.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -69,6 +69,7 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
+      backgroundColor: Colors.amber[100],
     );
   }
 }
