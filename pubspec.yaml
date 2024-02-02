@@ -37,6 +37,7 @@ dependencies:
 
   path: ^1.8.0
   firebase_core: ^2.25.2
+  cloud_firestore: ^4.15.2
 
 dev_dependencies:
   flutter_test:
