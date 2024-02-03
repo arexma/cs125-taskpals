@@ -11,7 +11,8 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 
-import "package:path/path.dart";
+import 'package:flutter/services.dart';
+import "package:path_provider/path_provider.dart";
 
 class UserData {
   // Open up file
@@ -20,8 +21,7 @@ class UserData {
   // Reads data from json file and saves it to class, returns it as Map object
   Future<Map<String, dynamic>> readData() async {
     try {
-      File file = File('lib/mock_data/user_data.json');
-      String content = await file.readAsString();
+      String content = await rootBundle.loadString('lib/assets/user_data.json');
       jsonData = json.decode(content);
       return jsonData;
     } catch (e) {
@@ -33,7 +33,12 @@ class UserData {
 
   Future<void> writeData(Map<String, dynamic> modifiedData) async {
     try {
-      File file = File(join('lib', 'mock_data', 'user_data.json'));
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String appDocPath = appDocDir.path;
+
+      String filePath = '$appDocPath/user_data.json';
+
+      File file = File(filePath);
       String content = json.encode(modifiedData);
       await file.writeAsString(content);
     } catch (e) {
