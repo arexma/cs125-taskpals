@@ -14,9 +14,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  UserDataFirebase test = UserDataFirebase();
-  await test.readData();
-
   runApp(
     const MaterialApp(
       home: TaskPals(),
