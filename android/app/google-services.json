@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "857325271425",
+    "project_id": "taskpals-82dd9",
+    "storage_bucket": "taskpals-82dd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857325271425:android:73c8e581691306581a5080",
+        "android_client_info": {
+          "package_name": "com.example.taskpals"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhsyElTJv1VkMCvCBgoR1ispg0IC-wHjY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
