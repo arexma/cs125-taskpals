@@ -9,6 +9,7 @@ import 'gacha.dart';
 import 'settings.dart';
 import 'stats.dart';
 
+/*
 class ProfilePictureButton extends StatelessWidget {
   const ProfilePictureButton({super.key});
 
@@ -232,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Gacha()),
+                    MaterialPageRoute(builder: (context) => GachaScreen()),
                   );
                 },
                 icon: const Icon(Icons.credit_card),
@@ -245,3 +246,4 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 }
+*/

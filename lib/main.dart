@@ -3,6 +3,7 @@ import 'screens/profile.dart';
 import 'screens/home_page.dart';
 import 'screens/tasks.dart';
 import 'screens/gacha.dart';
+import 'services/user_data.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -12,6 +13,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  UserDataFirebase test = UserDataFirebase();
+  await test.readData();
 
   runApp(
     const MaterialApp(
@@ -29,12 +33,14 @@ class TaskPals extends StatelessWidget {
   //   });
   // }
 
+  /*
   @override
   Widget build(BuildContext context) {
     return MaterialApp(title: 'Task Pals', initialRoute: '/tasks', routes: {
       '/tasks': (context) => const TasksPageStarter(),
     });
   }
+  */
 
   /*
   @override
@@ -55,7 +61,6 @@ class TaskPals extends StatelessWidget {
     );
   }
   */
-  /*
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -73,5 +78,4 @@ class TaskPals extends StatelessWidget {
       },
     );
   }
-  */
 }
