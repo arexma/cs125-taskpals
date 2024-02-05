@@ -12,7 +12,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
   runApp(
     const MaterialApp(
       home: TaskPals(),
@@ -28,14 +28,14 @@ class TaskPals extends StatelessWidget {
   //     '/login': (context) => const HomePage(),
   //   });
   // }
-  
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(title: 'Task Pals', initialRoute: '/tasks', routes: {
-      '/tasks': (context) => TasksPageStarter(),
+      '/tasks': (context) => const TasksPageStarter(),
     });
   }
-  
+
   /*
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class TaskPals extends StatelessWidget {
     );
   }
   */
-  
+  /*
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -73,4 +73,5 @@ class TaskPals extends StatelessWidget {
       },
     );
   }
+  */
 }

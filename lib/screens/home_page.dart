@@ -16,9 +16,8 @@ class ProfilePictureButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Profile())
-        );
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const ProfileScreen()));
       },
       child: Container(
         width: 60,
@@ -41,8 +40,7 @@ class StatsPageButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Stats())
-        );
+            context, MaterialPageRoute(builder: (context) => const Stats()));
       },
       child: const Text('Stats',
           style: TextStyle(
@@ -62,26 +60,25 @@ class TasksListButton extends StatelessWidget {
       height: 150.0,
       width: 200.0,
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-        ),
-        child: ListView.builder(
-          padding: const EdgeInsets.all(8.0),
-          itemCount: 3,
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Tasks()));
-              },
-              child: ListTile(
-                title: Text('Task $index'),
-              ),
-            );
-          },
-        )
-      ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+          ),
+          child: ListView.builder(
+            padding: const EdgeInsets.all(8.0),
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Tasks()));
+                },
+                child: ListTile(
+                  title: Text('Task $index'),
+                ),
+              );
+            },
+          )),
     );
   }
 }
@@ -105,72 +102,67 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
-
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/background.jpg'),
-                  fit: BoxFit.cover,
-                ),
+        home: Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/background.jpg'),
+                fit: BoxFit.cover,
               ),
             ),
-
-            const Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    ProfilePictureButton(),
-                    Padding(padding: EdgeInsets.all(8.0)),
-                    StatsPageButton(),
-                  ],
-                ),
+          ),
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  ProfilePictureButton(),
+                  Padding(padding: EdgeInsets.all(8.0)),
+                  StatsPageButton(),
+                ],
               ),
             ),
-
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const TasksListButton(),
-                    const Padding(padding: EdgeInsets.all(8.0)),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  const TasksListButton(),
+                  const Padding(padding: EdgeInsets.all(8.0)),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const Settings())
-                        );
-                      },
-                      icon: const Icon(Icons.settings),
-                    ),
-                  ],
-                ),
+                          MaterialPageRoute(
+                              builder: (context) => const Settings()));
+                    },
+                    icon: const Icon(Icons.settings),
+                  ),
+                ],
               ),
             ),
-            
-            const Align(
-              alignment: Alignment.bottomCenter,
-              child: FractionallySizedBox(
-                widthFactor: 0.7,
-                child: Image(
-                  alignment: Alignment.bottomCenter,
-                  image: AssetImage('assets/pets/test_image.jpg'),
-                ),
+          ),
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: FractionallySizedBox(
+              widthFactor: 0.7,
+              child: Image(
+                alignment: Alignment.bottomCenter,
+                image: AssetImage('assets/pets/test_image.jpg'),
               ),
             ),
-          ],
-        ),
-
-        bottomNavigationBar: BottomNavigationBar(
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Colors.black,
           selectedItemColor: Colors.grey,
           unselectedItemColor: Colors.white,
@@ -180,14 +172,14 @@ class _HomePageState extends State<HomePage> {
               currentPageIndex = index;
             });
           },
-          
           items: [
             BottomNavigationBarItem(
               icon: IconButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Profile()),
+                    MaterialPageRoute(
+                        builder: (context) => const ProfileScreen()),
                   );
                 },
                 icon: const Icon(Icons.account_circle),
@@ -200,7 +192,8 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Tasks()),
+                    MaterialPageRoute(
+                        builder: (context) => const TasksPageStarter()),
                   );
                 },
                 icon: const Icon(Icons.assignment_late),
@@ -248,9 +241,7 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.black,
             ),
           ],
-          type: BottomNavigationBarType.fixed
-        ),
-      )
-    );
+          type: BottomNavigationBarType.fixed),
+    ));
   }
 }
