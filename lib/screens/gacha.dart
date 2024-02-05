@@ -9,7 +9,7 @@ class GachaScreen extends StatelessWidget {
   final Future<Map<String, dynamic>> userData;
 
   GachaScreen({Key? key})
-      : userData = UserData().readData(),
+      : userData = UserDataFile().readData(),
         super(key: key);
 
   @override
@@ -25,6 +25,7 @@ class GachaScreen extends StatelessWidget {
           return Text('Error: ${snapshot.error}');
         } else {
           // Data was successfully retrieved, userData is saved into snapshot.data
+          snapshot.data!.entries.forEach(print);
           return Text('Received data: ${snapshot.data!.entries}');
         }
       },
