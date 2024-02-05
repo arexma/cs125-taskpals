@@ -20,6 +20,7 @@ height/weight
 // Make pals collected not user editable
 // Create userInfo map based on stored user data
 // Maybe move screen up if the keyboard covers wherever the user is editing?
+// Editable profile picture
 
 import 'package:flutter/material.dart';
 import '../utility/editable_field.dart';
