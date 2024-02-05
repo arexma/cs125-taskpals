@@ -12,82 +12,143 @@ class TasksPageStarter extends StatefulWidget {
 
 class TasksPage extends State<TasksPageStarter> {
   final PageController _pageController = PageController(initialPage: 0);
+  final ScrollController _scrollController = ScrollController();
+  List<Widget> tasksList = [];
+
   int _currentIndex = 0;
-  int _onPressedTracker = 0;
+  int _listItemKey = 0;
+
+  addListItem() {
+    setState(() {
+      tasksList.add(buildListElement(_listItemKey, tasksList.length));
+      _listItemKey += 1;
+    });
+
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+  }
+
+  deleteListItem(Key key) {
+    setState(() {
+      tasksList.removeWhere((item) => item.key == key);
+    });
+
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          children: [
-            SizedBox(
-              height: 350,
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
-                children: [
-                  buildStackElement(_currentIndex),
-                  buildStackElement(_currentIndex),
-                  buildStackElement(_currentIndex),
-                ],
-              ),
-            ),
-            const Text("Daily Tasks"),
-            ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(8),
-              children: <Widget>[
-                Container(
-                  height: 70,
-                  color: Colors.amber[600],
-                  child: const Center(child: Text('Entry A')),
-                ),
-                Container(
-                  height: 70,
-                  color: Colors.amber[500],
-                  child: const Center(child: Text('Entry B')),
-                ),
-                Container(
-                  height: 70,
-                  color: Colors.amber[100],
-                  child: const Center(child: Text('Entry C')),
-                ),
-                Container(
-                  height: 70,
-                  color: Colors.amber[50],
-                  child: const Center(child: Text('Entry C')),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                  onPressed: () {
-                    _onPressedTracker += 1;
+        body: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              Expanded(
+                flex: 6,
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.lightBlueAccent,
-                    elevation: 2,
-                  ),
-                  child: const Text("Add new task."),
+                  children: [
+                    buildStackElement(_currentIndex),
+                    buildStackElement(_currentIndex),
+                    buildStackElement(_currentIndex),
+                  ],
                 ),
               ),
-            ),
-          ],
+              const Expanded(
+                flex: 1,
+                child: Text("Daily Tasks"),
+              ),
+              Expanded(
+                flex: 8,
+                child: ListView.builder(
+                  controller: _scrollController,
+                  // reverse: true,
+                  itemCount: tasksList.length,
+                  itemBuilder: (context, index) => tasksList[index],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      onPressed: addListItem,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.lightBlueAccent,
+                        elevation: 2,
+                      ),
+                      child: const Text("Add new task."),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget buildStackElement(int index) {
-    return Center(
-      child: Text(
-        "Current index: $index",
+    return Container(
+      color: Colors.lightBlueAccent,
+      child: Center(
+        child: Text(
+          "Current index: $index",
+        ),
+      ),
+    );
+  }
+
+  Widget buildListElement(int listItemKey, int index) {
+    return Dismissible(
+      key: Key(listItemKey.toString()),
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        if (direction == DismissDirection.endToStart) {
+          deleteListItem(Key(listItemKey.toString()));
+        }
+      },
+      background: Container(
+        color: Colors.red,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: const Icon(
+          Icons.delete,
+          color: Colors.white,
+        ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.lightGreenAccent,
+          border: Border.all(
+            color: Colors.lightGreen,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        height: 70,
+        child: Center(
+          child: Text(
+            "Current index: $index",
+          ),
+        ),
       ),
     );
   }
