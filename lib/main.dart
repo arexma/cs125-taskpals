@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/profile.dart';
 import 'screens/home_page.dart';
+import 'screens/tasks.dart';
 import 'screens/gacha.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -11,21 +12,30 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const TaskPals());
+  
+  runApp(
+    const MaterialApp(
+      home: TaskPals(),
+    ),
+  );
 }
 
 class TaskPals extends StatelessWidget {
   const TaskPals({Key? key}) : super(key: key);
-
-  /*
+  // @override
+  // Widget build(BuildContext context) {
+  //   return MaterialApp(title: 'Task Pals', initialRoute: '/login', routes: {
+  //     '/login': (context) => const HomePage(),
+  //   });
+  // }
+  
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Task Pals', initialRoute: '/login', routes: {
-      '/login': (context) => const HomePage(),
+    return MaterialApp(title: 'Task Pals', initialRoute: '/tasks', routes: {
+      '/tasks': (context) => TasksPageStarter(),
     });
   }
-  */
-
+  
   /*
   @override
   Widget build(BuildContext context) {
@@ -45,7 +55,7 @@ class TaskPals extends StatelessWidget {
     );
   }
   */
-
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
