@@ -9,7 +9,6 @@ import 'gacha.dart';
 import 'settings.dart';
 import 'stats.dart';
 
-/*
 class ProfilePictureButton extends StatelessWidget {
   const ProfilePictureButton({super.key});
 
@@ -71,8 +70,10 @@ class TasksListButton extends StatelessWidget {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Tasks()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TasksPageStarter()));
                 },
                 child: ListTile(
                   title: Text('Task $index'),
@@ -95,11 +96,11 @@ class _HomePageState extends State<HomePage> {
   int currentPageIndex = 2;
 
   final List<Widget> pages = [
-    const Profile(),
-    const Tasks(),
+    const ProfileScreen(),
+    const TasksPageStarter(),
     const HomePage(),
     const Pets(),
-    const Gacha()
+    GachaScreen()
   ];
 
   @override
@@ -246,4 +247,3 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 }
-*/

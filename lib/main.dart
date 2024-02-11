@@ -23,6 +23,7 @@ void main() async {
 
 class TaskPals extends StatelessWidget {
   const TaskPals({Key? key}) : super(key: key);
+
   // @override
   // Widget build(BuildContext context) {
   //   return MaterialApp(title: 'Task Pals', initialRoute: '/login', routes: {
@@ -39,7 +40,6 @@ class TaskPals extends StatelessWidget {
   }
   */
 
-  /*
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -57,7 +57,8 @@ class TaskPals extends StatelessWidget {
       },
     );
   }
-  */
+
+  /*
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -74,5 +75,5 @@ class TaskPals extends StatelessWidget {
         '/gacha': (context) => GachaScreen(),
       },
     );
-  }
+  */
 }
