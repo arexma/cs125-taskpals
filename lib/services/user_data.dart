@@ -10,7 +10,7 @@
 //    tasks --> [string] (task descriptions)
 
 // TODO
-//  Error handling for async functions
+//  Error handling
 
 import 'dart:convert';
 import 'dart:async';
