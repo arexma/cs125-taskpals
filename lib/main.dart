@@ -4,9 +4,11 @@ import 'screens/home_page.dart';
 import 'screens/tasks.dart';
 import 'screens/gacha.dart';
 import 'services/user_data.dart';
-
+import 'screens/first_time_user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:android_id/android_id.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,12 +26,23 @@ void main() async {
 class TaskPals extends StatelessWidget {
   const TaskPals({Key? key}) : super(key: key);
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(title: 'Task Pals', initialRoute: '/login', routes: {
-  //     '/login': (context) => const HomePage(),
-  //   });
-  // }
+  Future<String?> _getDeviceID(BuildContext context) async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Theme.of(context).platform == TargetPlatform.android) {
+      const androidIdPlugin = AndroidId();
+      return await androidIdPlugin.getId();
+    } else if (Theme.of(context).platform == TargetPlatform.iOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      return iosInfo.identifierForVendor;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(title: 'Task Pals', initialRoute: '/first', routes: {
+      '/first': (context) => const FirstTimeUser(),
+    });
+  }
 
   /*
   @override
@@ -40,6 +53,7 @@ class TaskPals extends StatelessWidget {
   }
   */
 
+  /*
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -57,6 +71,7 @@ class TaskPals extends StatelessWidget {
       },
     );
   }
+  */
 
   /*
   @override

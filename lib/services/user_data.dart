@@ -123,8 +123,6 @@ class UserDataFile {
       data = json.decode(content);
       return data;
     } catch (e) {
-      // Log error
-      print('Error reading file: $e');
       return {};
     }
   }
@@ -140,8 +138,7 @@ class UserDataFile {
       String content = json.encode(modifiedData);
       await file.writeAsString(content);
     } catch (e) {
-      // Log error
-      print('Error writing to file $e');
+      return;
     }
   }
 }
