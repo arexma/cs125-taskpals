@@ -26,7 +26,7 @@ class ProfilePictureButton extends StatelessWidget {
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
         ),
-        child: Image.asset('assets/default_profile.png'),
+        child: Image.asset('lib/assets/default_profile.png'),
       ),
     );
   }
@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/background.jpg'),
+                image: AssetImage('lib/assets/background.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
               widthFactor: 0.7,
               child: Image(
                 alignment: Alignment.bottomCenter,
-                image: AssetImage('assets/pets/test_image.jpg'),
+                image: AssetImage('lib/assets/pets/test_image.jpg'),
               ),
             ),
           ),
