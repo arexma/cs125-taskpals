@@ -7,7 +7,7 @@ import 'firebase_options.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:android_id/android_id.dart';
 import 'services/user_data.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 /*
 
 adding new user first time accessing app from unique device, 
@@ -38,13 +38,18 @@ class TaskPals extends StatefulWidget {
 class _TaskPals extends State<TaskPals> {
   // Probably want to have global state management for database
   // connection, deviceID, and maybe isFirstTimeUser (?)
+  late Future<List<dynamic>> userData;
+
+  /*
   late bool isFirstTimeUser;
   late UserDataFirebase user;
   late String deviceID;
+  */
 
   @override
   void initState() {
     super.initState();
+    userData = firstTimeUser(context);
   }
 
   Future<String> _getDeviceID(BuildContext context) async {
@@ -60,6 +65,8 @@ class _TaskPals extends State<TaskPals> {
     return id;
   }
 
+  Future<bool> isFirstTimeUser() async {}
+
   Future<List<dynamic>> firstTimeUser(BuildContext context) async {
     String id = await _getDeviceID(context);
     UserDataFirebase user = UserDataFirebase(id);
@@ -72,14 +79,11 @@ class _TaskPals extends State<TaskPals> {
     return MaterialApp(
       title: 'Task Pals',
       home: FutureBuilder<List<dynamic>>(
-        future: firstTimeUser(context),
+        future: userData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            setState(() {
-              user = snapshot.data![0];
-              deviceID = snapshot.data![1];
-              isFirstTimeUser = user.isEmpty() ? true : false;
-            });
+            UserDataFirebase user = snapshot.data![0];
+            bool isFirstTimeUser = user.isEmpty();
             return isFirstTimeUser ? const FirstTimeUser() : const HomePage();
           } else {
             return const CircularProgressIndicator();
