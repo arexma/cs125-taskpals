@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FirstTimeUser extends StatelessWidget {
-  const FirstTimeUser({Key? key}) : super(key: key);
+  const FirstTimeUser({super.key});
 
   @override
   Widget build(BuildContext context) {

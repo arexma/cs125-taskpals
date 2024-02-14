@@ -8,6 +8,13 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:android_id/android_id.dart';
 import 'services/user_data.dart';
 
+/*
+
+adding new user first time accessing app from unique device, 
+profile page todos, 
+gacha - alex
+*/
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -22,7 +29,7 @@ void main() async {
 }
 
 class TaskPals extends StatefulWidget {
-  const TaskPals({Key? key}) : super(key: key);
+  const TaskPals({super.key});
 
   @override
   State<TaskPals> createState() => _TaskPals();
@@ -31,7 +38,7 @@ class TaskPals extends StatefulWidget {
 class _TaskPals extends State<TaskPals> {
   // Probably want to have global state management for database
   // connection, deviceID, and maybe isFirstTimeUser (?)
-  bool? isFirstTimeUser;
+  late bool isFirstTimeUser;
   late UserDataFirebase user;
   late String deviceID;
 
@@ -40,44 +47,40 @@ class _TaskPals extends State<TaskPals> {
     super.initState();
   }
 
-  Future<void> _getDeviceID(BuildContext context) async {
+  Future<String> _getDeviceID(BuildContext context) async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    String? id;
+    String id = '';
     if (Theme.of(context).platform == TargetPlatform.android) {
       const androidIdPlugin = AndroidId();
-      id = await androidIdPlugin.getId();
+      id = await androidIdPlugin.getId() ?? 'Unknown ID';
     } else if (Theme.of(context).platform == TargetPlatform.iOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      id = iosInfo.identifierForVendor;
+      id = iosInfo.identifierForVendor ?? 'Unknown ID';
     }
-
-    setState(() {
-      if (id == null) {
-        // Error handling if we can't extract device ID
-      } else {
-        deviceID = id;
-      }
-    });
+    return id;
   }
 
-  Future<void> firstTimeUser(BuildContext context) async {
-    await _getDeviceID(context);
-    user = UserDataFirebase(deviceID);
+  Future<List<dynamic>> firstTimeUser(BuildContext context) async {
+    String id = await _getDeviceID(context);
+    UserDataFirebase user = UserDataFirebase(id);
     await user.initializationComplete();
-    setState(() {
-      isFirstTimeUser = user.isEmpty() ? true : false;
-    });
+    return [user, id];
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Task Pals',
-      home: FutureBuilder<void>(
+      home: FutureBuilder<List<dynamic>>(
         future: firstTimeUser(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return isFirstTimeUser! ? const FirstTimeUser() : const HomePage();
+            setState(() {
+              user = snapshot.data![0];
+              deviceID = snapshot.data![1];
+              isFirstTimeUser = user.isEmpty() ? true : false;
+            });
+            return isFirstTimeUser ? const FirstTimeUser() : const HomePage();
           } else {
             return const CircularProgressIndicator();
           }
@@ -91,13 +94,6 @@ class _TaskPals extends State<TaskPals> {
 /*
 class TaskPals extends StatelessWidget {
   const TaskPals({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(title: 'Task Pals', initialRoute: '/first', routes: {
-      '/first': (context) => const FirstTimeUser(),
-    });
-  }
 
   /*
   @override
