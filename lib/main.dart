@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'screens/gacha.dart';
 import 'screens/home_page.dart';
@@ -7,7 +9,6 @@ import 'firebase_options.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:android_id/android_id.dart';
 import 'services/user_data.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 /*
 
 adding new user first time accessing app from unique device, 
@@ -38,37 +39,30 @@ class TaskPals extends StatefulWidget {
 class _TaskPals extends State<TaskPals> {
   // Probably want to have global state management for database
   // connection, deviceID, and maybe isFirstTimeUser (?)
-  late Future<List<dynamic>> userData;
-
-  /*
   late bool isFirstTimeUser;
   late UserDataFirebase user;
   late String deviceID;
-  */
 
   @override
   void initState() {
     super.initState();
-    userData = firstTimeUser(context);
   }
 
-  Future<String> _getDeviceID(BuildContext context) async {
+  Future<String> _getDeviceID() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     String id = '';
-    if (Theme.of(context).platform == TargetPlatform.android) {
+    if (Platform.isAndroid) {
       const androidIdPlugin = AndroidId();
       id = await androidIdPlugin.getId() ?? 'Unknown ID';
-    } else if (Theme.of(context).platform == TargetPlatform.iOS) {
+    } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       id = iosInfo.identifierForVendor ?? 'Unknown ID';
     }
     return id;
   }
 
-  Future<bool> isFirstTimeUser() async {}
-
-  Future<List<dynamic>> firstTimeUser(BuildContext context) async {
-    String id = await _getDeviceID(context);
+  Future<List<dynamic>> firstTimeUser() async {
+    String id = await _getDeviceID();
     UserDataFirebase user = UserDataFirebase(id);
     await user.initializationComplete();
     return [user, id];
@@ -79,7 +73,7 @@ class _TaskPals extends State<TaskPals> {
     return MaterialApp(
       title: 'Task Pals',
       home: FutureBuilder<List<dynamic>>(
-        future: userData,
+        future: firstTimeUser(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             UserDataFirebase user = snapshot.data![0];
