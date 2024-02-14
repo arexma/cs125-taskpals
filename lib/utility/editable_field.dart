@@ -15,7 +15,7 @@ class EditableTextField extends StatefulWidget {
   final AlignmentGeometry? textAlignment;
 
   const EditableTextField({
-    Key? key,
+    super.key,
     this.initialText,
     this.boxWidth,
     this.boxHeight,
@@ -24,7 +24,7 @@ class EditableTextField extends StatefulWidget {
     this.borderRadius,
     this.edgeInsets,
     this.textAlignment,
-  }) : super(key: key);
+  });
 
   @override
   State<EditableTextField> createState() => _EditableTextField();
