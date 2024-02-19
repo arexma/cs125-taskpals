@@ -1,13 +1,15 @@
 // Retrieves saved information about user from file/database
 // Current user info template:
 
-//    Name --> string
-//    Unique id --> string
-//    Height --> int (inches)
-//    Weight --> int
-//    Currency --> int
-//    Pals collected --> [int] (unique pal ids)
+//    name --> string
+//    id --> string
+//    height --> int (inches)
+//    weight --> int
+//    age --> int
+//    currency --> int
+//    pals_collected --> [int] (unique pal ids)
 //    tasks --> [string] (task descriptions)
+//    goals --> [string]
 
 // TODO
 //  Error handling
@@ -47,6 +49,7 @@ const userFields = [
 // won't work as expected.
 class UserDataFirebase {
   Map<String, dynamic> data = {};
+  late String id;
   late CollectionReference users;
   late Completer<void> _initCompleter;
 
@@ -61,6 +64,7 @@ class UserDataFirebase {
     if (flag != null) {
       data = flag as Map<String, dynamic>;
     }
+    this.id = id;
     _initCompleter.complete();
   }
 
@@ -75,7 +79,7 @@ class UserDataFirebase {
   }
 
   // Make sure to call this if data is empty upon initialization
-  Future<bool> writeToDatabase(String id, Map<String, dynamic> data) async {
+  Future<bool> writeToDatabase(Map<String, dynamic> data) async {
     try {
       await users.doc(id).set(data);
       this.data = data;
@@ -98,8 +102,7 @@ class UserDataFirebase {
 
   // Update user by field
   // Returns true if successful, false otherwise
-  Future<bool> updateDatabase(
-      String id, Map<String, dynamic> modifiedData) async {
+  Future<bool> updateDatabase(Map<String, dynamic> modifiedData) async {
     try {
       DocumentReference userDocument = users.doc(id);
       await userDocument.update(modifiedData);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../services/user_data.dart';
 
 import 'name.dart';
 import 'biometrics.dart';
@@ -9,7 +10,13 @@ import 'navigation.dart';
 class FirstTimeUser extends StatefulWidget {
   // Callback to rebuild
   final VoidCallback updateUser;
-  const FirstTimeUser({super.key, required this.updateUser});
+  final UserDataFirebase user;
+
+  const FirstTimeUser({
+    super.key,
+    required this.updateUser,
+    required this.user,
+  });
 
   @override
   State<FirstTimeUser> createState() => _FirstTimeUser();

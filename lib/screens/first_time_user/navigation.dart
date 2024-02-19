@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 // Both left and right arrow
 // Left and right arrow, but right arrow calls a callback function
 
+// TODO:
+// Animate ElevatedButton
 class Navigation extends StatelessWidget {
   final PageController controller;
   final bool showLeftArrow;

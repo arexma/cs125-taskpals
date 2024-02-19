@@ -89,6 +89,7 @@ class _TaskPals extends State<TaskPals> {
                     updateUser: () {
                       setState(() {});
                     },
+                    user: user,
                   )
                 : const HomePage();
           } else {
