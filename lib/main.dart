@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'screens/gacha.dart';
 import 'screens/home_page.dart';
-import 'screens/first_time_user.dart';
+import 'screens/first_time_user/first_time_user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -37,15 +37,23 @@ class TaskPals extends StatefulWidget {
 }
 
 class _TaskPals extends State<TaskPals> {
-  // Probably want to have global state management for database
-  // connection, deviceID, and maybe isFirstTimeUser (?)
-  late bool isFirstTimeUser;
   late UserDataFirebase user;
   late String deviceID;
+  late bool isFirstTimeUser;
 
   @override
   void initState() {
     super.initState();
+    _initializeUser();
+  }
+
+  Future<void> _initializeUser() async {
+    List<dynamic> data = await firstTimeUser();
+    setState(() {
+      user = data[0];
+      deviceID = data[1];
+      isFirstTimeUser = user.isEmpty();
+    });
   }
 
   Future<String> _getDeviceID() async {
@@ -76,9 +84,13 @@ class _TaskPals extends State<TaskPals> {
         future: firstTimeUser(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            UserDataFirebase user = snapshot.data![0];
-            bool isFirstTimeUser = user.isEmpty();
-            return isFirstTimeUser ? const FirstTimeUser() : const HomePage();
+            return isFirstTimeUser
+                ? FirstTimeUser(
+                    updateUser: () {
+                      setState(() {});
+                    },
+                  )
+                : const HomePage();
           } else {
             return const CircularProgressIndicator();
           }
