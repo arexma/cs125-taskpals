@@ -13,6 +13,7 @@ class EditableTextField extends StatefulWidget {
   final double? borderRadius;
   final double? edgeInsets;
   final AlignmentGeometry? textAlignment;
+  final Function(dynamic)? callback;
 
   const EditableTextField({
     super.key,
@@ -24,6 +25,7 @@ class EditableTextField extends StatefulWidget {
     this.borderRadius,
     this.edgeInsets,
     this.textAlignment,
+    this.callback,
   });
 
   @override
@@ -61,6 +63,11 @@ class _EditableTextField extends State<EditableTextField> {
     setState(() {
       _controller.text = newText;
     });
+    widget.callback?.call(newText);
+  }
+
+  String currentText() {
+    return _controller.text;
   }
 
   @override

@@ -3,7 +3,12 @@ import 'navigation.dart';
 
 class Goals extends StatefulWidget {
   final Navigation navigationWidget;
-  const Goals({super.key, required this.navigationWidget});
+  final Function(String, dynamic) updateData;
+  const Goals({
+    super.key,
+    required this.navigationWidget,
+    required this.updateData,
+  });
 
   @override
   State<Goals> createState() => _Goals();

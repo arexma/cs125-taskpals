@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
+
+import '../../utility/editable_field.dart';
 import 'navigation.dart';
 
 class Name extends StatefulWidget {
   final Navigation navigationWidget;
-  const Name({super.key, required this.navigationWidget});
+  final Function(String, dynamic) updateData;
+  final String savedName;
+
+  const Name({
+    super.key,
+    required this.navigationWidget,
+    required this.updateData,
+    required this.savedName,
+  });
 
   @override
   State<Name> createState() => _Name();
@@ -19,7 +29,22 @@ class _Name extends State<Name> {
       ),
       body: Column(
         children: <Widget>[
-          const Text('Name'),
+          const SizedBox(height: 250.0),
+          const Text(
+            'Name ?',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 45.0,
+            ),
+          ),
+          const SizedBox(height: 50.0),
+          EditableTextField(
+            initialText: widget.savedName,
+            callback: (dynamic value) {
+              widget.updateData('name', value);
+            },
+          ), // initial text based on data
+          const Spacer(),
           widget.navigationWidget,
         ],
       ),

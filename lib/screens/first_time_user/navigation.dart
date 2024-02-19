@@ -59,10 +59,13 @@ class Navigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment:
-          showLeftArrow ? MainAxisAlignment.start : MainAxisAlignment.end,
-      children: createRow(),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        mainAxisAlignment:
+            showLeftArrow ? MainAxisAlignment.start : MainAxisAlignment.end,
+        children: createRow(),
+      ),
     );
   }
 }

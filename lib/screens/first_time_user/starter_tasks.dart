@@ -3,7 +3,12 @@ import 'navigation.dart';
 
 class StarterTasks extends StatefulWidget {
   final Navigation navigationWidget;
-  const StarterTasks({super.key, required this.navigationWidget});
+  final Function(String, dynamic) updateData;
+  const StarterTasks({
+    super.key,
+    required this.navigationWidget,
+    required this.updateData,
+  });
 
   @override
   State<StarterTasks> createState() => _StarterTasks();

@@ -3,7 +3,12 @@ import 'navigation.dart';
 
 class Biometrics extends StatefulWidget {
   final Navigation navigationWidget;
-  const Biometrics({super.key, required this.navigationWidget});
+  final Function(String, dynamic) updateData;
+  const Biometrics({
+    super.key,
+    required this.navigationWidget,
+    required this.updateData,
+  });
 
   @override
   State<Biometrics> createState() => _Biometrics();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/user_data.dart';
 
+// Subscreens
 import 'name.dart';
 import 'biometrics.dart';
 import 'goals.dart';
@@ -24,6 +25,18 @@ class FirstTimeUser extends StatefulWidget {
 
 class _FirstTimeUser extends State<FirstTimeUser> {
   final PageController pageController = PageController();
+  Map<String, dynamic> data = {};
+
+  void writeToDatabase() {
+    widget.user.writeToDatabase(data);
+    widget.updateUser();
+  }
+
+  void addToData(String key, dynamic value) {
+    setState(() {
+      data[key] = value;
+    });
+  }
 
   // Name only has right arrow, StartTasks right arrow needs
   // to call callback function
@@ -33,29 +46,34 @@ class _FirstTimeUser extends State<FirstTimeUser> {
       controller: pageController,
       children: [
         Name(
+          savedName: data['name'] ?? '',
           navigationWidget: Navigation(
             controller: pageController,
             showLeftArrow: false,
           ),
+          updateData: addToData,
         ),
         Biometrics(
           navigationWidget: Navigation(
             controller: pageController,
             showLeftArrow: true,
           ),
+          updateData: addToData,
         ),
         Goals(
           navigationWidget: Navigation(
             controller: pageController,
             showLeftArrow: true,
           ),
+          updateData: addToData,
         ),
         StarterTasks(
           navigationWidget: Navigation(
             controller: pageController,
             showLeftArrow: true,
-            onRightArrowPressed: widget.updateUser,
+            onRightArrowPressed: writeToDatabase,
           ),
+          updateData: addToData,
         ),
       ],
     );
