@@ -12,6 +12,17 @@ class Goals extends StatefulWidget {
 class _Goals extends State<Goals> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(25.0),
+        child: AppBar(),
+      ),
+      body: Column(
+        children: <Widget>[
+          const Text('Goals'),
+          widget.navigationWidget,
+        ],
+      ),
+    );
   }
 }

@@ -12,6 +12,17 @@ class StarterTasks extends StatefulWidget {
 class _StarterTasks extends State<StarterTasks> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(25.0),
+        child: AppBar(),
+      ),
+      body: Column(
+        children: <Widget>[
+          const Text('Starter Tasks'),
+          widget.navigationWidget,
+        ],
+      ),
+    );
   }
 }

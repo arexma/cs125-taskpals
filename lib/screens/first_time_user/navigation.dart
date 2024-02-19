@@ -20,26 +20,37 @@ class Navigation extends StatelessWidget {
     List<Widget> row = <Widget>[];
 
     if (showLeftArrow) {
-      row.add(ElevatedButton(
-        onPressed: () => controller.previousPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeIn,
+      row.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: ElevatedButton(
+            onPressed: () => controller.previousPage(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeIn,
+            ),
+            child: const Icon(Icons.arrow_left),
+          ),
         ),
-        child: const Icon(Icons.arrow_left),
-      ));
-      row.add(const SizedBox(width: 16.0));
+      );
     }
 
-    row.add(ElevatedButton(
-      onPressed: () {
-        onRightArrowPressed?.call();
-        controller.nextPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      },
-      child: const Icon(Icons.arrow_right),
-    ));
+    row.add(const Spacer());
+
+    row.add(
+      Padding(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: ElevatedButton(
+          onPressed: () {
+            onRightArrowPressed?.call();
+            controller.nextPage(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+          child: const Icon(Icons.arrow_right),
+        ),
+      ),
+    );
 
     return row;
   }
@@ -47,6 +58,8 @@ class Navigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment:
+          showLeftArrow ? MainAxisAlignment.start : MainAxisAlignment.end,
       children: createRow(),
     );
   }
