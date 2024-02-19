@@ -40,10 +40,11 @@ class _Name extends State<Name> {
           const SizedBox(height: 50.0),
           EditableTextField(
             initialText: widget.savedName,
+            textAlignment: Alignment.center,
             callback: (dynamic value) {
               widget.updateData('name', value);
             },
-          ), // initial text based on data
+          ),
           const Spacer(),
           widget.navigationWidget,
         ],

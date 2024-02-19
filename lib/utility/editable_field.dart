@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 // An editable text field constrained by a box
 
 // Can make it so that if the user clicks outside the box midway through editing text, don't save current changes
+Map<Alignment, TextAlign> alignments = {
+  Alignment.centerLeft: TextAlign.left,
+  Alignment.centerRight: TextAlign.right,
+  Alignment.center: TextAlign.center,
+};
+
 class EditableTextField extends StatefulWidget {
   // Widget variables for customization
   final String? initialText;
@@ -99,6 +105,9 @@ class _EditableTextField extends State<EditableTextField> {
                       _toggleEdit();
                     },
                     onSubmitted: (String newText) => _handleSave(newText),
+                    textAlign: alignments[
+                            widget.textAlignment ?? Alignment.centerLeft] ??
+                        TextAlign.left,
                   )
                 : Text(
                     _controller.text,

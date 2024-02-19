@@ -54,6 +54,11 @@ class _FirstTimeUser extends State<FirstTimeUser> {
           updateData: addToData,
         ),
         Biometrics(
+          savedInfo: {
+            'height': data['height'] ?? -1,
+            'weight': data['weight'] ?? -1,
+            'age': data['age'] ?? -1,
+          },
           navigationWidget: Navigation(
             controller: pageController,
             showLeftArrow: true,
