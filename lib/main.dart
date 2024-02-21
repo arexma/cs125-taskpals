@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'screens/profile.dart';
+import 'package:provider/provider.dart';
+import 'package:theme_provider/theme_provider.dart';
 import 'screens/home_page.dart';
-import 'screens/tasks.dart';
-import 'screens/gacha.dart';
 import 'services/user_data.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:just_audio/just_audio.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,63 +13,60 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(
-    const MaterialApp(
-      home: TaskPals(),
-    ),
-  );
+  UserDataFirebase test = UserDataFirebase();
+  await test.readData();
+  runApp(TaskPals());
+}
+
+// MusicPlayer class to pass down to all future widgets to inherit
+class MusicPlayer extends ChangeNotifier {
+  late AudioPlayer player;
+
+  MusicPlayer() {
+    player = AudioPlayer();
+    player.setLoopMode(LoopMode.one);
+    player.setVolume(0.2);
+    player.setAsset("lib/assets/audio/Spring (It's a Big World Outside).mp3");
+    player.play();
+  }
+
+  AudioPlayer get currentPlayer => player;
+
+  void changeSong(String songURL) {
+    player.setAsset("lib/assets/audio/$songURL");
+    player.play();
+  }
+
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
 }
 
 class TaskPals extends StatelessWidget {
   const TaskPals({Key? key}) : super(key: key);
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(title: 'Task Pals', initialRoute: '/login', routes: {
-  //     '/login': (context) => const HomePage(),
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Task Pals', initialRoute: '/tasks', routes: {
-      '/tasks': (context) => const TasksPageStarter(),
-    });
-  }
-
-  /*
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Task Pals',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.amber,
-        ), // Customize global color theming
-        textTheme: const TextTheme(), // Customize global text theming
-      ),
-      initialRoute: '/profile',
-      routes: {
-        '/profile': (context) => const ProfileScreen(),
-      },
+    // Save themes and load them from device 
+    return ChangeNotifierProvider(
+      create: (context) => MusicPlayer(),
+      child: ThemeProvider(
+        saveThemesOnChange: true,
+        loadThemeOnInit: true,
+        child: ThemeConsumer(
+          child: Builder(
+            builder: (themeContext) => MaterialApp(
+              title: 'Task Pals',
+              initialRoute: '/login',
+              theme: ThemeProvider.themeOf(themeContext).data,
+              routes: {
+                '/login': (context) => const HomePage(),
+              }
+            )
+          )
+        )
+      )
     );
   }
-  */
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //     title: 'Task Pals',
-  //     theme: ThemeData(
-  //       useMaterial3: true,
-  //       colorScheme: ColorScheme.fromSeed(
-  //         seedColor: Colors.amber,
-  //       ), // Customize global color theming
-  //       textTheme: const TextTheme(), // Customize global text theming
-  //     ),
-  //     initialRoute: '/gacha',
-  //     routes: {
-  //       '/gacha': (context) => GachaScreen(),
-  //     },
-  //   );
-  // }
 }
