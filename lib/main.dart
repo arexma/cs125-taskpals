@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:android_id/android_id.dart';
+import 'package:just_audio/just_audio.dart';
 
 /*
 
@@ -77,7 +78,10 @@ class _TaskPals extends State<TaskPals> {
     UserDataFirebase temp = await firstTimeUser();
     setState(() {
       user = temp;
-      isFirstTimeUser = user.isEmpty();
+
+      // For testing
+      // isFirstTimeUser = user.isEmpty();
+      isFirstTimeUser = false;
     });
   }
 
@@ -119,20 +123,22 @@ class _TaskPals extends State<TaskPals> {
                 : ChangeNotifierProvider(
                     create: (context) => MusicPlayer(),
                     child: ThemeProvider(
-                        saveThemesOnChange: true,
-                        loadThemeOnInit: true,
-                        child: ThemeConsumer(
-                            child: Builder(
-                                builder: (themeContext) => MaterialApp(
-                                        title: 'Task Pals',
-                                        initialRoute: '/login',
-                                        theme:
-                                            ThemeProvider.themeOf(themeContext)
-                                                .data,
-                                        routes: {
-                                          '/login': (context) =>
-                                              const HomePage(),
-                                        })))));
+                      saveThemesOnChange: true,
+                      loadThemeOnInit: true,
+                      child: ThemeConsumer(
+                        child: Builder(
+                          builder: (themeContext) => MaterialApp(
+                            title: 'Task Pals',
+                            initialRoute: '/login',
+                            theme: ThemeProvider.themeOf(themeContext).data,
+                            routes: {
+                              '/login': (context) => const HomePage(),
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
           } else {
             return const CircularProgressIndicator();
           }
