@@ -30,14 +30,12 @@ class TaskPals extends StatelessWidget {
   //   });
   // }
 
-  /*
   @override
   Widget build(BuildContext context) {
     return MaterialApp(title: 'Task Pals', initialRoute: '/tasks', routes: {
       '/tasks': (context) => const TasksPageStarter(),
     });
   }
-  */
 
   /*
   @override
@@ -58,21 +56,21 @@ class TaskPals extends StatelessWidget {
     );
   }
   */
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Task Pals',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.amber,
-        ), // Customize global color theming
-        textTheme: const TextTheme(), // Customize global text theming
-      ),
-      initialRoute: '/gacha',
-      routes: {
-        '/gacha': (context) => GachaScreen(),
-      },
-    );
-  }
+  // @override
+  // Widget build(BuildContext context) {
+  //   return MaterialApp(
+  //     title: 'Task Pals',
+  //     theme: ThemeData(
+  //       useMaterial3: true,
+  //       colorScheme: ColorScheme.fromSeed(
+  //         seedColor: Colors.amber,
+  //       ), // Customize global color theming
+  //       textTheme: const TextTheme(), // Customize global text theming
+  //     ),
+  //     initialRoute: '/gacha',
+  //     routes: {
+  //       '/gacha': (context) => GachaScreen(),
+  //     },
+  //   );
+  // }
 }
