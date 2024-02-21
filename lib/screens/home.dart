@@ -1,0 +1,152 @@
+import 'package:flutter/material.dart';
+import 'profile.dart';
+import 'settings.dart';
+import 'stats.dart';
+import 'tasks.dart';
+
+class ProfilePictureButton extends StatelessWidget {
+  const ProfilePictureButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProfileScreen()
+          ),
+        );
+      },
+      child: Container(
+        width: 60,
+        height: 60,
+        clipBehavior: Clip.antiAlias,
+        decoration: const BoxDecoration(shape: BoxShape.circle),
+        child: Image.asset('lib/assets/default_profile.png'),
+      ),
+    );
+  }
+}
+
+class StatsPageButton extends StatelessWidget {
+  const StatsPageButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Stats()
+          ),
+        );
+      },
+      child: const Text('Stats',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w700,
+          )),
+    );
+  }
+}
+
+class TasksListButton extends StatelessWidget {
+  const TasksListButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 150.0,
+      width: 200.0,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+        ),
+        child: ListView.builder(
+          padding: const EdgeInsets.all(8.0),
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const TasksPageStarter()));
+              },
+              child: ListTile(
+                title: Text('Task $index'),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // Background image for home page
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('lib/assets/background.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        const Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: EdgeInsets.all(30.0),
+            child: Column(
+              children: [
+                ProfilePictureButton(),
+                Padding(padding: EdgeInsets.all(8.0)),
+                StatsPageButton(),
+              ],
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const TasksListButton(),
+                const Padding(padding: EdgeInsets.all(8.0)),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsPage())
+                    );
+                  },
+                  icon: const Icon(Icons.settings),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const Align(
+          alignment: Alignment.bottomCenter,
+          child: FractionallySizedBox(
+            widthFactor: 0.5,
+            child: Image(
+              alignment: Alignment.bottomCenter,
+              image: AssetImage('lib/assets/pets/test_image.jpg'),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

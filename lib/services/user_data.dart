@@ -63,9 +63,9 @@ class UserDataFirebase {
     try {
       QuerySnapshot querySnapshot = await users.get();
 
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         print('Document ID: ${doc.id}, Data: ${doc.data()}');
-      });
+      }
     } catch (e) {
       print('Error reading data from Firestore: $e');
     }
