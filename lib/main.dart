@@ -84,7 +84,7 @@ class _TaskPals extends State<TaskPals> {
           if (snapshot.connectionState == ConnectionState.done) {
             return isFirstTimeUser
                 ? FirstTimeUser(
-                    updateUser: () {
+                    updateParent: () {
                       setState(() {});
                     },
                     user: user,

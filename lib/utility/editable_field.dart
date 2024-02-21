@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 // An editable text field constrained by a box
 
+// TODO:
+// Fix cursor size depending on box size
+
 // Can make it so that if the user clicks outside the box midway through editing text, don't save current changes
 Map<Alignment, TextAlign> alignments = {
   Alignment.centerLeft: TextAlign.left,

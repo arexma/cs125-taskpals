@@ -10,12 +10,12 @@ import 'navigation.dart';
 
 class FirstTimeUser extends StatefulWidget {
   // Callback to rebuild
-  final VoidCallback updateUser;
+  final VoidCallback updateParent;
   final UserDataFirebase user;
 
   const FirstTimeUser({
     super.key,
-    required this.updateUser,
+    required this.updateParent,
     required this.user,
   });
 
@@ -29,7 +29,7 @@ class _FirstTimeUser extends State<FirstTimeUser> {
 
   void writeToDatabase() {
     widget.user.writeToDatabase(data);
-    widget.updateUser();
+    widget.updateParent();
   }
 
   void addToData(String key, dynamic value) {
@@ -55,7 +55,7 @@ class _FirstTimeUser extends State<FirstTimeUser> {
         ),
         Biometrics(
           savedInfo: {
-            'height': data['height'] ?? -1,
+            'height': data['height'] ?? 36,
             'weight': data['weight'] ?? -1,
             'age': data['age'] ?? -1,
           },

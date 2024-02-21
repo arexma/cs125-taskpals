@@ -27,9 +27,11 @@ const userFields = [
   "id",
   "height",
   "weight",
+  "age",
   "currency",
   "pals_collected",
-  "tasks"
+  "tasks",
+  "goals"
 ];
 
 // Access user data from Firebase database

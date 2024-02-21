@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'navigation.dart';
+import '../../utility/editable_field.dart';
 
 List<int> feet = List<int>.generate(5, (index) => index + 3);
 List<int> inches = List<int>.generate(13, (index) => index);
@@ -24,30 +26,62 @@ class Biometrics extends StatefulWidget {
   State<Biometrics> createState() => _Biometrics();
 }
 
-class _Biometrics extends State<Biometrics> {
+class _Biometrics extends State<Biometrics>
+    with AutomaticKeepAliveClientMixin<Biometrics> {
+  int feet = 3;
+  int inches = 0;
+
   Row rowGenerator(List<String> fields) {
     List<Widget> children = [];
 
     for (String field in fields) {
-      children.add(
-        DropdownMenu(
-          dropdownMenuEntries: field == 'ft'
-              ? feet
-                  .map((String feet) =>
-                      DropdownMenuEntry(label: feet, value: feet))
-                  .toList()
-              : inches
-                  .map((String inches) =>
-                      DropdownMenuEntry(label: inches, value: inches))
-                  .toList(),
-        ),
-      );
-      children.add(Text(field));
+      if (field == 'lbs' || field == 'years') {
+        children.add(
+          EditableTextField(
+            initialText: field == 'lbs'
+                ? widget.savedInfo['weight'] == -1
+                    ? ''
+                    : widget.savedInfo['weight'].toString()
+                : widget.savedInfo['age'] == -1
+                    ? ''
+                    : widget.savedInfo['age'].toString(),
+            boxWidth: 50.0,
+            boxHeight: 30.0,
+            textAlignment: Alignment.center,
+            callback: (dynamic value) {
+              String key = field == 'lbs' ? 'weight' : 'age';
+              widget.updateData(key, int.parse(value));
+            },
+          ),
+        );
+      } else {
+        children.add(Menu(
+          field: field,
+          callback: (int value, String field) {
+            setState(() => field == 'ft' ? feet = value : inches = value);
+          },
+          initialValue: field == 'ft'
+              ? widget.savedInfo['height']! ~/ 12
+              : widget.savedInfo['height']! % 12,
+        ));
+      }
+
+      children.add(Padding(
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+        child: Text(field),
+      ));
     }
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: children,
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant Biometrics oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    widget.updateData('height', feet * 12 + inches);
   }
 
   @override
@@ -59,40 +93,63 @@ class _Biometrics extends State<Biometrics> {
       ),
       body: Column(
         children: <Widget>[
+          const Spacer(),
           const Text('Height'),
           rowGenerator(['ft', 'in']),
+          const Spacer(),
           const Text('Weight'),
-          Row(),
+          rowGenerator(['lbs']),
+          const Spacer(),
           const Text('Age'),
-          Row(),
+          rowGenerator(['years']),
+          const Spacer(),
           widget.navigationWidget,
         ],
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class Menu extends StatefulWidget {
-  const Menu({super.key});
+  final String field;
+  final Function(int, String)? callback;
+  final int initialValue;
+  const Menu(
+      {super.key,
+      required this.field,
+      this.callback,
+      required this.initialValue});
 
   @override
   State<Menu> createState() => _MenuState();
 }
 
 class _MenuState extends State<Menu> {
-  int dropdownValue = 0; // saved value
+  late List<int> selectedField;
+  late int selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedField = widget.field == "ft" ? feet : inches;
+    selectedValue = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton<int>(
-      value: dropdownValue,
+      value: selectedValue,
       icon: const Icon(Icons.arrow_downward),
       onChanged: (int? value) {
         setState(() {
-          dropdownValue = value!;
+          selectedValue = value!;
+          widget.callback?.call(value, widget.field);
         });
       },
-      items: feet.map<DropdownMenuItem<int>>((int value) {
+      items: selectedField.map<DropdownMenuItem<int>>((int value) {
         return DropdownMenuItem<int>(
           value: value,
           child: Text(value.toString()),
