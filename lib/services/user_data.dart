@@ -1,13 +1,18 @@
 // Retrieves saved information about user from file/database
-// Info includes:
+// Current user info template:
 
-//    Name --> string
-//    Unique id --> int
-//    Height --> int (inches)
-//    Weight --> int
-//    Currency --> int
-//    Pals collected --> [int] (unique pal ids)
+//    name --> string
+//    id --> string
+//    height --> int (inches)
+//    weight --> int
+//    age --> int
+//    currency --> int
+//    pals_collected --> [int] (unique pal ids)
 //    tasks --> [string] (task descriptions)
+//    goals --> [string]
+
+// TODO
+//  Error handling
 
 import 'dart:convert';
 import 'dart:async';
@@ -16,6 +21,100 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import "package:path_provider/path_provider.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+
+const userFields = [
+  "name",
+  "id",
+  "height",
+  "weight",
+  "age",
+  "currency",
+  "pals_collected",
+  "tasks",
+  "goals"
+];
+
+// Access user data from Firebase database
+
+// Class useflow:
+// 1. Create class using unique device ID
+//    UserDataFirebase user = UserDataFirebase(<unique device id>);
+// 2. Wait for initialization to complete before performing any functions
+//    await test.initializationComplete()
+// 3. Check if there was a user with that id in the database
+//    test.isEmpty()
+//    - If test.isEmpty() returns true, write to database with collected user data
+//      await test.writeToDatabase(<unique device id>, <data>);
+//    - Else, you can use the class as expected
+
+// IMPORTANT: Any methods that are async need to be awaited or else your program
+// won't work as expected.
+class UserDataFirebase {
+  Map<String, dynamic> data = {};
+  late String id;
+  late CollectionReference users;
+  late Completer<void> _initCompleter;
+
+  UserDataFirebase(String id) {
+    _initCompleter = Completer<void>();
+    init(id);
+  }
+
+  Future<void> init(String id) async {
+    users = FirebaseFirestore.instance.collection('users');
+    var flag = (await users.doc(id).get()).data();
+    if (flag != null) {
+      data = flag as Map<String, dynamic>;
+    }
+    this.id = id;
+    _initCompleter.complete();
+  }
+
+  // Check if initialization is complete
+  Future<void> initializationComplete() {
+    return _initCompleter.future;
+  }
+
+  // Check if user exists in database
+  bool isEmpty() {
+    return data.isEmpty;
+  }
+
+  // Make sure to call this if data is empty upon initialization
+  Future<bool> writeToDatabase(Map<String, dynamic> data) async {
+    try {
+      await users.doc(id).set(data);
+      this.data = data;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Returns user data if fields not specified
+  Map<String, dynamic> queryByUniqueID([List<String>? fields]) {
+    Map<String, dynamic> res = fields == null ? data : {};
+    if (fields != null) {
+      for (String field in fields) {
+        res[field] = data[field];
+      }
+    }
+    return res;
+  }
+
+  // Update user by field
+  // Returns true if successful, false otherwise
+  Future<bool> updateDatabase(Map<String, dynamic> modifiedData) async {
+    try {
+      DocumentReference userDocument = users.doc(id);
+      await userDocument.update(modifiedData);
+      data = (await userDocument.get()).data() as Map<String, dynamic>;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+}
 
 // Access user data from test files (for local testing)
 class UserDataFile {
@@ -29,8 +128,6 @@ class UserDataFile {
       data = json.decode(content);
       return data;
     } catch (e) {
-      // Log error
-      print('Error reading file: $e');
       return {};
     }
   }
@@ -46,60 +143,7 @@ class UserDataFile {
       String content = json.encode(modifiedData);
       await file.writeAsString(content);
     } catch (e) {
-      // Log error
-      print('Error writing to file $e');
-    }
-  }
-}
-
-// Access user data from Firebase database
-class UserDataFirebase {
-  late Map<String, dynamic> data;
-  late CollectionReference users;
-
-  UserDataFirebase() {
-    users = FirebaseFirestore.instance.collection('users');
-  }
-
-  /*
-  Future<void> readData() async {
-    try {
-      QuerySnapshot querySnapshot = await users.get();
-
-      querySnapshot.docs.forEach((doc) {
-        print('Document ID: ${doc.id}, Data: ${doc.data()}');
-      });
-    } catch (e) {
-      print('Error reading data from Firestore: $e');
-    }
-  }
-  */
-
-  // queryByUniqueID(123, optional field parameter) --> either whole object or specific field
-  Future<void> queryByUniqueID() async {}
-
-  /*
-  Future<void> writeToDatabase(String modifiedData) async {
-    try {
-      await users.add({
-        'name': name,
-      })
-    }
-  }
-  */
-
-  // Be able to add a new user first time accessing app
-
-  // Update user by field
-  Future<void> updateDatabase(
-      String documentID, Map<String, dynamic> modifiedData) async {
-    try {
-      DocumentReference userDocument = users.doc(documentID);
-      await userDocument.update(modifiedData);
-
-      print('Updated document successfully!');
-    } catch (e) {
-      print("Error updated data in Firestore: $e");
+      return;
     }
   }
 }
