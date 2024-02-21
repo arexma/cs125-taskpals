@@ -137,6 +137,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+
   firebase_core:
     dependency: "direct main"
     description:
@@ -232,6 +233,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
+
   just_audio:
     dependency: "direct main"
     description:
@@ -256,6 +258,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.9"
+
   lints:
     dependency: transitive
     description:
@@ -568,3 +571,4 @@ packages:
 sdks:
   dart: ">=3.2.6 <4.0.0"
   flutter: ">=3.16.0"
+

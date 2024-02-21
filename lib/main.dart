@@ -12,6 +12,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   UserDataFirebase test = UserDataFirebase();
   await test.readData();
   runApp(TaskPals());

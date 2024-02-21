@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
+
 }
 
 class _HomePageState extends State<HomePage> {
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   // Get daily steps from healthkit
   int dailySteps = 0;
   HealthFactory health = HealthFactory();
+
 
   Future fetchStepData() async {
     int? steps;
@@ -38,6 +40,7 @@ class _HomePageState extends State<HomePage> {
 
     List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
       currentTime.subtract(const Duration(days: 1)), currentTime, types
+
     );
 
     types = [
@@ -79,7 +82,6 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
-
   Widget build(BuildContext context) {
     // Create the initial instance of the music player
     final player = Provider.of<MusicPlayer>(context);

@@ -1,11 +1,13 @@
 // Retrieves saved information about user from file/database
 // Info includes:
-//    Currency
-//    Name
-//    Height
-//    Weight
-//    Pals collected
-//    etc
+
+//    Name --> string
+//    Unique id --> int
+//    Height --> int (inches)
+//    Weight --> int
+//    Currency --> int
+//    Pals collected --> [int] (unique pal ids)
+//    tasks --> [string] (task descriptions)
 
 import 'dart:convert';
 import 'dart:async';
@@ -59,6 +61,7 @@ class UserDataFirebase {
     users = FirebaseFirestore.instance.collection('users');
   }
 
+  /*
   Future<void> readData() async {
     try {
       QuerySnapshot querySnapshot = await users.get();
@@ -70,6 +73,10 @@ class UserDataFirebase {
       print('Error reading data from Firestore: $e');
     }
   }
+  */
+
+  // queryByUniqueID(123, optional field parameter) --> either whole object or specific field
+  Future<void> queryByUniqueID() async {}
 
   /*
   Future<void> writeToDatabase(String modifiedData) async {
@@ -81,6 +88,9 @@ class UserDataFirebase {
   }
   */
 
+  // Be able to add a new user first time accessing app
+
+  // Update user by field
   Future<void> updateDatabase(
       String documentID, Map<String, dynamic> modifiedData) async {
     try {
