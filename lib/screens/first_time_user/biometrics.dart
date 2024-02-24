@@ -26,8 +26,15 @@ class Biometrics extends StatefulWidget {
 }
 
 class _Biometrics extends State<Biometrics> {
-  int feet = 3;
-  int inches = 0;
+  late int feet;
+  late int inches;
+
+  @override
+  void initState() {
+    super.initState();
+    feet = widget.savedInfo['height']! ~/ 12;
+    inches = widget.savedInfo['height']! % 12;
+  }
 
   Row rowGenerator(List<String> fields) {
     List<Widget> children = [];
@@ -53,15 +60,16 @@ class _Biometrics extends State<Biometrics> {
           ),
         );
       } else {
-        children.add(Menu(
-          field: field,
-          callback: (int value, String field) {
-            setState(() => field == 'ft' ? feet = value : inches = value);
-          },
-          initialValue: field == 'ft'
-              ? widget.savedInfo['height']! ~/ 12
-              : widget.savedInfo['height']! % 12,
-        ));
+        children.add(
+          Menu(
+            field: field,
+            callback: (int value, String field) {
+              field == 'ft' ? feet = value : inches = value;
+              widget.updateData('height', feet * 12 + inches);
+            },
+            initialValue: field == 'ft' ? feet : inches,
+          ),
+        );
       }
 
       children.add(Padding(
@@ -80,16 +88,6 @@ class _Biometrics extends State<Biometrics> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: children,
     );
-  }
-
-  @override
-  void didUpdateWidget(covariant Biometrics oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.savedInfo['height'] != feet * 12 + inches) {
-      setState(() {
-        widget.updateData('height', feet * 12 + inches);
-      });
-    }
   }
 
   @override
@@ -140,6 +138,7 @@ class Menu extends StatefulWidget {
   final String field;
   final Function(int, String)? callback;
   final int initialValue;
+
   const Menu(
       {super.key,
       required this.field,
@@ -163,19 +162,18 @@ class _MenuState extends State<Menu> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<int>(
-      value: selectedValue,
-      icon: const Icon(Icons.arrow_downward),
-      onChanged: (int? value) {
+    return DropdownMenu(
+      initialSelection: selectedValue,
+      onSelected: (value) {
         setState(() {
-          selectedValue = value!;
+          selectedValue = value;
           widget.callback?.call(value, widget.field);
         });
       },
-      items: selectedField.map<DropdownMenuItem<int>>((int value) {
-        return DropdownMenuItem<int>(
+      dropdownMenuEntries: selectedField.map<DropdownMenuEntry>((value) {
+        return DropdownMenuEntry(
           value: value,
-          child: Text(value.toString()),
+          label: value.toString(),
         );
       }).toList(),
     );
