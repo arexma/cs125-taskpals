@@ -42,40 +42,32 @@ class TaskPals extends StatefulWidget {
 class _TaskPals extends State<TaskPals> {
   late UserDataFirebase user;
   late bool isFirstTimeUser;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeUser();
-  }
+  late String deviceID;
 
   Future<void> _initializeUser() async {
-    await firstTimeUser();
+    await _getDeviceID();
+    user = UserDataFirebase(deviceID);
+    await user.initializationComplete();
+    isFirstTimeUser = user.isEmpty();
   }
 
-  Future<String> _getDeviceID() async {
+  Future<void> _getDeviceID() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    String id = 'Windows Testing';
+    deviceID = 'Windows Testing';
 
     if (!kIsWeb) {
       if (Platform.isAndroid) {
         const androidIdPlugin = AndroidId();
-        id = await androidIdPlugin.getId() ?? 'Unknown ID';
+        deviceID = await androidIdPlugin.getId() ?? 'Unknown ID';
       } else if (Platform.isIOS) {
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        id = iosInfo.identifierForVendor ?? 'Unknown ID';
+        deviceID = iosInfo.identifierForVendor ?? 'Unknown ID';
       }
     }
-
-    return id;
   }
 
-  Future<void> firstTimeUser() async {
-    String id = await _getDeviceID();
-    UserDataFirebase user = UserDataFirebase(id);
-    await user.initializationComplete();
-    this.user = user;
-    isFirstTimeUser = user.isEmpty();
+  Future<void> checkFirstTimeUser() async {
+    await _initializeUser();
   }
 
   @override
@@ -83,7 +75,7 @@ class _TaskPals extends State<TaskPals> {
     return MaterialApp(
       title: 'Task Pals',
       home: FutureBuilder<void>(
-        future: firstTimeUser(),
+        future: checkFirstTimeUser(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return isFirstTimeUser
