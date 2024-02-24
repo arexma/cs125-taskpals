@@ -21,7 +21,6 @@ class StarterTasks extends StatefulWidget {
 
 class _StarterTasks extends State<StarterTasks> {
   List<String> tasks = [];
-  late EditableTextField textField;
 
   final GlobalKey<EditableTextFieldState> _editableTextFieldKey =
       GlobalKey<EditableTextFieldState>();
@@ -30,16 +29,6 @@ class _StarterTasks extends State<StarterTasks> {
   void initState() {
     super.initState();
     tasks = widget.savedTasks;
-    textField = EditableTextField(
-      key: _editableTextFieldKey,
-      boxWidth: 300,
-      boxHeight: 40,
-      borderColor: Colors.black,
-      borderWidth: 2,
-      borderRadius: 10,
-      edgeInsets: 5,
-      textAlignment: Alignment.centerLeft,
-    );
   }
 
   @override
@@ -119,7 +108,16 @@ class _StarterTasks extends State<StarterTasks> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              textField,
+              EditableTextField(
+                key: _editableTextFieldKey,
+                boxWidth: 300,
+                boxHeight: 60,
+                borderColor: Colors.black,
+                borderWidth: 2,
+                borderRadius: 10,
+                edgeInsets: 5,
+                textAlignment: Alignment.centerLeft,
+              ),
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: tasks.length == 5
