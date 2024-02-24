@@ -29,6 +29,7 @@ class _StarterTasks extends State<StarterTasks> {
   @override
   void initState() {
     super.initState();
+    tasks = widget.savedTasks;
     textField = EditableTextField(
       key: _editableTextFieldKey,
       boxWidth: 300,
@@ -94,7 +95,15 @@ class _StarterTasks extends State<StarterTasks> {
                         });
                       },
                       background: Container(
-                        color: Colors.red,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          border: Border.all(
+                            color: Colors.red[600]!,
+                          ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
                       ),
                       child: ListTile(
                         title: Text(tasks[index]),
@@ -102,39 +111,6 @@ class _StarterTasks extends State<StarterTasks> {
                       ),
                     ),
                   );
-                  /*
-                  return Dismissible(
-                    key: Key(tasks[index]),
-                    onDismissed: (direction) {
-                      try {
-                        setState(() {
-                          tasks.removeAt(index);
-                        });
-                      } catch (e) {
-                        print('Error $e');
-                      }
-                    },
-                    background: Container(
-                      color: Colors.red,
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          color: Colors.grey[200],
-                          child: ListTile(
-                            title: Text(tasks[index]),
-                            onTap: () {}, // task editing
-                          ),
-                        ),
-                        if (index < tasks.length - 1)
-                          const Divider(
-                            height: 0,
-                            color: Colors.grey,
-                          ),
-                      ],
-                    ),
-                  );
-                  */
                 },
               ),
             ),
@@ -159,6 +135,7 @@ class _StarterTasks extends State<StarterTasks> {
                               tasks.add(currentTask);
                             },
                           );
+                          widget.updateData('tasks', tasks);
                         }
                       },
               ),
