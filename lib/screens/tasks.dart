@@ -3,6 +3,7 @@ View of daily tasks to complete
 */
 import 'package:flutter/material.dart';
 import '../services/user_data.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class TasksPageStarter extends StatefulWidget {
   const TasksPageStarter({super.key});
@@ -25,30 +26,44 @@ class TasksPage extends State<TasksPageStarter> {
   int _currentIndex = 0;
   int _listItemKey = 0;
 
+  // obtains tasks from database and turns into list (string)
+  List<String> queryToStringsList(String field) {
+    Map<String, dynamic> query = queryByUniqueID([field]);
+
+    return query[field];
+  }
+
+  // takes list of strings (from query) and turns into task list (widgets)
+  void queryToTasksList(List<String> queryList) {
+    for (int i = 0; i < queryList.length; i++) {
+      addListItem(queryList[i]);
+    }
+  }
+
+  void queryToTopLists(List<String> queryCompleted, List<String> queryDeleted) {
+    for (int i = 0; i < queryCompleted.length; i++) {
+      tasksCompletedList.add(queryCompleted[i]);
+    }
+    for (int i = 0; i < queryDeleted.length; i++) {
+      tasksDeletedList.add(queryDeleted[i]);
+    }
+  }
+
   addListItem(String taskDescription) {
     setState(() {
       tasksList.add(
           buildListElement(_listItemKey, tasksList.length, taskDescription));
+      updateDatabase(query['tasks'].append(taskDescription));
       _listItemKey += 1;
     });
 
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOut,
-    );
-
-    // _completedTasksListController.animateTo(
-    //   _scrollController.position.maxScrollExtent,
-    //   duration: const Duration(milliseconds: 200),
-    //   curve: Curves.easeOut,
-    // );
-
-    // _deletedTasksListController.animateTo(
-    //   _scrollController.position.maxScrollExtent,
-    //   duration: const Duration(milliseconds: 200),
-    //   curve: Curves.easeOut,
-    // );
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   deleteListItem(Key key, String taskDescription, {bool addPoints = false}) {
@@ -74,6 +89,7 @@ class TasksPage extends State<TasksPageStarter> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: ThemeProvider.themeOf(context).data.canvasColor,
         body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
@@ -103,7 +119,7 @@ class TasksPage extends State<TasksPageStarter> {
               Expanded(
                 flex: 1,
                 child: Container(
-                  color: Colors.orangeAccent,
+                  color: ThemeProvider.themeOf(context).data.dividerColor,
                   child: const Center(
                     child: Text("Daily Tasks"),
                   ),
@@ -111,12 +127,19 @@ class TasksPage extends State<TasksPageStarter> {
               ),
               Expanded(
                 flex: 8,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  // reverse: true,
-                  itemCount: tasksList.length,
-                  itemBuilder: (context, index) => tasksList[index],
-                ),
+                child: tasksList.isEmpty
+                    ? const Center(
+                        child: Text(
+                          "ADD SOME TASKS",
+                          style: TextStyle(fontSize: 40),
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: _scrollController,
+                        // reverse: true,
+                        itemCount: tasksList.length,
+                        itemBuilder: (context, index) => tasksList[index],
+                      ),
               ),
               Expanded(
                 flex: 1,
@@ -129,10 +152,20 @@ class TasksPage extends State<TasksPageStarter> {
                         _showAddTaskDialog(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.lightBlueAccent,
-                        elevation: 2,
+                        backgroundColor: ThemeProvider.themeOf(context)
+                            .data
+                            .dialogBackgroundColor,
+                        elevation: 10,
                       ),
-                      child: const Text("Add new task."),
+                      child: Text(
+                        "Add new task.",
+                        style: TextStyle(
+                          color: ThemeProvider.themeOf(context)
+                              .data
+                              .unselectedWidgetColor,
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ),
                 ),

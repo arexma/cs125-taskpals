@@ -31,6 +31,8 @@ const userFields = [
   "currency",
   "pals_collected",
   "tasks",
+  "tasks_completed",
+  "tasks_deleted",
   "goals"
 ];
 

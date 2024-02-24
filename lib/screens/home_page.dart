@@ -14,7 +14,6 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
-
 }
 
 class _HomePageState extends State<HomePage> {
@@ -23,7 +22,6 @@ class _HomePageState extends State<HomePage> {
   // Get daily steps from healthkit
   int dailySteps = 0;
   HealthFactory health = HealthFactory();
-
 
   Future fetchStepData() async {
     int? steps;
@@ -36,12 +34,11 @@ class _HomePageState extends State<HomePage> {
     bool requested = await health.requestAuthorization(types);
 
     var currentTime = DateTime.now();
-    var midnight = DateTime(currentTime.year, currentTime.month, currentTime.day);
+    var midnight =
+        DateTime(currentTime.year, currentTime.month, currentTime.day);
 
     List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
-      currentTime.subtract(const Duration(days: 1)), currentTime, types
-
-    );
+        currentTime.subtract(const Duration(days: 1)), currentTime, types);
 
     types = [
       HealthDataType.STEPS,
@@ -53,8 +50,10 @@ class _HomePageState extends State<HomePage> {
     ];
     await health.requestAuthorization(types, permissions: permissions);
 
-    bool success = await health.writeHealthData(10, HealthDataType.STEPS, currentTime, currentTime);
-    success = await health.writeHealthData(3.1, HealthDataType.SLEEP_SESSION, currentTime, currentTime);
+    bool success = await health.writeHealthData(
+        10, HealthDataType.STEPS, currentTime, currentTime);
+    success = await health.writeHealthData(
+        3.1, HealthDataType.SLEEP_SESSION, currentTime, currentTime);
 
     if (requested) {
       steps = await health.getTotalStepsInInterval(midnight, currentTime);
@@ -85,7 +84,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // Create the initial instance of the music player
     final player = Provider.of<MusicPlayer>(context);
-    
+
     return MaterialApp(
       home: Scaffold(
         body: pages[currentPageIndex],
@@ -103,9 +102,7 @@ class _HomePageState extends State<HomePage> {
               onTabChange: navigateBottomBar,
               padding: const EdgeInsets.all(15),
               tabs: const [
-                GButton(
-                  icon: Icons.account_circle,
-                  text: 'Profile'),
+                GButton(icon: Icons.account_circle, text: 'Profile'),
                 GButton(
                   icon: Icons.assignment_late,
                   text: 'Tasks',
