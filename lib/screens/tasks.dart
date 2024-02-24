@@ -6,7 +6,8 @@ import '../services/user_data.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 class TasksPageStarter extends StatefulWidget {
-  const TasksPageStarter({super.key});
+  final UserDataFirebase user;
+  const TasksPageStarter({super.key, required this.user});
 
   @override
   State<TasksPageStarter> createState() => TasksPage();

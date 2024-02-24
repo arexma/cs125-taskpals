@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'profile.dart';
 import 'settings.dart';
-import 'stats.dart';
 import 'tasks.dart';
 
+import '../services/user_data.dart';
+
 class ProfilePictureButton extends StatelessWidget {
-  const ProfilePictureButton({super.key});
+  final UserDataFirebase user;
+  const ProfilePictureButton({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,9 @@ class ProfilePictureButton extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          MaterialPageRoute(
+            builder: (context) => ProfileScreen(user: user),
+          ),
         );
       },
       child: Container(
@@ -24,27 +28,6 @@ class ProfilePictureButton extends StatelessWidget {
         decoration: const BoxDecoration(shape: BoxShape.circle),
         child: Image.asset('lib/assets/default_profile.png'),
       ),
-    );
-  }
-}
-
-class StatsPageButton extends StatelessWidget {
-  const StatsPageButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Stats()),
-        );
-      },
-      child: const Text('Stats',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w700,
-          )),
     );
   }
 }
@@ -85,7 +68,8 @@ class TasksListButton extends StatelessWidget {
 }
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+  final UserDataFirebase user;
+  const Home({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {

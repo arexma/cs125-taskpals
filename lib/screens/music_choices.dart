@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:provider/provider.dart';
 import 'package:taskpals/main.dart';
 
-class MusicTile extends StatelessWidget {
+class MusicItem extends StatelessWidget {
   final String title;
   final Function() onTap;
-  const MusicTile({
+  const MusicItem({
     super.key,
     required this.title,
     required this.onTap,
@@ -41,49 +40,45 @@ class MusicTile extends StatelessWidget {
 }
 
 class MusicChoices extends StatelessWidget {
-  const MusicChoices({super.key});
+  final MusicPlayer player;
+  const MusicChoices({super.key, required this.player});
 
   @override
   Widget build(BuildContext context) {
-    final player = Provider.of<MusicPlayer>(context);
 
     return AlertDialog(
       title: const Text("Music Selection"),
       content: const Text("Change the Background Music"),
       actions: <Widget> [
-        MusicTile(
+        MusicItem(
           title: "Spring (It's a Big World Outside).mp3",
           onTap: () {
             player.changeSong("Spring (It's a Big World Outside).mp3");
           },
         ),
-        const SizedBox(width: 30),
-        MusicTile(
+        MusicItem(
           title: "Select a File!.mp3",
           onTap: () {
             player.changeSong("Select a File!.mp3");
           },
         ),
-        const SizedBox(width: 30),
-        MusicTile(
+        MusicItem(
           title: "Snowdin Town.mp3",
           onTap: () {
             player.changeSong("Snowdin Town.mp3");
           },
         ),
-        const SizedBox(width: 30),
-        MusicTile(
+        MusicItem(
           title: "Zen Garden.mp3",
           onTap: () {
             player.changeSong("Zen Garden.mp3");
           },
         ),
-        const SizedBox(width: 30),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text("Close")
+          child: const Text("Close"),
         ),
       ],
     );

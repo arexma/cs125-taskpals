@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:health/health.dart';
-import 'package:provider/provider.dart';
-import 'package:taskpals/main.dart';
 import 'profile.dart';
 import 'tasks.dart';
 import 'pets.dart';
 import 'gacha.dart';
 import 'home.dart';
 
+import '../services/user_data.dart';
+
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final UserDataFirebase user;
+  const HomePage({super.key, required this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -72,19 +73,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Screens to navigate through via GNav bar
-  final List<Widget> pages = [
-    const ProfileScreen(),
-    const TasksPageStarter(),
-    const Home(),
-    const Pets(),
-    GachaScreen()
-  ];
+  late List<Widget> pages = [];
+  @override
+  void initState() {
+    super.initState();
+    pages = [
+      ProfileScreen(user: widget.user),
+      TasksPageStarter(user: widget.user),
+      Home(user: widget.user),
+      Pets(user: widget.user),
+      GachaScreen(user: widget.user)
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Create the initial instance of the music player
-    final player = Provider.of<MusicPlayer>(context);
-
     return MaterialApp(
       home: Scaffold(
         body: pages[currentPageIndex],
