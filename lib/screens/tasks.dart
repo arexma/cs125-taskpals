@@ -27,21 +27,33 @@ class TasksPage extends State<TasksPageStarter> {
   int _currentIndex = 0;
   int _listItemKey = 0;
 
-  // obtains tasks from database and turns into list (string)
-  List<String> queryToStringsList(String field) {
-    Map<String, dynamic> query = queryByUniqueID([field]);
+  @override
+  void initState() {
+    super.initState();
+    List<dynamic> tasks = queryToStringsList('tasks');
+    queryToTasksList(tasks);
+    List<dynamic> completedTasks = queryToStringsList('completed_tasks');
+    List<dynamic> deletedTasks = queryToStringsList('deleted_tasks');
+    queryToTopLists(completedTasks, deletedTasks);
+  }
 
-    return query[field];
+  // obtains tasks from database and turns into list (string)
+  List<dynamic> queryToStringsList(String field) {
+    Map<String, dynamic> query = widget.user.queryByUniqueID([field]);
+    return query[field] ?? [];
   }
 
   // takes list of strings (from query) and turns into task list (widgets)
-  void queryToTasksList(List<String> queryList) {
+  void queryToTasksList(List<dynamic> queryList) {
     for (int i = 0; i < queryList.length; i++) {
-      addListItem(queryList[i]);
+      tasksList
+          .add(buildListElement(_listItemKey, tasksList.length, queryList[i]));
+      _listItemKey += 1;
     }
   }
 
-  void queryToTopLists(List<String> queryCompleted, List<String> queryDeleted) {
+  void queryToTopLists(
+      List<dynamic> queryCompleted, List<dynamic> queryDeleted) {
     for (int i = 0; i < queryCompleted.length; i++) {
       tasksCompletedList.add(queryCompleted[i]);
     }
@@ -50,12 +62,14 @@ class TasksPage extends State<TasksPageStarter> {
     }
   }
 
-  addListItem(String taskDescription) {
+  addListItem(String taskDescription, {bool initialize = false}) {
     setState(() {
       tasksList.add(
           buildListElement(_listItemKey, tasksList.length, taskDescription));
-      updateDatabase(query['tasks'].append(taskDescription));
       _listItemKey += 1;
+      List<dynamic> tasks = widget.user.queryByUniqueID(['tasks'])['tasks'];
+      tasks.add(taskDescription);
+      widget.user.updateDatabase({'tasks': tasks});
     });
 
     if (_scrollController.hasClients) {
@@ -73,12 +87,25 @@ class TasksPage extends State<TasksPageStarter> {
       if (addPoints) {
         tasksCompleted += 1;
         tasksCompletedList.add(taskDescription);
+        Map<String, dynamic> tasks =
+            widget.user.queryByUniqueID(['completed_tasks', 'tasks']);
+        tasks['completed_tasks'] == null
+            ? tasks['completed_tasks'] = [taskDescription]
+            : tasks['completed_tasks'].add(taskDescription);
+        tasks['tasks'].remove(taskDescription);
+        widget.user.updateDatabase(tasks);
       } else {
         tasksDeleted += 1;
         tasksDeletedList.add(taskDescription);
+        Map<String, dynamic> tasks =
+            widget.user.queryByUniqueID(['deleted_tasks', 'tasks']);
+        tasks['deleted_tasks'] == null
+            ? tasks['deleted_tasks'] = [taskDescription]
+            : tasks['deleted_tasks'].add(taskDescription);
+        tasks['tasks'].remove(taskDescription);
+        widget.user.updateDatabase(tasks);
       }
     });
-
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 200),

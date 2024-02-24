@@ -8,6 +8,8 @@ import 'package:theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:taskpals/main.dart';
 
+import '../services/user_data.dart';
+
 class ForwardButton extends StatelessWidget {
   final Function() onTap;
   const ForwardButton({
@@ -83,7 +85,7 @@ class SettingSwitch extends StatelessWidget {
           ),
           const Spacer(),
           Text(
-            value ? "On":"Off",
+            value ? "On" : "Off",
             style: const TextStyle(
               fontSize: 15,
               color: Colors.grey,
@@ -150,20 +152,18 @@ class SettingItem extends StatelessWidget {
           ),
           const Spacer(),
           value != null
-            ? Text(
-              value!,
-              style: const TextStyle(
-                fontSize: 15,
-                color: Colors.grey,
-              ),
-            )
-          : const SizedBox(),
+              ? Text(
+                  value!,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey,
+                  ),
+                )
+              : const SizedBox(),
           const SizedBox(
             width: 20,
           ),
-          ForwardButton(
-            onTap: onTap
-          ),
+          ForwardButton(onTap: onTap),
         ],
       ),
     );
@@ -171,7 +171,8 @@ class SettingItem extends StatelessWidget {
 }
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final UserDataFirebase user;
+  const SettingsPage({super.key, required this.user});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -200,7 +201,7 @@ class _SettingsPageState extends State<SettingsPage> {
       prefs.setBool('option', isDarkMode);
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -211,7 +212,8 @@ class _SettingsPageState extends State<SettingsPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
+              MaterialPageRoute(
+                  builder: (context) => HomePage(user: widget.user)),
             );
           },
           color: ThemeProvider.themeOf(context).data.hintColor,
@@ -264,14 +266,17 @@ class _SettingsPageState extends State<SettingsPage> {
               SettingItem(
                 title: "Music",
                 bgColor: Colors.blue.shade100,
-                iconColor: Colors.blue, 
+                iconColor: Colors.blue,
                 icon: Ionicons.musical_note,
                 onTap: () {
                   showDialog(
                     context: context,
                     builder: (BuildContext dialogContext) {
-                      final player = Provider.of<MusicPlayer>(context, listen: false);
-                      return MusicChoices(player: player,);
+                      final player =
+                          Provider.of<MusicPlayer>(context, listen: false);
+                      return MusicChoices(
+                        player: player,
+                      );
                     },
                   );
                 },

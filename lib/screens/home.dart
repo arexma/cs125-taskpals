@@ -50,12 +50,7 @@ class TasksListButton extends StatelessWidget {
           itemCount: 3,
           itemBuilder: (context, index) {
             return InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const TasksPageStarter()));
-              },
+              onTap: () {},
               child: ListTile(
                 title: Text('Task $index'),
               ),
@@ -92,15 +87,14 @@ class Home extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
-                          padding: EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
                           child: Column(
                             children: [
-                              ProfilePictureButton(),
-                              StatsPageButton(),
+                              ProfilePictureButton(user: user),
                             ],
                           ),
                         ),
@@ -118,7 +112,8 @@ class Home extends StatelessWidget {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SettingsPage()));
+                                        builder: (context) =>
+                                            SettingsPage(user: user)));
                               },
                               icon: const Icon(Icons.settings),
                             ),

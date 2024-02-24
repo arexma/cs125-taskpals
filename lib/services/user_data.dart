@@ -9,7 +9,10 @@
 //    currency --> int
 //    pals_collected --> [int] (unique pal ids)
 //    tasks --> [string] (task descriptions)
+//    tasks_completed --> [string]
+//    tasks_deleted --> [string]
 //    goals --> [string]
+//
 
 // TODO
 //  Error handling

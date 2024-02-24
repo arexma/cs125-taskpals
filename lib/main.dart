@@ -115,7 +115,7 @@ class _TaskPals extends State<TaskPals> {
                               initialRoute: '/login',
                               theme: ThemeProvider.themeOf(themeContext).data,
                               routes: {
-                                '/login': (context) => const HomePage(),
+                                '/login': (context) => HomePage(user: user),
                               },
                             ),
                           ),
