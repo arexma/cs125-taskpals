@@ -38,10 +38,12 @@ class EditableTextField extends StatefulWidget {
   });
 
   @override
-  State<EditableTextField> createState() => _EditableTextField();
+  State<EditableTextField> createState() => EditableTextFieldState();
+
+  void resetText() {}
 }
 
-class _EditableTextField extends State<EditableTextField> {
+class EditableTextFieldState extends State<EditableTextField> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
   bool _isEditing = false;
@@ -73,7 +75,12 @@ class _EditableTextField extends State<EditableTextField> {
     widget.callback?.call(newText);
   }
 
-  String currentText() {
+  void resetText() {
+    _controller.text = '';
+    setState(() {});
+  }
+
+  String getCurrentText() {
     return _controller.text;
   }
 

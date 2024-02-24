@@ -29,9 +29,9 @@ class _Name extends State<Name> {
       ),
       body: Column(
         children: <Widget>[
-          const SizedBox(height: 250.0),
+          const SizedBox(height: 350.0),
           const Text(
-            'Name ?',
+            'What is your name?',
             style: TextStyle(
               color: Colors.black,
               fontSize: 45.0,

@@ -66,7 +66,13 @@ class _Biometrics extends State<Biometrics> {
 
       children.add(Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-        child: Text(field),
+        child: Text(
+          field,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 20.0,
+          ),
+        ),
       ));
     }
 
@@ -96,13 +102,31 @@ class _Biometrics extends State<Biometrics> {
       body: Column(
         children: <Widget>[
           const Spacer(),
-          const Text('Height'),
+          const Text(
+            'Height',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 35.0,
+            ),
+          ),
           rowGenerator(['ft', 'in']),
           const Spacer(),
-          const Text('Weight'),
+          const Text(
+            'Weight',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 35.0,
+            ),
+          ),
           rowGenerator(['lbs']),
           const Spacer(),
-          const Text('Age'),
+          const Text(
+            'Age',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 35.0,
+            ),
+          ),
           rowGenerator(['years']),
           const Spacer(),
           widget.navigationWidget,

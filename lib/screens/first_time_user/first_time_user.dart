@@ -66,6 +66,7 @@ class _FirstTimeUser extends State<FirstTimeUser> {
           updateData: addToData,
         ),
         Goals(
+          savedGoals: data['goals'] ?? [],
           navigationWidget: Navigation(
             controller: pageController,
             showLeftArrow: true,
@@ -73,6 +74,7 @@ class _FirstTimeUser extends State<FirstTimeUser> {
           updateData: addToData,
         ),
         StarterTasks(
+          savedTasks: data['tasks'] ?? [],
           navigationWidget: Navigation(
             controller: pageController,
             showLeftArrow: true,
