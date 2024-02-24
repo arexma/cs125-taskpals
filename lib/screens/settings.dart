@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskpals/screens/home_page.dart';
 import 'package:taskpals/screens/music_choices.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:taskpals/main.dart';
 
 class ForwardButton extends StatelessWidget {
   final Function() onTap;
@@ -201,7 +203,6 @@ class _SettingsPageState extends State<SettingsPage> {
   
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: ThemeProvider.themeOf(context).data.canvasColor,
       appBar: AppBar(
@@ -268,8 +269,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (BuildContext context) {
-                      return MusicChoices();
+                    builder: (BuildContext dialogContext) {
+                      final player = Provider.of<MusicPlayer>(context, listen: false);
+                      return MusicChoices(player: player,);
                     },
                   );
                 },

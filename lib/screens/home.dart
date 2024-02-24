@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'profile.dart';
 import 'settings.dart';
-import 'stats.dart';
 import 'tasks.dart';
 
 import '../services/user_data.dart';
@@ -28,27 +27,6 @@ class ProfilePictureButton extends StatelessWidget {
         decoration: const BoxDecoration(shape: BoxShape.circle),
         child: Image.asset('lib/assets/default_profile.png'),
       ),
-    );
-  }
-}
-
-class StatsPageButton extends StatelessWidget {
-  const StatsPageButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Stats()),
-        );
-      },
-      child: const Text('Stats',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w700,
-          )),
     );
   }
 }
@@ -111,9 +89,8 @@ class Home extends StatelessWidget {
             padding: const EdgeInsets.all(30.0),
             child: Column(
               children: [
-                ProfilePictureButton(user: user),
-                const Padding(padding: EdgeInsets.all(8.0)),
-                const StatsPageButton(),
+                ProfilePictureButton(),
+                Padding(padding: EdgeInsets.all(8.0)),
               ],
             ),
           ),
@@ -146,7 +123,7 @@ class Home extends StatelessWidget {
             widthFactor: 0.5,
             child: Image(
               alignment: Alignment.bottomCenter,
-              image: AssetImage('lib/assets/pets/test_image.jpg'),
+              image: AssetImage('lib/assets/pets/Squirtle.gif'),
             ),
           ),
         ),

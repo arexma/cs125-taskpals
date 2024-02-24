@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:health/health.dart';
-import 'package:provider/provider.dart';
-import 'package:taskpals/main.dart';
 import 'profile.dart';
 import 'tasks.dart';
 import 'pets.dart';
@@ -90,9 +88,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Create the initial instance of the music player
-    final player = Provider.of<MusicPlayer>(context);
-
     return MaterialApp(
       home: Scaffold(
         body: pages[currentPageIndex],

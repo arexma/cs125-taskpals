@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
@@ -23,35 +22,27 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(
-    const MaterialApp(
-      home: TaskPals(),
-    ),
-  );
+  runApp(const TaskPals());
 }
 
 // MusicPlayer class to pass down to all future widgets to inherit
-class MusicPlayer extends ChangeNotifier {
-  late AudioPlayer player;
+class MusicPlayer {
+  final AudioPlayer player = AudioPlayer();
 
   MusicPlayer() {
-    player = AudioPlayer();
     player.setLoopMode(LoopMode.one);
     player.setVolume(0.2);
     player.setAsset("lib/assets/audio/Spring (It's a Big World Outside).mp3");
     player.play();
   }
 
-  AudioPlayer get currentPlayer => player;
-
-  void changeSong(String songURL) {
-    player.setAsset("lib/assets/audio/$songURL");
-    player.play();
+  Future<void> changeSong(String songURL) async {
+    await player.setAsset("lib/assets/audio/$songURL");
+    await player.play();
   }
 
   void dispose() {
     player.dispose();
-    super.dispose();
   }
 }
 
@@ -95,6 +86,8 @@ class _TaskPals extends State<TaskPals> {
 
   @override
   Widget build(BuildContext context) {
+    final player = MusicPlayer();
+
     return MaterialApp(
       title: 'Task Pals',
       home: FutureBuilder<void>(
@@ -109,25 +102,26 @@ class _TaskPals extends State<TaskPals> {
                     },
                     user: user,
                   )
-                : ChangeNotifierProvider(
-                    create: (context) => MusicPlayer(),
-                    child: ThemeProvider(
-                      saveThemesOnChange: true,
-                      loadThemeOnInit: true,
-                      child: ThemeConsumer(
-                        child: Builder(
-                          builder: (themeContext) => MaterialApp(
-                            title: 'Task Pals',
-                            initialRoute: '/login',
-                            theme: ThemeProvider.themeOf(themeContext).data,
-                            routes: {
-                              '/login': (context) => HomePage(user: user),
-                            },
+                : Provider<MusicPlayer>(
+                    create: (_) => player,
+                    builder: (context, child) {
+                      return ThemeProvider(
+                        saveThemesOnChange: true,
+                        loadThemeOnInit: true,
+                        child: ThemeConsumer(
+                          child: Builder(
+                            builder: (themeContext) => MaterialApp(
+                              title: 'Task Pals',
+                              initialRoute: '/login',
+                              theme: ThemeProvider.themeOf(themeContext).data,
+                              routes: {
+                                '/login': (context) => const HomePage(),
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  );
+                      );
+                    });
           } else {
             return const CircularProgressIndicator();
           }
