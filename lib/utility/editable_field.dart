@@ -64,14 +64,12 @@ class _EditableTextField extends State<EditableTextField> {
     setState(() {
       _isEditing = !_isEditing;
     });
+
     _focusNode.unfocus();
   }
 
   void _handleSave(String newText) {
     _toggleEdit();
-    setState(() {
-      _controller.text = newText;
-    });
     widget.callback?.call(newText);
   }
 
@@ -105,9 +103,11 @@ class _EditableTextField extends State<EditableTextField> {
                     focusNode: _focusNode,
                     autofocus: true,
                     onTapOutside: (PointerDownEvent event) {
-                      _toggleEdit();
+                      _handleSave(_controller.text);
                     },
-                    onSubmitted: (String newText) => _handleSave(newText),
+                    onSubmitted: (String newText) {
+                      _handleSave(newText);
+                    },
                     textAlign: alignments[
                             widget.textAlignment ?? Alignment.centerLeft] ??
                         TextAlign.left,

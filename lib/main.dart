@@ -1,16 +1,19 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'screens/gacha.dart';
+import 'package:flutter/foundation.dart';
+
 import 'screens/home_page.dart';
 import 'screens/first_time_user/first_time_user.dart';
+import 'services/user_data.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:android_id/android_id.dart';
-import 'services/user_data.dart';
-/*
 
+/*
 adding new user first time accessing app from unique device, 
 profile page todos, 
 gacha - alex
@@ -56,14 +59,18 @@ class _TaskPals extends State<TaskPals> {
 
   Future<String> _getDeviceID() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    String id = '';
-    if (Platform.isAndroid) {
-      const androidIdPlugin = AndroidId();
-      id = await androidIdPlugin.getId() ?? 'Unknown ID';
-    } else if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      id = iosInfo.identifierForVendor ?? 'Unknown ID';
+    String id = 'Windows Testing';
+
+    if (!kIsWeb) {
+      if (Platform.isAndroid) {
+        const androidIdPlugin = AndroidId();
+        id = await androidIdPlugin.getId() ?? 'Unknown ID';
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        id = iosInfo.identifierForVendor ?? 'Unknown ID';
+      }
     }
+
     return id;
   }
 
@@ -98,29 +105,3 @@ class _TaskPals extends State<TaskPals> {
     );
   }
 }
-
-
-/*
-class TaskPals extends StatelessWidget {
-  const TaskPals({Key? key}) : super(key: key);
-
-  /*
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Task Pals',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.amber,
-        ), // Customize global color theming
-        textTheme: const TextTheme(), // Customize global text theming
-      ),
-      initialRoute: '/gacha',
-      routes: {
-        '/gacha': (context) => GachaScreen(),
-      },
-    );
-  */
-}
-*/

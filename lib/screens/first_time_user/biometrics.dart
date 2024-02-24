@@ -10,7 +10,6 @@ class Biometrics extends StatefulWidget {
   final Navigation navigationWidget;
   final Function(String, dynamic) updateData;
   final Map<String, int> savedInfo;
-  // Expecting:
   // height: int
   // weight: int
   // age: int
@@ -26,8 +25,7 @@ class Biometrics extends StatefulWidget {
   State<Biometrics> createState() => _Biometrics();
 }
 
-class _Biometrics extends State<Biometrics>
-    with AutomaticKeepAliveClientMixin<Biometrics> {
+class _Biometrics extends State<Biometrics> {
   int feet = 3;
   int inches = 0;
 
@@ -81,7 +79,11 @@ class _Biometrics extends State<Biometrics>
   @override
   void didUpdateWidget(covariant Biometrics oldWidget) {
     super.didUpdateWidget(oldWidget);
-    widget.updateData('height', feet * 12 + inches);
+    if (widget.savedInfo['height'] != feet * 12 + inches) {
+      setState(() {
+        widget.updateData('height', feet * 12 + inches);
+      });
+    }
   }
 
   @override
@@ -108,9 +110,6 @@ class _Biometrics extends State<Biometrics>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class Menu extends StatefulWidget {
