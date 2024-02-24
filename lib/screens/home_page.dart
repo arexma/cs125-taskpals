@@ -9,8 +9,11 @@ import 'pets.dart';
 import 'gacha.dart';
 import 'home.dart';
 
+import '../services/user_data.dart';
+
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final UserDataFirebase user;
+  const HomePage({super.key, required this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -23,8 +26,6 @@ class _HomePageState extends State<HomePage> {
   int dailySteps = 0;
   HealthFactory health = HealthFactory();
 
-
-
   Future fetchStepData() async {
     int? steps;
 
@@ -36,11 +37,11 @@ class _HomePageState extends State<HomePage> {
     bool requested = await health.requestAuthorization(types);
 
     var currentTime = DateTime.now();
-    var midnight = DateTime(currentTime.year, currentTime.month, currentTime.day);
+    var midnight =
+        DateTime(currentTime.year, currentTime.month, currentTime.day);
 
     List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
-      currentTime.subtract(const Duration(days: 1)), currentTime, types
-    );
+        currentTime.subtract(const Duration(days: 1)), currentTime, types);
 
     types = [
       HealthDataType.STEPS,
@@ -52,8 +53,10 @@ class _HomePageState extends State<HomePage> {
     ];
     await health.requestAuthorization(types, permissions: permissions);
 
-    bool success = await health.writeHealthData(10, HealthDataType.STEPS, currentTime, currentTime);
-    success = await health.writeHealthData(3.1, HealthDataType.SLEEP_SESSION, currentTime, currentTime);
+    bool success = await health.writeHealthData(
+        10, HealthDataType.STEPS, currentTime, currentTime);
+    success = await health.writeHealthData(
+        3.1, HealthDataType.SLEEP_SESSION, currentTime, currentTime);
 
     if (requested) {
       steps = await health.getTotalStepsInInterval(midnight, currentTime);
@@ -72,19 +75,24 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Screens to navigate through via GNav bar
-  final List<Widget> pages = [
-    const ProfileScreen(),
-    const TasksPageStarter(),
-    const Home(),
-    const Pets(),
-    GachaScreen()
-  ];
+  late List<Widget> pages = [];
+  @override
+  void initState() {
+    super.initState();
+    pages = [
+      ProfileScreen(user: widget.user),
+      TasksPageStarter(user: widget.user),
+      Home(user: widget.user),
+      Pets(user: widget.user),
+      GachaScreen(user: widget.user)
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     // Create the initial instance of the music player
     final player = Provider.of<MusicPlayer>(context);
-    
+
     return MaterialApp(
       home: Scaffold(
         body: pages[currentPageIndex],
@@ -102,9 +110,7 @@ class _HomePageState extends State<HomePage> {
               onTabChange: navigateBottomBar,
               padding: const EdgeInsets.all(15),
               tabs: const [
-                GButton(
-                  icon: Icons.account_circle,
-                  text: 'Profile'),
+                GButton(icon: Icons.account_circle, text: 'Profile'),
                 GButton(
                   icon: Icons.assignment_late,
                   text: 'Tasks',

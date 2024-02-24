@@ -4,8 +4,11 @@ import 'settings.dart';
 import 'stats.dart';
 import 'tasks.dart';
 
+import '../services/user_data.dart';
+
 class ProfilePictureButton extends StatelessWidget {
-  const ProfilePictureButton({super.key});
+  final UserDataFirebase user;
+  const ProfilePictureButton({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class ProfilePictureButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ProfileScreen()
+            builder: (context) => ProfileScreen(user: user),
           ),
         );
       },
@@ -38,9 +41,7 @@ class StatsPageButton extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const Stats()
-          ),
+          MaterialPageRoute(builder: (context) => const Stats()),
         );
       },
       child: const Text('Stats',
@@ -71,8 +72,10 @@ class TasksListButton extends StatelessWidget {
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const TasksPageStarter()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const TasksPageStarter()));
               },
               child: ListTile(
                 title: Text('Task $index'),
@@ -86,7 +89,8 @@ class TasksListButton extends StatelessWidget {
 }
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+  final UserDataFirebase user;
+  const Home({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -101,15 +105,15 @@ class Home extends StatelessWidget {
             ),
           ),
         ),
-        const Align(
+        Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: EdgeInsets.all(30.0),
+            padding: const EdgeInsets.all(30.0),
             child: Column(
               children: [
-                ProfilePictureButton(),
-                Padding(padding: EdgeInsets.all(8.0)),
-                StatsPageButton(),
+                ProfilePictureButton(user: user),
+                const Padding(padding: EdgeInsets.all(8.0)),
+                const StatsPageButton(),
               ],
             ),
           ),
@@ -126,9 +130,9 @@ class Home extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsPage())
-                    );
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SettingsPage()));
                   },
                   icon: const Icon(Icons.settings),
                 ),

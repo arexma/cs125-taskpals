@@ -25,6 +25,8 @@ height/weight
 import 'package:flutter/material.dart';
 import '../utility/editable_field.dart';
 
+import '../services/user_data.dart';
+
 const Map<String, String> userInfo = {
   'Name': 'Alexander Rex Ma',
   'Height': '5\' 8"',
@@ -33,7 +35,8 @@ const Map<String, String> userInfo = {
 };
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final UserDataFirebase user;
+  const ProfileScreen({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {

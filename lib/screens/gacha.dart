@@ -7,8 +7,9 @@ import '../services/user_data.dart';
 
 class GachaScreen extends StatelessWidget {
   final Future<Map<String, dynamic>> userData;
+  final UserDataFirebase user;
 
-  GachaScreen({super.key})
+  GachaScreen({super.key, required this.user})
       : userData = UserDataFile().readData();
 
   @override
