@@ -1,89 +1,13 @@
-/* 
-Homepage (after login?) where the user can have a small view of tasks and navigate to other pages
-*/
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:health/health.dart';
+import 'package:provider/provider.dart';
+import 'package:taskpals/main.dart';
 import 'profile.dart';
 import 'tasks.dart';
 import 'pets.dart';
 import 'gacha.dart';
-import 'settings.dart';
-import 'stats.dart';
-
-class ProfilePictureButton extends StatelessWidget {
-  const ProfilePictureButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const ProfileScreen()));
-      },
-      child: Container(
-        width: 60,
-        height: 60,
-        clipBehavior: Clip.antiAlias,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-        ),
-        child: Image.asset('lib/assets/default_profile.png'),
-      ),
-    );
-  }
-}
-
-class StatsPageButton extends StatelessWidget {
-  const StatsPageButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Stats()));
-      },
-      child: const Text('Stats',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w700,
-          )),
-    );
-  }
-}
-
-class TasksListButton extends StatelessWidget {
-  const TasksListButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 150.0,
-      width: 200.0,
-      child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          child: ListView.builder(
-            padding: const EdgeInsets.all(8.0),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TasksPageStarter()));
-                },
-                child: ListTile(
-                  title: Text('Task $index'),
-                ),
-              );
-            },
-          )),
-    );
-  }
-}
+import 'home.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -95,155 +19,113 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentPageIndex = 2;
 
+  // Get daily steps from healthkit
+  int dailySteps = 0;
+  HealthFactory health = HealthFactory();
+
+
+
+  Future fetchStepData() async {
+    int? steps;
+
+    var types = [
+      HealthDataType.STEPS,
+      HealthDataType.SLEEP_SESSION,
+    ];
+
+    bool requested = await health.requestAuthorization(types);
+
+    var currentTime = DateTime.now();
+    var midnight = DateTime(currentTime.year, currentTime.month, currentTime.day);
+
+    List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
+      currentTime.subtract(const Duration(days: 1)), currentTime, types
+    );
+
+    types = [
+      HealthDataType.STEPS,
+      HealthDataType.SLEEP_SESSION,
+    ];
+    var permissions = [
+      HealthDataAccess.READ_WRITE,
+      HealthDataAccess.READ_WRITE,
+    ];
+    await health.requestAuthorization(types, permissions: permissions);
+
+    bool success = await health.writeHealthData(10, HealthDataType.STEPS, currentTime, currentTime);
+    success = await health.writeHealthData(3.1, HealthDataType.SLEEP_SESSION, currentTime, currentTime);
+
+    if (requested) {
+      steps = await health.getTotalStepsInInterval(midnight, currentTime);
+
+      setState(() {
+        dailySteps = (steps == null) ? 0 : steps;
+      });
+    }
+  }
+
+  // Sets the state of the GNav bar whenever pressed
+  void navigateBottomBar(int index) {
+    setState(() {
+      currentPageIndex = index;
+    });
+  }
+
+  // Screens to navigate through via GNav bar
   final List<Widget> pages = [
     const ProfileScreen(),
     const TasksPageStarter(),
-    const HomePage(),
+    const Home(),
     const Pets(),
     GachaScreen()
   ];
 
   @override
   Widget build(BuildContext context) {
+    // Create the initial instance of the music player
+    final player = Provider.of<MusicPlayer>(context);
+    
     return MaterialApp(
-        home: Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('lib/assets/background.jpg'),
-                fit: BoxFit.cover,
-              ),
+      home: Scaffold(
+        body: pages[currentPageIndex],
+        bottomNavigationBar: Container(
+          color: Colors.black,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            child: GNav(
+              selectedIndex: currentPageIndex,
+              backgroundColor: Colors.black,
+              color: Colors.white,
+              activeColor: Colors.white,
+              tabBackgroundColor: Colors.brown.shade900,
+              gap: 8,
+              onTabChange: navigateBottomBar,
+              padding: const EdgeInsets.all(15),
+              tabs: const [
+                GButton(
+                  icon: Icons.account_circle,
+                  text: 'Profile'),
+                GButton(
+                  icon: Icons.assignment_late,
+                  text: 'Tasks',
+                ),
+                GButton(
+                  icon: Icons.house,
+                  text: 'Home',
+                ),
+                GButton(
+                  icon: Icons.pets,
+                  text: 'Pets',
+                ),
+                GButton(
+                  icon: Icons.credit_card,
+                  text: 'Gacha',
+                ),
+              ],
             ),
           ),
-          const Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  ProfilePictureButton(),
-                  Padding(padding: EdgeInsets.all(8.0)),
-                  StatsPageButton(),
-                ],
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const TasksListButton(),
-                  const Padding(padding: EdgeInsets.all(8.0)),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Settings()));
-                    },
-                    icon: const Icon(Icons.settings),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const Align(
-            alignment: Alignment.bottomCenter,
-            child: FractionallySizedBox(
-              widthFactor: 0.7,
-              child: Image(
-                alignment: Alignment.bottomCenter,
-                image: AssetImage('lib/assets/pets/test_image.jpg'),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.black,
-          selectedItemColor: Colors.grey,
-          unselectedItemColor: Colors.white,
-          currentIndex: currentPageIndex,
-          onTap: (index) {
-            setState(() {
-              currentPageIndex = index;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ProfileScreen()),
-                  );
-                },
-                icon: const Icon(Icons.account_circle),
-              ),
-              label: 'Profile',
-              backgroundColor: Colors.black,
-            ),
-            BottomNavigationBarItem(
-              icon: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const TasksPageStarter()),
-                  );
-                },
-                icon: const Icon(Icons.assignment_late),
-              ),
-              label: 'Tasks',
-              backgroundColor: Colors.black,
-            ),
-            BottomNavigationBarItem(
-              icon: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
-                },
-                icon: const Icon(Icons.house),
-              ),
-              label: 'Home',
-              backgroundColor: Colors.black,
-            ),
-            BottomNavigationBarItem(
-              icon: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Pets()),
-                  );
-                },
-                icon: const Icon(Icons.pets),
-              ),
-              label: 'Pets',
-              backgroundColor: Colors.black,
-            ),
-            BottomNavigationBarItem(
-              icon: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => GachaScreen()),
-                  );
-                },
-                icon: const Icon(Icons.credit_card),
-              ),
-              label: 'Gacha',
-              backgroundColor: Colors.black,
-            ),
-          ],
-          type: BottomNavigationBarType.fixed),
-    ));
+    );
   }
 }
