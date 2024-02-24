@@ -44,10 +44,12 @@ class Navigation extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () {
             onRightArrowPressed?.call();
-            controller.nextPage(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
+            if (onRightArrowPressed == null) {
+              controller.nextPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
           },
           child: const Icon(Icons.arrow_right),
         ),

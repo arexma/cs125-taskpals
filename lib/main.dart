@@ -50,11 +50,7 @@ class _TaskPals extends State<TaskPals> {
   }
 
   Future<void> _initializeUser() async {
-    UserDataFirebase temp = await firstTimeUser();
-    setState(() {
-      user = temp;
-      isFirstTimeUser = user.isEmpty();
-    });
+    await firstTimeUser();
   }
 
   Future<String> _getDeviceID() async {
@@ -74,24 +70,26 @@ class _TaskPals extends State<TaskPals> {
     return id;
   }
 
-  Future<UserDataFirebase> firstTimeUser() async {
+  Future<void> firstTimeUser() async {
     String id = await _getDeviceID();
     UserDataFirebase user = UserDataFirebase(id);
     await user.initializationComplete();
-    return user;
+    this.user = user;
+    isFirstTimeUser = user.isEmpty();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Task Pals',
-      home: FutureBuilder<UserDataFirebase>(
+      home: FutureBuilder<void>(
         future: firstTimeUser(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return isFirstTimeUser
                 ? FirstTimeUser(
-                    updateParent: () {
+                    updateParent: (Map<String, dynamic> data) {
+                      user.writeToDatabase(data);
                       setState(() {});
                     },
                     user: user,

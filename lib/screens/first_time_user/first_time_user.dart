@@ -10,7 +10,7 @@ import 'navigation.dart';
 
 class FirstTimeUser extends StatefulWidget {
   // Callback to rebuild
-  final VoidCallback updateParent;
+  final Function(Map<String, dynamic>) updateParent;
   final UserDataFirebase user;
 
   const FirstTimeUser({
@@ -28,8 +28,7 @@ class _FirstTimeUser extends State<FirstTimeUser> {
   Map<String, dynamic> data = {};
 
   void writeToDatabase() {
-    widget.user.writeToDatabase(data);
-    widget.updateParent();
+    widget.updateParent(data);
   }
 
   void addToData(String key, dynamic value) {
