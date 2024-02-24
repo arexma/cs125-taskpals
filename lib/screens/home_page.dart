@@ -14,7 +14,6 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
-
 }
 
 class _HomePageState extends State<HomePage> {
@@ -23,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   // Get daily steps from healthkit
   int dailySteps = 0;
   HealthFactory health = HealthFactory();
+
 
 
   Future fetchStepData() async {
@@ -40,7 +40,6 @@ class _HomePageState extends State<HomePage> {
 
     List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
       currentTime.subtract(const Duration(days: 1)), currentTime, types
-
     );
 
     types = [

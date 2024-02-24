@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 
 // An editable text field constrained by a box
 
+// TODO:
+// Fix cursor size depending on box size
+
 // Can make it so that if the user clicks outside the box midway through editing text, don't save current changes
+Map<Alignment, TextAlign> alignments = {
+  Alignment.centerLeft: TextAlign.left,
+  Alignment.centerRight: TextAlign.right,
+  Alignment.center: TextAlign.center,
+};
+
 class EditableTextField extends StatefulWidget {
   // Widget variables for customization
   final String? initialText;
@@ -13,9 +22,10 @@ class EditableTextField extends StatefulWidget {
   final double? borderRadius;
   final double? edgeInsets;
   final AlignmentGeometry? textAlignment;
+  final Function(dynamic)? callback;
 
   const EditableTextField({
-    Key? key,
+    super.key,
     this.initialText,
     this.boxWidth,
     this.boxHeight,
@@ -24,13 +34,16 @@ class EditableTextField extends StatefulWidget {
     this.borderRadius,
     this.edgeInsets,
     this.textAlignment,
-  }) : super(key: key);
+    this.callback,
+  });
 
   @override
-  State<EditableTextField> createState() => _EditableTextField();
+  State<EditableTextField> createState() => EditableTextFieldState();
+
+  void resetText() {}
 }
 
-class _EditableTextField extends State<EditableTextField> {
+class EditableTextFieldState extends State<EditableTextField> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
   bool _isEditing = false;
@@ -53,14 +66,22 @@ class _EditableTextField extends State<EditableTextField> {
     setState(() {
       _isEditing = !_isEditing;
     });
+
     _focusNode.unfocus();
   }
 
   void _handleSave(String newText) {
     _toggleEdit();
-    setState(() {
-      _controller.text = newText;
-    });
+    widget.callback?.call(newText);
+  }
+
+  void resetText() {
+    _controller.text = '';
+    setState(() {});
+  }
+
+  String getCurrentText() {
+    return _controller.text;
   }
 
   @override
@@ -89,9 +110,14 @@ class _EditableTextField extends State<EditableTextField> {
                     focusNode: _focusNode,
                     autofocus: true,
                     onTapOutside: (PointerDownEvent event) {
-                      _toggleEdit();
+                      _handleSave(_controller.text);
                     },
-                    onSubmitted: (String newText) => _handleSave(newText),
+                    onSubmitted: (String newText) {
+                      _handleSave(newText);
+                    },
+                    textAlign: alignments[
+                            widget.textAlignment ?? Alignment.centerLeft] ??
+                        TextAlign.left,
                   )
                 : Text(
                     _controller.text,
