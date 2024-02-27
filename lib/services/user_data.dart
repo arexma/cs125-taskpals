@@ -12,7 +12,7 @@
 //    tasks_completed --> [string]
 //    tasks_deleted --> [string]
 //    goals --> [string]
-//
+//    pfp --> string
 
 // TODO
 //  Error handling
@@ -36,7 +36,8 @@ const userFields = [
   "tasks",
   "tasks_completed",
   "tasks_deleted",
-  "goals"
+  "goals",
+  "pfp",
 ];
 
 // Access user data from Firebase database

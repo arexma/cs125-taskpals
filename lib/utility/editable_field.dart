@@ -39,8 +39,6 @@ class EditableTextField extends StatefulWidget {
 
   @override
   State<EditableTextField> createState() => EditableTextFieldState();
-
-  void resetText() {}
 }
 
 class EditableTextFieldState extends State<EditableTextField> {

@@ -14,12 +14,15 @@ pals collected (owned/possible)
 
 // TODO:
 // Maybe remove box around text unless the user is updating it
-// Create userInfo map based on stored user data
 // Maybe move screen up if the keyboard covers wherever the user is editing?
+
 // Editable profile picture
+//  Ask user for initial profile picture on app startup
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../utility/editable_field.dart';
 import '../services/user_data.dart';
@@ -56,18 +59,9 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: () async {},
-              child: SizedBox(
-                width: 200.0,
-                height: 200.0,
-                child: ClipOval(
-                  child: Image.asset(
-                    ('lib/assets/pfp.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+            ProfileImage(
+              initialImage: user.queryByUniqueID(['pfp'])['pfp'].toString(),
+              user: user,
             ),
             Column(
               children: fields.entries
@@ -119,4 +113,79 @@ Widget buildColumn(String label, dynamic initialText, BuildContext context,
       ],
     ),
   );
+}
+
+class ProfileImage extends StatefulWidget {
+  final String initialImage;
+  final UserDataFirebase user;
+
+  const ProfileImage({
+    super.key,
+    required this.initialImage,
+    required this.user,
+  });
+
+  @override
+  State<ProfileImage> createState() => ProfileImageState();
+}
+
+class ProfileImageState extends State<ProfileImage> {
+  late String selectedImage;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedImage = widget.initialImage;
+  }
+
+  Future<void> pickAndSaveImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedImage =
+        await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      String documentsPath = await saveImageToDocuments(pickedImage.path);
+      setState(() {
+        selectedImage = documentsPath;
+      });
+      widget.user.updateDatabase({'pfp': documentsPath});
+    }
+  }
+
+  Future<String> saveImageToDocuments(String imagePath) async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    String documentsPath = '${documentsDirectory.path}/$fileName.jpg';
+
+    await File(imagePath).copy(documentsPath);
+
+    return documentsPath;
+  }
+
+  Image getImageFromDocuments() {
+    return Image.file(
+      File(selectedImage),
+      fit: BoxFit.cover,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        setState(
+          () async {
+            await pickAndSaveImage();
+          },
+        );
+      },
+      child: SizedBox(
+        width: 200.0,
+        height: 200.0,
+        child: ClipOval(
+          child: getImageFromDocuments(),
+        ),
+      ),
+    );
+  }
 }
