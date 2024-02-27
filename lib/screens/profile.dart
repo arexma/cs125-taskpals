@@ -19,8 +19,9 @@ pals collected (owned/possible)
 // Editable profile picture
 
 import 'package:flutter/material.dart';
-import '../utility/editable_field.dart';
+import 'package:image_picker/image_picker.dart';
 
+import '../utility/editable_field.dart';
 import '../services/user_data.dart';
 
 const Map<String, String> fields = {
@@ -55,13 +56,16 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              width: 200.0,
-              height: 200.0,
-              child: ClipOval(
-                child: Image.asset(
-                  ('lib/assets/pfp.jpg'),
-                  fit: BoxFit.cover,
+            GestureDetector(
+              onTap: () async {},
+              child: SizedBox(
+                width: 200.0,
+                height: 200.0,
+                child: ClipOval(
+                  child: Image.asset(
+                    ('lib/assets/pfp.jpg'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
