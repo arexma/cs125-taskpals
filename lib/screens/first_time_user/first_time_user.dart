@@ -46,7 +46,10 @@ class _FirstTimeUser extends State<FirstTimeUser> {
       controller: pageController,
       children: [
         Name(
-          savedName: data['name'] ?? '',
+          savedInfo: {
+            'name': data['name'] ?? '',
+            'pfp': data['pfp'] ?? 'lib/assets/default_profile.png',
+          },
           navigationWidget: Navigation(
             controller: pageController,
             showLeftArrow: false,
