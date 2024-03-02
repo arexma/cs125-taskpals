@@ -1,23 +1,5 @@
-/* ideas: 
-User-editable:
-name
-height
-weight
-age
-
-Non-user-editable:
-user data with healthkit stuff
-calendar with progress done per day?
-tasks done
-pals collected (owned/possible)
-*/
-
 // TODO:
 // Maybe remove box around text unless the user is updating it
-// Maybe move screen up if the keyboard covers wherever the user is editing?
-
-// Editable profile picture
-//  Ask user for initial profile picture on app startup
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -60,53 +42,64 @@ class _ProfileScreen extends State<ProfileScreen> {
         preferredSize: const Size.fromHeight(25.0),
         child: AppBar(),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const Center(
-              child: Text(
-                'Profile',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 45.0,
-                ),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('lib/assets/screen_backgrounds/profile.jpg'),
+                fit: BoxFit.cover,
               ),
             ),
-            GestureDetector(
-              onTap: () async {
-                String newPath = await pickAndSaveImage();
-                setState(() {
-                  pfpPath = newPath;
-                });
-                widget.user.updateDatabase({'pfp': pfpPath});
-              },
-              child: SizedBox(
-                width: 200.0,
-                height: 200.0,
-                child: ClipOval(
-                    child: pfpPath.startsWith('lib/assets/')
-                        ? Image.asset(pfpPath, fit: BoxFit.cover)
-                        : Image.file(File(pfpPath), fit: BoxFit.cover)),
-              ),
-            ),
-            Column(
-              children: fields.entries
-                  .map(
-                    (entry) => buildColumn(
-                      entry.value,
-                      widget.user.queryByUniqueID([entry.key])[entry.key],
-                      context,
-                      (dynamic value) {
-                        widget.user.updateDatabase({entry.key: value});
-                      },
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                const Center(
+                  child: Text(
+                    'Profile',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 45.0,
                     ),
-                  )
-                  .toList(),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    String newPath = await pickAndSaveImage();
+                    setState(() {
+                      pfpPath = newPath;
+                    });
+                    widget.user.updateDatabase({'pfp': pfpPath});
+                  },
+                  child: SizedBox(
+                    width: 200.0,
+                    height: 200.0,
+                    child: ClipOval(
+                        child: pfpPath.startsWith('lib/assets/')
+                            ? Image.asset(pfpPath, fit: BoxFit.cover)
+                            : Image.file(File(pfpPath), fit: BoxFit.cover)),
+                  ),
+                ),
+                Column(
+                  children: fields.entries
+                      .map(
+                        (entry) => buildColumn(
+                          entry.value,
+                          widget.user.queryByUniqueID([entry.key])[entry.key],
+                          context,
+                          (dynamic value) {
+                            widget.user.updateDatabase({entry.key: value});
+                          },
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      backgroundColor: Colors.lightBlue[100],
     );
   }
 }
@@ -140,144 +133,3 @@ Widget buildColumn(String label, dynamic initialText, BuildContext context,
     ),
   );
 }
-
-/*
-class ProfileImage extends StatefulWidget {
-  final String initialImage;
-  final UserDataFirebase user;
-
-  const ProfileImage({
-    super.key,
-    required this.initialImage,
-    required this.user,
-  });
-
-  @override
-  State<ProfileImage> createState() => ProfileImageState();
-}
-
-class ProfileImageState extends State<ProfileImage> {
-  late String selectedImage;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedImage = widget.initialImage;
-  }
-
-  Future<void> pickAndSaveImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedImage =
-        await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedImage != null) {
-      String documentsPath = await saveImageToDocuments(pickedImage.path);
-      setState(() {
-        selectedImage = documentsPath;
-      });
-      widget.user.updateDatabase({'pfp': documentsPath});
-    }
-  }
-
-  Future<String> saveImageToDocuments(String imagePath) async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    String documentsPath = '${documentsDirectory.path}/$fileName.jpg';
-
-    await File(imagePath).copy(documentsPath);
-
-    return documentsPath;
-  }
-
-  Image getImageFromDocuments() {
-    return Image.file(
-      File(selectedImage),
-      fit: BoxFit.cover,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        setState(
-          () async {
-            await pickAndSaveImage();
-          },
-        );
-      },
-      child: SizedBox(
-        width: 200.0,
-        height: 200.0,
-        child: ClipOval(
-          child: getImageFromDocuments(),
-        ),
-      ),
-    );
-  }
-}
-*/
-
-/*
-class ProfileScreen extends StatelessWidget {
-  final UserDataFirebase user;
-  const ProfileScreen({super.key, required this.user});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(25.0),
-        child: AppBar(),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const Center(
-              child: Text(
-                'Profile',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 45.0,
-                ),
-              ),
-            ),
-            GestureDetector(
-                onTap: () async {
-                  String newPath = await pickAndSaveImage();
-                  setState(() {
-                    pfpPath = newPath;
-                  });
-                  widget.updateData('pfp', pfpPath);
-                },
-                child: SizedBox(
-                  width: 200.0,
-                  height: 200.0,
-                  child: ClipOval(
-                      child: pfpPath.startsWith('lib/assets/')
-                          ? Image.asset(pfpPath, fit: BoxFit.cover)
-                          : Image.file(File(pfpPath), fit: BoxFit.cover)),
-                ),
-              )
-            Column(
-              children: fields.entries
-                  .map(
-                    (entry) => buildColumn(
-                      entry.value,
-                      user.queryByUniqueID([entry.key])[entry.key],
-                      context,
-                      (dynamic value) {
-                        user.updateDatabase({entry.key: value});
-                      },
-                    ),
-                  )
-                  .toList(),
-            ),
-          ],
-        ),
-      ),
-      backgroundColor: Colors.lightBlue[100],
-    );
-  }
-}
-*/

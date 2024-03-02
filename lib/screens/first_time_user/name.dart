@@ -46,7 +46,7 @@ class _Name extends State<Name> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/assets/first_time_user/name_2.jpg'),
+                image: AssetImage('lib/assets/first_time_user/name.jpg'),
                 fit: BoxFit.cover,
               ),
             ),

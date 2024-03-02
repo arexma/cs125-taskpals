@@ -71,6 +71,7 @@ flutter:
     - lib/assets/pets/
     - lib/assets/audio/
     - lib/assets/first_time_user/
+    - lib/assets/screen_backgrounds/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
