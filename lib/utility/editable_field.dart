@@ -21,6 +21,7 @@ class EditableTextField extends StatefulWidget {
   final double? borderWidth;
   final double? borderRadius;
   final double? edgeInsets;
+  final Color? textColor;
   final AlignmentGeometry? textAlignment;
   final Function(dynamic)? callback;
 
@@ -33,6 +34,7 @@ class EditableTextField extends StatefulWidget {
     this.borderWidth,
     this.borderRadius,
     this.edgeInsets,
+    this.textColor,
     this.textAlignment,
     this.callback,
   });
@@ -116,9 +118,15 @@ class EditableTextFieldState extends State<EditableTextField> {
                     textAlign: alignments[
                             widget.textAlignment ?? Alignment.centerLeft] ??
                         TextAlign.left,
+                    style: TextStyle(
+                      color: widget.textColor ?? Colors.black,
+                    ),
                   )
                 : Text(
                     _controller.text,
+                    style: TextStyle(
+                      color: widget.textColor ?? Colors.black,
+                    ),
                   ),
           ),
         ),

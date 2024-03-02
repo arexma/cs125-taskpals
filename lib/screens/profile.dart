@@ -1,5 +1,6 @@
 // TODO:
-// Maybe remove box around text unless the user is updating it
+// Maybe remove box around text unless user clicks on an edit button.
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -59,7 +60,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                   child: Text(
                     'Profile',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 45.0,
                     ),
                   ),
@@ -113,7 +114,10 @@ Widget buildColumn(String label, dynamic initialText, BuildContext context,
       children: <Widget>[
         Text(
           label,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         const SizedBox(height: 4.0),
         label == 'Pals Collected' || label == 'Currency'
@@ -121,10 +125,14 @@ Widget buildColumn(String label, dynamic initialText, BuildContext context,
                 label == 'Pals Collected'
                     ? '${List<int>.from(initialText).length} / 151'
                     : initialText.toString(),
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
               )
             : EditableTextField(
                 initialText: initialText.toString(),
-                boxWidth: MediaQuery.of(context).size.width * 0.8,
+                textColor: Colors.black,
+                boxWidth: MediaQuery.of(context).size.height * 0.8,
                 boxHeight: MediaQuery.of(context).size.height * 0.05,
                 textAlignment: Alignment.center,
                 callback: callback,
