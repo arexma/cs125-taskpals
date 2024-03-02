@@ -29,6 +29,8 @@ class _FirstTimeUser extends State<FirstTimeUser> {
   Map<String, dynamic> data = {};
 
   void writeToDatabase() {
+    data['currency'] = 0;
+    data['pals_collected'] = [];
     widget.updateParent(data);
   }
 
