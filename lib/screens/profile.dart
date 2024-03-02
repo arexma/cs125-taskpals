@@ -21,9 +21,8 @@ pals collected (owned/possible)
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
+import '../services/pfp.dart';
 import '../utility/editable_field.dart';
 import '../services/user_data.dart';
 
@@ -36,9 +35,23 @@ const Map<String, String> fields = {
   'pals_collected': 'Pals Collected',
 };
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final UserDataFirebase user;
   const ProfileScreen({super.key, required this.user});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreen();
+}
+
+class _ProfileScreen extends State<ProfileScreen> {
+  late String pfpPath;
+
+  @override
+  void initState() {
+    super.initState();
+    pfpPath = widget.user.queryByUniqueID(['pfp'])['pfp'] ??
+        'lib/assets/default_profile.png';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,19 +72,32 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-            ProfileImage(
-              initialImage: user.queryByUniqueID(['pfp'])['pfp'].toString(),
-              user: user,
+            GestureDetector(
+              onTap: () async {
+                String newPath = await pickAndSaveImage();
+                setState(() {
+                  pfpPath = newPath;
+                });
+                widget.user.updateDatabase({'pfp': pfpPath});
+              },
+              child: SizedBox(
+                width: 200.0,
+                height: 200.0,
+                child: ClipOval(
+                    child: pfpPath.startsWith('lib/assets/')
+                        ? Image.asset(pfpPath, fit: BoxFit.cover)
+                        : Image.file(File(pfpPath), fit: BoxFit.cover)),
+              ),
             ),
             Column(
               children: fields.entries
                   .map(
                     (entry) => buildColumn(
                       entry.value,
-                      user.queryByUniqueID([entry.key])[entry.key],
+                      widget.user.queryByUniqueID([entry.key])[entry.key],
                       context,
                       (dynamic value) {
-                        user.updateDatabase({entry.key: value});
+                        widget.user.updateDatabase({entry.key: value});
                       },
                     ),
                   )
@@ -115,6 +141,7 @@ Widget buildColumn(String label, dynamic initialText, BuildContext context,
   );
 }
 
+/*
 class ProfileImage extends StatefulWidget {
   final String initialImage;
   final UserDataFirebase user;
@@ -189,3 +216,68 @@ class ProfileImageState extends State<ProfileImage> {
     );
   }
 }
+*/
+
+/*
+class ProfileScreen extends StatelessWidget {
+  final UserDataFirebase user;
+  const ProfileScreen({super.key, required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(25.0),
+        child: AppBar(),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const Center(
+              child: Text(
+                'Profile',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 45.0,
+                ),
+              ),
+            ),
+            GestureDetector(
+                onTap: () async {
+                  String newPath = await pickAndSaveImage();
+                  setState(() {
+                    pfpPath = newPath;
+                  });
+                  widget.updateData('pfp', pfpPath);
+                },
+                child: SizedBox(
+                  width: 200.0,
+                  height: 200.0,
+                  child: ClipOval(
+                      child: pfpPath.startsWith('lib/assets/')
+                          ? Image.asset(pfpPath, fit: BoxFit.cover)
+                          : Image.file(File(pfpPath), fit: BoxFit.cover)),
+                ),
+              )
+            Column(
+              children: fields.entries
+                  .map(
+                    (entry) => buildColumn(
+                      entry.value,
+                      user.queryByUniqueID([entry.key])[entry.key],
+                      context,
+                      (dynamic value) {
+                        user.updateDatabase({entry.key: value});
+                      },
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
+        ),
+      ),
+      backgroundColor: Colors.lightBlue[100],
+    );
+  }
+}
+*/

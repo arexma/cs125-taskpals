@@ -67,7 +67,7 @@ class _TaskPals extends State<TaskPals> {
 
   Future<void> _getDeviceID() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    deviceID = 'Windows Testing 2';
+    deviceID = 'Windows Testing';
 
     if (!kIsWeb) {
       if (Platform.isAndroid) {
