@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:taskpals/main.dart';
 import 'package:pixelarticons/pixelarticons.dart';
 
+import '../services/user_data.dart';
+
 class ForwardButton extends StatelessWidget {
   final Function() onTap;
   const ForwardButton({
@@ -84,7 +86,7 @@ class SettingSwitch extends StatelessWidget {
           ),
           const Spacer(),
           Text(
-            value ? "On":"Off",
+            value ? "On" : "Off",
             style: const TextStyle(
               fontSize: 15,
               color: Colors.grey,
@@ -151,20 +153,18 @@ class SettingItem extends StatelessWidget {
           ),
           const Spacer(),
           value != null
-            ? Text(
-              value!,
-              style: const TextStyle(
-                fontSize: 15,
-                color: Colors.grey,
-              ),
-            )
-          : const SizedBox(),
+              ? Text(
+                  value!,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey,
+                  ),
+                )
+              : const SizedBox(),
           const SizedBox(
             width: 20,
           ),
-          ForwardButton(
-            onTap: onTap
-          ),
+          ForwardButton(onTap: onTap),
         ],
       ),
     );
@@ -202,7 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
       prefs.setBool('option', isDarkMode);
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
       String backgroundPath = ThemeProvider.themeOf(context).data == ThemeData.dark()

@@ -3,6 +3,7 @@ View of daily tasks to complete
 */
 import 'package:flutter/material.dart';
 import '../services/user_data.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class TasksPageStarter extends StatefulWidget {
   final UserDataFirebase user;
@@ -26,30 +27,58 @@ class TasksPage extends State<TasksPageStarter> {
   int _currentIndex = 0;
   int _listItemKey = 0;
 
-  addListItem(String taskDescription) {
+  @override
+  void initState() {
+    super.initState();
+    List<dynamic> tasks = queryToStringsList('tasks');
+    queryToTasksList(tasks);
+    List<dynamic> completedTasks = queryToStringsList('completed_tasks');
+    List<dynamic> deletedTasks = queryToStringsList('deleted_tasks');
+    queryToTopLists(completedTasks, deletedTasks);
+  }
+
+  // obtains tasks from database and turns into list (string)
+  List<dynamic> queryToStringsList(String field) {
+    Map<String, dynamic> query = widget.user.queryByUniqueID([field]);
+    return query[field] ?? [];
+  }
+
+  // takes list of strings (from query) and turns into task list (widgets)
+  void queryToTasksList(List<dynamic> queryList) {
+    for (int i = 0; i < queryList.length; i++) {
+      tasksList
+          .add(buildListElement(_listItemKey, tasksList.length, queryList[i]));
+      _listItemKey += 1;
+    }
+  }
+
+  void queryToTopLists(
+      List<dynamic> queryCompleted, List<dynamic> queryDeleted) {
+    for (int i = 0; i < queryCompleted.length; i++) {
+      tasksCompletedList.add(queryCompleted[i]);
+    }
+    for (int i = 0; i < queryDeleted.length; i++) {
+      tasksDeletedList.add(queryDeleted[i]);
+    }
+  }
+
+  addListItem(String taskDescription, {bool initialize = false}) {
     setState(() {
       tasksList.add(
           buildListElement(_listItemKey, tasksList.length, taskDescription));
       _listItemKey += 1;
+      List<dynamic> tasks = widget.user.queryByUniqueID(['tasks'])['tasks'];
+      tasks.add(taskDescription);
+      widget.user.updateDatabase({'tasks': tasks});
     });
 
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOut,
-    );
-
-    // _completedTasksListController.animateTo(
-    //   _scrollController.position.maxScrollExtent,
-    //   duration: const Duration(milliseconds: 200),
-    //   curve: Curves.easeOut,
-    // );
-
-    // _deletedTasksListController.animateTo(
-    //   _scrollController.position.maxScrollExtent,
-    //   duration: const Duration(milliseconds: 200),
-    //   curve: Curves.easeOut,
-    // );
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   deleteListItem(Key key, String taskDescription, {bool addPoints = false}) {
@@ -58,12 +87,25 @@ class TasksPage extends State<TasksPageStarter> {
       if (addPoints) {
         tasksCompleted += 1;
         tasksCompletedList.add(taskDescription);
+        Map<String, dynamic> tasks =
+            widget.user.queryByUniqueID(['completed_tasks', 'tasks']);
+        tasks['completed_tasks'] == null
+            ? tasks['completed_tasks'] = [taskDescription]
+            : tasks['completed_tasks'].add(taskDescription);
+        tasks['tasks'].remove(taskDescription);
+        widget.user.updateDatabase(tasks);
       } else {
         tasksDeleted += 1;
         tasksDeletedList.add(taskDescription);
+        Map<String, dynamic> tasks =
+            widget.user.queryByUniqueID(['deleted_tasks', 'tasks']);
+        tasks['deleted_tasks'] == null
+            ? tasks['deleted_tasks'] = [taskDescription]
+            : tasks['deleted_tasks'].add(taskDescription);
+        tasks['tasks'].remove(taskDescription);
+        widget.user.updateDatabase(tasks);
       }
     });
-
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 200),
@@ -75,6 +117,7 @@ class TasksPage extends State<TasksPageStarter> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: ThemeProvider.themeOf(context).data.canvasColor,
         body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
@@ -104,7 +147,7 @@ class TasksPage extends State<TasksPageStarter> {
               Expanded(
                 flex: 1,
                 child: Container(
-                  color: Colors.orangeAccent,
+                  color: ThemeProvider.themeOf(context).data.dividerColor,
                   child: const Center(
                     child: Text("Daily Tasks"),
                   ),
@@ -112,12 +155,19 @@ class TasksPage extends State<TasksPageStarter> {
               ),
               Expanded(
                 flex: 8,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  // reverse: true,
-                  itemCount: tasksList.length,
-                  itemBuilder: (context, index) => tasksList[index],
-                ),
+                child: tasksList.isEmpty
+                    ? const Center(
+                        child: Text(
+                          "ADD SOME TASKS",
+                          style: TextStyle(fontSize: 40),
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: _scrollController,
+                        // reverse: true,
+                        itemCount: tasksList.length,
+                        itemBuilder: (context, index) => tasksList[index],
+                      ),
               ),
               Expanded(
                 flex: 1,
@@ -130,10 +180,20 @@ class TasksPage extends State<TasksPageStarter> {
                         _showAddTaskDialog(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.lightBlueAccent,
-                        elevation: 2,
+                        backgroundColor: ThemeProvider.themeOf(context)
+                            .data
+                            .dialogBackgroundColor,
+                        elevation: 10,
                       ),
-                      child: const Text("Add new task."),
+                      child: Text(
+                        "Add new task.",
+                        style: TextStyle(
+                          color: ThemeProvider.themeOf(context)
+                              .data
+                              .unselectedWidgetColor,
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ),
                 ),

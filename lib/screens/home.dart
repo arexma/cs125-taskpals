@@ -22,8 +22,9 @@ class ProfilePictureButton extends StatelessWidget {
         );
       },
       child: Container(
-        width: 60,
-        height: 60,
+        margin: const EdgeInsets.only(bottom: 30),
+        width: 80,
+        height: 80,
         clipBehavior: Clip.antiAlias,
         decoration: const BoxDecoration(shape: BoxShape.circle),
         child: Image.asset('lib/assets/default_profile.png'),
@@ -129,7 +130,7 @@ class Home extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+          ],
         ),
         const Align(
           alignment: Alignment.bottomCenter,
