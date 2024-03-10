@@ -41,7 +41,7 @@ dependencies:
   health: ^9.0.1
   provider: ^6.1.1
   http: ^1.1.0
-  dotenv: ^4.2.0
+  flutter_dotenv: ^5.0.2
 
   path: ^1.8.0
   firebase_core: ^2.25.2
@@ -73,6 +73,7 @@ flutter:
     - lib/assets/pets/
     - lib/assets/audio/
     - lib/assets/background/
+    - lib/.env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

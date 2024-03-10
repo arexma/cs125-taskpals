@@ -3,7 +3,6 @@ import 'package:pixelarticons/pixelarticons.dart';
 import 'package:taskpals/screens/home_page.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'settings.dart';
-import 'tasks.dart';
 import '../services/user_data.dart';
 
 class ProfilePictureButton extends StatelessWidget {

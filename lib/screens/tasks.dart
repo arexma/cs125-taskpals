@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import '../services/user_data.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:dotenv/dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TasksPageStarter extends StatefulWidget {
   final UserDataFirebase user;
@@ -30,7 +30,7 @@ class TasksPage extends State<TasksPageStarter> {
   List<String> recommendedTasksList = [];
   int _currentIndex = 0;
   int _listItemKey = 0;
-  var env = DotEnv(includePlatformEnvironment: true)..load();
+  //var env = DotEnv(includePlatformEnvironment: true)..load();
 
   @override
   void initState() {
@@ -44,11 +44,12 @@ class TasksPage extends State<TasksPageStarter> {
   }
 
   Future<String> sendMessage(String message) async {
+    print(dotenv.env['OPENAIKEY']);
     final response = await http.post(
       Uri.parse('https://api.openai.com/v1/chat/completions'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${env['OPENAIKEY']}',
+        'Authorization': 'Bearer ${dotenv.env['OPENAIKEY']}',
       },
       body: json.encode({
         'model': 'gpt-3.5-turbo',
