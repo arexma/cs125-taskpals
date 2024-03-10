@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pixelarticons/pixelarticons.dart';
-import 'package:taskpals/screens/home_page.dart';
-import 'package:theme_provider/theme_provider.dart';
+import 'profile.dart';
 import 'settings.dart';
 import 'tasks.dart';
+
 import '../services/user_data.dart';
 
 class ProfilePictureButton extends StatelessWidget {
@@ -17,7 +16,7 @@ class ProfilePictureButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(user: user, index: 0),
+            builder: (context) => ProfileScreen(user: user),
           ),
         );
       },
@@ -51,17 +50,9 @@ class TasksListButton extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           itemCount: 3,
           itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TasksPageStarter(user: user)));
-              },
-              child: ListTile(
-                title: Text('Task $index'),
-              ),
-            );
+            Map<String, dynamic> query = user.queryByUniqueID(['tasks']);
+
+            return Text(query['tasks'][index]);
           },
         ),
       ),
@@ -75,71 +66,75 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String backgroundPath = ThemeProvider.themeOf(context).data == ThemeData.dark()
-                            ? 'lib/assets/background/night.gif'
-                            : 'lib/assets/background/day.gif';
-
-    return Stack(
-      children: [
-        // Background image for home page
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(backgroundPath),
-              fit: BoxFit.cover,
+    return Container(
+      color: Colors.black,
+      child: SafeArea(
+        child: Stack(
+          children: [
+            // Background image for home page
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('lib/assets/background.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Column(
               children: [
-                ProfilePictureButton(user: user),
-                const Padding(padding: EdgeInsets.all(8.0)),
-                Text(
-                  'Currency: \$${user.queryByUniqueID(['currency'])['currency']}',
-                  style: const TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  )
-                )
-              ],
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                TasksListButton(user: user),
-                const Padding(padding: EdgeInsets.all(8.0)),
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SettingsPage(user: user)));
-                  },
-                  icon: const Icon(Pixel.editbox),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              ProfilePictureButton(user: user),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            TasksListButton(user: user),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SettingsPage(user: user)));
+                              },
+                              icon: const Icon(Icons.settings),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SizedBox(
+                    child: Image(
+                      image: AssetImage('lib/assets/pets/Squirtle.gif'),
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
               ],
-            ),
-          ),
-        ),
-        const Align(
-          alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            child: Image(
-              image: AssetImage('lib/assets/pets/Squirtle.gif'),
-              width: 300,
-              height: 300,
-              fit: BoxFit.contain,
             ),
           ],
         ),

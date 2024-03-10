@@ -4,6 +4,6 @@
   "height": "5' 8\"",
   "weight": "135",
   "currency": "9000",
-  "pals_collected": ["Abra", "Dragonite", "Snorlax"],
+  "pals_collected": [1, 2, 3],
   "tasks": ["Shower 3 times a day"]
 }

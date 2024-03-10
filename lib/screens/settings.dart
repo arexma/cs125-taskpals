@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskpals/screens/home_page.dart';
 import 'package:taskpals/screens/music_choices.dart';
-import 'package:taskpals/services/user_data.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:taskpals/main.dart';
@@ -28,7 +28,7 @@ class ForwardButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         child: Icon(
-          Pixel.chevronright,
+          Ionicons.chevron_forward_outline,
           color: ThemeProvider.themeOf(context).data.hintColor,
         ),
       ),
@@ -210,6 +210,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ? 'lib/assets/background/night.gif'
             : 'lib/assets/background/day.gif';
     return Scaffold(
+      backgroundColor: ThemeProvider.themeOf(context).data.canvasColor,
       appBar: AppBar(
         backgroundColor: ThemeProvider.themeOf(context).data.canvasColor,
         leading: IconButton(
@@ -221,18 +222,12 @@ class _SettingsPageState extends State<SettingsPage> {
             );
           },
           color: ThemeProvider.themeOf(context).data.hintColor,
-          icon: const Icon(Pixel.chevronleft),
+          icon: const Icon(Ionicons.chevron_back_outline),
         ),
         leadingWidth: 100.0,
         toolbarHeight: 100.0,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(backgroundPath),
-            fit: BoxFit.cover,
-          ),
-        ),
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(50.0),
           child: Column(
@@ -253,7 +248,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: "Notifications",
                 bgColor: Colors.yellow.shade100,
                 iconColor: Colors.yellow,
-                icon: Pixel.notification,
+                icon: Ionicons.notifications,
                 onTap: () {},
               ),
               const SizedBox(
@@ -263,7 +258,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: "Dark Mode",
                 bgColor: Colors.purple.shade100,
                 iconColor: Colors.purple,
-                icon: Pixel.moon,
+                icon: Ionicons.moon,
                 value: isDarkMode,
                 onTap: (value) {
                   saveSwitchState(value);

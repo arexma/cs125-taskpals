@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pixelarticons/pixelarticons.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:taskpals/main.dart';
 
 class MusicItem extends StatelessWidget {
@@ -22,7 +22,7 @@ class MusicItem extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: IconButton(
-            icon: const Icon(Pixel.play),
+            icon: const Icon(Ionicons.play),
             onPressed: onTap,
           ),
         ),
