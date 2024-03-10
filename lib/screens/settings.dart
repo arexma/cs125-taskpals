@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskpals/screens/home_page.dart';
 import 'package:taskpals/screens/music_choices.dart';
+import 'package:taskpals/services/user_data.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:taskpals/main.dart';
+import 'package:pixelarticons/pixelarticons.dart';
 
 import '../services/user_data.dart';
 
@@ -29,7 +30,7 @@ class ForwardButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         child: Icon(
-          Ionicons.chevron_forward_outline,
+          Pixel.chevronright,
           color: ThemeProvider.themeOf(context).data.hintColor,
         ),
       ),
@@ -204,25 +205,32 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+      String backgroundPath = ThemeProvider.themeOf(context).data == ThemeData.dark()
+                            ? 'lib/assets/background/night.gif'
+                            : 'lib/assets/background/day.gif';
     return Scaffold(
-      backgroundColor: ThemeProvider.themeOf(context).data.canvasColor,
       appBar: AppBar(
         backgroundColor: ThemeProvider.themeOf(context).data.canvasColor,
         leading: IconButton(
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => HomePage(user: widget.user)),
+              MaterialPageRoute(builder: (context) => HomePage(user: widget.user, index: 2)),
             );
           },
           color: ThemeProvider.themeOf(context).data.hintColor,
-          icon: const Icon(Ionicons.chevron_back_outline),
+          icon: const Icon(Pixel.chevronleft),
         ),
         leadingWidth: 100.0,
         toolbarHeight: 100.0,
       ),
-      body: SingleChildScrollView(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(backgroundPath),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(50.0),
           child: Column(
@@ -243,7 +251,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: "Notifications",
                 bgColor: Colors.yellow.shade100,
                 iconColor: Colors.yellow,
-                icon: Ionicons.notifications,
+                icon: Pixel.notification,
                 onTap: () {},
               ),
               const SizedBox(
@@ -253,7 +261,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: "Dark Mode",
                 bgColor: Colors.purple.shade100,
                 iconColor: Colors.purple,
-                icon: Ionicons.moon,
+                icon: Pixel.moon,
                 value: isDarkMode,
                 onTap: (value) {
                   saveSwitchState(value);
@@ -266,17 +274,14 @@ class _SettingsPageState extends State<SettingsPage> {
               SettingItem(
                 title: "Music",
                 bgColor: Colors.blue.shade100,
-                iconColor: Colors.blue,
-                icon: Ionicons.musical_note,
+                iconColor: Colors.blue, 
+                icon: Pixel.music,
                 onTap: () {
                   showDialog(
                     context: context,
                     builder: (BuildContext dialogContext) {
-                      final player =
-                          Provider.of<MusicPlayer>(context, listen: false);
-                      return MusicChoices(
-                        player: player,
-                      );
+                      final player = Provider.of<MusicPlayer>(context, listen: false);
+                      return MusicChoices(player: player);
                     },
                   );
                 },

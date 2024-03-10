@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:health/health.dart';
+import 'package:pixelarticons/pixel.dart';
 import 'profile.dart';
 import 'tasks.dart';
 import 'pets.dart';
 import 'gacha.dart';
 import 'home.dart';
-
 import '../services/user_data.dart';
+import 'package:pixelarticons/pixelarticons.dart';
 
 class HomePage extends StatefulWidget {
   final UserDataFirebase user;
-  const HomePage({super.key, required this.user});
+  final int index;
+  const HomePage({super.key, required this.user, required this.index});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int currentPageIndex = 2;
+  late int currentPageIndex;
 
   // Get daily steps from healthkit
   int dailySteps = 0;
@@ -35,11 +37,10 @@ class _HomePageState extends State<HomePage> {
     bool requested = await health.requestAuthorization(types);
 
     var currentTime = DateTime.now();
-    var midnight =
-        DateTime(currentTime.year, currentTime.month, currentTime.day);
+    var midnight = DateTime(currentTime.year, currentTime.month, currentTime.day);
 
     List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
-        currentTime.subtract(const Duration(days: 1)), currentTime, types);
+      currentTime.subtract(const Duration(days: 1)), currentTime, types);
 
     types = [
       HealthDataType.STEPS,
@@ -52,9 +53,9 @@ class _HomePageState extends State<HomePage> {
     await health.requestAuthorization(types, permissions: permissions);
 
     bool success = await health.writeHealthData(
-        10, HealthDataType.STEPS, currentTime, currentTime);
+      10, HealthDataType.STEPS, currentTime, currentTime);
     success = await health.writeHealthData(
-        3.1, HealthDataType.SLEEP_SESSION, currentTime, currentTime);
+      3.1, HealthDataType.SLEEP_SESSION, currentTime, currentTime);
 
     if (requested) {
       steps = await health.getTotalStepsInInterval(midnight, currentTime);
@@ -77,6 +78,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    currentPageIndex = widget.index;
     pages = [
       ProfileScreen(user: widget.user),
       TasksPageStarter(user: widget.user),
@@ -105,21 +107,24 @@ class _HomePageState extends State<HomePage> {
               onTabChange: navigateBottomBar,
               padding: const EdgeInsets.all(15),
               tabs: const [
-                GButton(icon: Icons.account_circle, text: 'Profile'),
                 GButton(
-                  icon: Icons.assignment_late,
+                  icon: Pixel.user,
+                  text: 'Profile'
+                ),
+                GButton(
+                  icon: Pixel.clipboard,
                   text: 'Tasks',
                 ),
                 GButton(
-                  icon: Icons.house,
+                  icon: Pixel.home,
                   text: 'Home',
                 ),
                 GButton(
-                  icon: Icons.pets,
+                  icon: Pixel.downasaur,
                   text: 'Pets',
                 ),
                 GButton(
-                  icon: Icons.credit_card,
+                  icon: Pixel.dollar,
                   text: 'Gacha',
                 ),
               ],
