@@ -76,6 +76,7 @@ class _Name extends State<Name> {
                   color: Colors.black,
                   fontSize: 40.0,
                 ),
+                textAlign: TextAlign.center,
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.025),
               EditableTextField(
