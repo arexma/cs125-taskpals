@@ -87,6 +87,7 @@ class _StarterTasks extends State<StarterTasks> {
                         ),
                       ),
                       child: Dismissible(
+                        direction: DismissDirection.startToEnd,
                         key: Key(tasks[index]),
                         onDismissed: (direction) {
                           setState(() {
