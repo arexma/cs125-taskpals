@@ -1,6 +1,10 @@
 /*
 View of daily tasks to complete
 */
+
+// TODO: make new recommended tasks stay on the screen after reload (new way to see rec)
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../services/user_data.dart';
 import 'package:theme_provider/theme_provider.dart';
@@ -24,8 +28,6 @@ class TasksPage extends State<TasksPageStarter> {
   List<String> tasksCompletedList = [];
   List<String> tasksDeletedList = [];
   List<String> recommendedTasksList = [];
-  int tasksCompleted = 0;
-  int tasksDeleted = 0;
   int _currentIndex = 0;
   int _listItemKey = 0;
   var env = DotEnv(includePlatformEnvironment: true)..load();
@@ -96,6 +98,29 @@ class TasksPage extends State<TasksPageStarter> {
     }
   }
 
+  void addRecommendedTasks() async {
+    List<dynamic> goals = queryToStringsList('goals');
+    String goalsListString = goals.toString();
+    String tasksCompletedListString = tasksCompletedList.toString();
+    String tasksDeletedListString = tasksDeletedList.toString();
+    String prompt =
+        "can you give me 1 task to complete if i want to improve my diet? keep it short and simple like Sleep 8 hours. "
+        "or like Wake up at 6 am. I want it to be a task rather than a recommendation. "
+        "i dont want the words every day to be on the prompt as it will be a task to complete in a day anyway. "
+        "the following list will be a list of goals in string format to help create some tasks. "
+        "these are some starter goals the user wants to improve on but you do not have to adhere to only these goals: $goalsListString "
+        "the following is a list of tasks they have completed: $tasksCompletedListString "
+        "the following is a  list of tasks they have deleted: $tasksDeletedListString "
+        "i want you to return 5 to 10 tasks in the format of comma separated values in code like 'task1','task2','task3'";
+
+    String response = await sendMessage(prompt);
+    response = response.substring(1, response.length - 1);
+    List<String> temp = response.split(RegExp(r"', *'"));
+    recommendedTasksList.addAll(temp);
+
+    setState(() {});
+  }
+
   addListItem(String taskDescription, {bool initialize = false}) {
     setState(() {
       tasksList.add(
@@ -119,23 +144,25 @@ class TasksPage extends State<TasksPageStarter> {
     setState(() {
       tasksList.removeWhere((item) => item.key == key);
       if (addPoints) {
-        tasksCompleted += 1;
         tasksCompletedList.add(taskDescription);
         Map<String, dynamic> tasks =
             widget.user.queryByUniqueID(['completed_tasks', 'tasks']);
-        tasks['completed_tasks'] == null
-            ? tasks['completed_tasks'] = [taskDescription]
-            : tasks['completed_tasks'].add(taskDescription);
+        if (tasks['completed_tasks'] == null) {
+          tasks['completed_tasks'] = [taskDescription];
+        } else {
+          tasks['completed_tasks'].add(taskDescription);
+        }
         tasks['tasks'].remove(taskDescription);
         widget.user.updateDatabase(tasks);
       } else {
-        tasksDeleted += 1;
         tasksDeletedList.add(taskDescription);
         Map<String, dynamic> tasks =
             widget.user.queryByUniqueID(['deleted_tasks', 'tasks']);
-        tasks['deleted_tasks'] == null
-            ? tasks['deleted_tasks'] = [taskDescription]
-            : tasks['deleted_tasks'].add(taskDescription);
+        if (tasks['deleted_tasks'] == null) {
+          tasks['deleted_tasks'] = [taskDescription];
+        } else {
+          tasks['deleted_tasks'].add(taskDescription);
+        }
         tasks['tasks'].remove(taskDescription);
         widget.user.updateDatabase(tasks);
       }
@@ -169,10 +196,9 @@ class TasksPage extends State<TasksPageStarter> {
                     if (index == 0) {
                       return recommendedTasksViewer(recommendedTasksList);
                     } else if (index == 1) {
-                      return tasksCompletedViewer(
-                          tasksCompleted, tasksCompletedList);
+                      return tasksCompletedViewer(tasksCompletedList);
                     } else {
-                      return tasksDeletedViewer(tasksDeleted, tasksDeletedList);
+                      return tasksDeletedViewer(tasksDeletedList);
                     }
                   },
                   itemCount: 3,
@@ -270,8 +296,8 @@ class TasksPage extends State<TasksPageStarter> {
     );
   }
 
-  Widget tasksCompletedViewer(
-      int tasksCompleted, List<String> tasksCompletedList) {
+  Widget tasksCompletedViewer(List<String> tasksCompletedList) {
+    int tasksCompleted = tasksCompletedList.length;
     return Column(
       children: [
         Expanded(
@@ -302,7 +328,8 @@ class TasksPage extends State<TasksPageStarter> {
     );
   }
 
-  Widget tasksDeletedViewer(int tasksDeleted, List<String> tasksDeletedList) {
+  Widget tasksDeletedViewer(List<String> tasksDeletedList) {
+    int tasksDeleted = tasksDeletedList.length;
     return Column(
       children: [
         Expanded(

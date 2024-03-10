@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'profile.dart';
+import 'package:pixelarticons/pixelarticons.dart';
+import 'package:taskpals/screens/home_page.dart';
+import 'package:theme_provider/theme_provider.dart';
 import 'settings.dart';
 import 'tasks.dart';
-
 import '../services/user_data.dart';
 
 class ProfilePictureButton extends StatelessWidget {
@@ -16,7 +17,7 @@ class ProfilePictureButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProfileScreen(user: user),
+            builder: (context) => HomePage(user: user, index: 0),
           ),
         );
       },
@@ -40,7 +41,7 @@ class TasksListButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 150.0,
-      width: 200.0,
+      width: 250.0,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -51,7 +52,6 @@ class TasksListButton extends StatelessWidget {
           itemCount: 3,
           itemBuilder: (context, index) {
             Map<String, dynamic> query = user.queryByUniqueID(['tasks']);
-
             return Text(query['tasks'][index]);
           },
         ),
@@ -66,79 +66,77 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      child: SafeArea(
-        child: Stack(
-          children: [
-            // Background image for home page
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('lib/assets/background.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
+    String backgroundPath =
+        ThemeProvider.themeOf(context).data == ThemeData.dark()
+            ? 'lib/assets/background/night.gif'
+            : 'lib/assets/background/day.gif';
+
+    return Stack(
+      children: [
+        // Background image for home page
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(backgroundPath),
+              fit: BoxFit.cover,
             ),
-            Column(
+          ),
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            children: [
-                              ProfilePictureButton(user: user),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            TasksListButton(user: user),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            SettingsPage(user: user)));
-                              },
-                              icon: const Icon(Icons.settings),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SizedBox(
-                    child: Image(
-                      image: AssetImage('lib/assets/pets/Squirtle.gif'),
-                      width: 300,
-                      height: 300,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                ProfilePictureButton(user: user),
+                const Padding(padding: EdgeInsets.all(8.0)),
+                Text(
+                    'Currency: \$${user.queryByUniqueID([
+                          'currency'
+                        ])['currency']}',
+                    style: const TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ))
+              ],
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                TasksListButton(user: user),
+                const Padding(padding: EdgeInsets.all(8.0)),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SettingsPage(user: user)));
+                  },
+                  icon: const Icon(Pixel.editbox),
                 ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+        const Align(
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            child: Image(
+              image: AssetImage('lib/assets/pets/Squirtle.gif'),
+              width: 300,
+              height: 300,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
