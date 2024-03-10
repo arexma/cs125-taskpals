@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../services/user_data.dart';
 
 // Subscreens
@@ -28,6 +29,8 @@ class _FirstTimeUser extends State<FirstTimeUser> {
   Map<String, dynamic> data = {};
 
   void writeToDatabase() {
+    data['currency'] = 0;
+    data['pals_collected'] = [];
     widget.updateParent(data);
   }
 
@@ -45,7 +48,10 @@ class _FirstTimeUser extends State<FirstTimeUser> {
       controller: pageController,
       children: [
         Name(
-          savedName: data['name'] ?? '',
+          savedInfo: {
+            'name': data['name'] ?? '',
+            'pfp': data['pfp'] ?? 'lib/assets/default_profile.png',
+          },
           navigationWidget: Navigation(
             controller: pageController,
             showLeftArrow: false,

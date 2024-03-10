@@ -17,10 +17,14 @@ class EditableTextField extends StatefulWidget {
   final String? initialText;
   final double? boxWidth;
   final double? boxHeight;
+  final Color? boxColor;
   final Color? borderColor;
   final double? borderWidth;
   final double? borderRadius;
   final double? edgeInsets;
+  final Color? textColor;
+  final Shadow? textShadow;
+  final double? textSize;
   final AlignmentGeometry? textAlignment;
   final Function(dynamic)? callback;
 
@@ -29,18 +33,20 @@ class EditableTextField extends StatefulWidget {
     this.initialText,
     this.boxWidth,
     this.boxHeight,
+    this.boxColor,
     this.borderColor,
     this.borderWidth,
     this.borderRadius,
     this.edgeInsets,
+    this.textColor,
+    this.textShadow,
+    this.textSize,
     this.textAlignment,
     this.callback,
   });
 
   @override
   State<EditableTextField> createState() => EditableTextFieldState();
-
-  void resetText() {}
 }
 
 class EditableTextFieldState extends State<EditableTextField> {
@@ -95,6 +101,7 @@ class EditableTextFieldState extends State<EditableTextField> {
         child: Container(
           constraints: const BoxConstraints.expand(),
           decoration: BoxDecoration(
+            color: widget.boxColor ?? Colors.transparent,
             border: Border.all(
               color: widget.borderColor ?? Colors.black,
               width: widget.borderWidth ?? 2,
@@ -105,22 +112,43 @@ class EditableTextFieldState extends State<EditableTextField> {
           child: Align(
             alignment: widget.textAlignment ?? Alignment.centerLeft,
             child: _isEditing
-                ? TextField(
-                    controller: _controller,
-                    focusNode: _focusNode,
-                    autofocus: true,
-                    onTapOutside: (PointerDownEvent event) {
-                      _handleSave(_controller.text);
-                    },
-                    onSubmitted: (String newText) {
-                      _handleSave(newText);
-                    },
-                    textAlign: alignments[
-                            widget.textAlignment ?? Alignment.centerLeft] ??
-                        TextAlign.left,
+                ? Container(
+                    decoration: BoxDecoration(boxShadow: [
+                      widget.textShadow == null
+                          ? const BoxShadow()
+                          : BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              offset: const Offset(2.0, 2.0),
+                              blurRadius: 4.0,
+                            )
+                    ]),
+                    child: TextField(
+                      controller: _controller,
+                      focusNode: _focusNode,
+                      autofocus: true,
+                      onTapOutside: (PointerDownEvent event) {
+                        _handleSave(_controller.text);
+                      },
+                      onSubmitted: (String newText) {
+                        _handleSave(newText);
+                      },
+                      textAlign: alignments[
+                              widget.textAlignment ?? Alignment.centerLeft] ??
+                          TextAlign.left,
+                      style: TextStyle(
+                        color: widget.textColor ?? Colors.black,
+                      ),
+                    ),
                   )
                 : Text(
                     _controller.text,
+                    style: TextStyle(
+                      color: widget.textColor ?? Colors.black,
+                      fontSize: widget.textSize ?? 14.0,
+                      shadows: [
+                        widget.textShadow ?? const Shadow(),
+                      ],
+                    ),
                   ),
           ),
         ),
