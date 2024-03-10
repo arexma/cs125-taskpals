@@ -6,13 +6,12 @@
 //    height --> int (inches)
 //    weight --> int
 //    age --> int
-//    currency --> int
-//    pals_collected --> [int] (unique pal ids)
+//    pals_collected --> [string] (unique pal ids)
 //    tasks --> [string] (task descriptions)
 //    tasks_completed --> [string]
 //    tasks_deleted --> [string]
 //    goals --> [string]
-//
+//    coins --> int
 
 // TODO
 //  Error handling

@@ -91,34 +91,34 @@ class _TaskPals extends State<TaskPals> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return isFirstTimeUser
-              ? FirstTimeUser(
-                updateParent: (Map<String, dynamic> data) {
-                  user.writeToDatabase(data);
-                  setState(() {});
-                },
-                user: user,
-              )
-              : Provider<MusicPlayer>(
-                create: (_) => player,
-                builder: (context, child) {
-                  return ThemeProvider(
-                    saveThemesOnChange: true,
-                    loadThemeOnInit: true,
-                    child: ThemeConsumer(
-                      child: Builder(
-                        builder: (themeContext) => MaterialApp(
-                          title: 'Task Pals',
-                          initialRoute: '/login',
-                          theme: ThemeProvider.themeOf(themeContext).data,
-                          routes: {
-                            '/login': (context) => HomePage(user: user, index: 2),
-                          },
+                ? FirstTimeUser(
+                    updateParent: (Map<String, dynamic> data) {
+                      user.writeToDatabase(data);
+                      setState(() {});
+                    },
+                    user: user,
+                  )
+                : Provider<MusicPlayer>(
+                    create: (_) => player,
+                    builder: (context, child) {
+                      return ThemeProvider(
+                        saveThemesOnChange: true,
+                        loadThemeOnInit: true,
+                        child: ThemeConsumer(
+                          child: Builder(
+                            builder: (themeContext) => MaterialApp(
+                              title: 'Task Pals',
+                              initialRoute: '/login',
+                              theme: ThemeProvider.themeOf(themeContext).data,
+                              routes: {
+                                '/login': (context) =>
+                                    HomePage(user: user, index: 2),
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                }
-              );
+                      );
+                    });
           } else {
             return const CircularProgressIndicator();
           }

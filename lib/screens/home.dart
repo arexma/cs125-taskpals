@@ -41,7 +41,7 @@ class TasksListButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 150.0,
-      width: 200.0,
+      width: 250.0,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -51,17 +51,8 @@ class TasksListButton extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           itemCount: 3,
           itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TasksPageStarter(user: user)));
-              },
-              child: ListTile(
-                title: Text('Task $index'),
-              ),
-            );
+            Map<String, dynamic> query = user.queryByUniqueID(['tasks']);
+            return Text(query['tasks'][index]);
           },
         ),
       ),
@@ -75,9 +66,10 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String backgroundPath = ThemeProvider.themeOf(context).data == ThemeData.dark()
-                            ? 'lib/assets/background/night.gif'
-                            : 'lib/assets/background/day.gif';
+    String backgroundPath =
+        ThemeProvider.themeOf(context).data == ThemeData.dark()
+            ? 'lib/assets/background/night.gif'
+            : 'lib/assets/background/day.gif';
 
     return Stack(
       children: [
@@ -100,12 +92,13 @@ class Home extends StatelessWidget {
                 ProfilePictureButton(user: user),
                 const Padding(padding: EdgeInsets.all(8.0)),
                 Text(
-                  'Currency: \$${user.queryByUniqueID(['currency'])['currency']}',
-                  style: const TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  )
-                )
+                    'Currency: \$${user.queryByUniqueID([
+                          'currency'
+                        ])['currency']}',
+                    style: const TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ))
               ],
             ),
           ),
@@ -124,13 +117,13 @@ class Home extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SettingsPage(user: user)));
+                            builder: (context) => SettingsPage(user: user)));
                   },
                   icon: const Icon(Pixel.editbox),
                 ),
               ],
             ),
-          ],
+          ),
         ),
         const Align(
           alignment: Alignment.bottomCenter,

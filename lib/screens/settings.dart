@@ -9,8 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:taskpals/main.dart';
 import 'package:pixelarticons/pixelarticons.dart';
 
-import '../services/user_data.dart';
-
 class ForwardButton extends StatelessWidget {
   final Function() onTap;
   const ForwardButton({
@@ -205,9 +203,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-      String backgroundPath = ThemeProvider.themeOf(context).data == ThemeData.dark()
-                            ? 'lib/assets/background/night.gif'
-                            : 'lib/assets/background/day.gif';
+    String backgroundPath =
+        ThemeProvider.themeOf(context).data == ThemeData.dark()
+            ? 'lib/assets/background/night.gif'
+            : 'lib/assets/background/day.gif';
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ThemeProvider.themeOf(context).data.canvasColor,
@@ -215,7 +214,8 @@ class _SettingsPageState extends State<SettingsPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePage(user: widget.user, index: 2)),
+              MaterialPageRoute(
+                  builder: (context) => HomePage(user: widget.user, index: 2)),
             );
           },
           color: ThemeProvider.themeOf(context).data.hintColor,
@@ -274,13 +274,14 @@ class _SettingsPageState extends State<SettingsPage> {
               SettingItem(
                 title: "Music",
                 bgColor: Colors.blue.shade100,
-                iconColor: Colors.blue, 
+                iconColor: Colors.blue,
                 icon: Pixel.music,
                 onTap: () {
                   showDialog(
                     context: context,
                     builder: (BuildContext dialogContext) {
-                      final player = Provider.of<MusicPlayer>(context, listen: false);
+                      final player =
+                          Provider.of<MusicPlayer>(context, listen: false);
                       return MusicChoices(player: player);
                     },
                   );

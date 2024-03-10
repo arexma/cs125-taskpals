@@ -40,6 +40,8 @@ dependencies:
   shared_preferences: ^2.2.2
   health: ^9.0.1
   provider: ^6.1.1
+  http: ^1.1.0
+  dotenv: ^4.2.0
 
   path: ^1.8.0
   firebase_core: ^2.25.2
@@ -48,6 +50,7 @@ dependencies:
   device_info_plus: ^9.1.2
   android_id: ^0.3.6
   pixelarticons: ^0.4.0
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
