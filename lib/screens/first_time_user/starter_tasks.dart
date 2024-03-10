@@ -34,113 +34,125 @@ class _StarterTasks extends State<StarterTasks> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(25.0),
-        child: AppBar(),
-      ),
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          const SizedBox(height: 100.0),
-          const Text(
-            'Starter Tasks',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 45.0,
-            ),
-          ),
-          Text(
-            '${tasks.length} / 5',
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 35.0,
-            ),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(10.0),
-              margin: const EdgeInsets.all(50.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                    'lib/assets/screen_backgrounds/first_time_user.jpg'),
+                fit: BoxFit.cover,
               ),
-              child: ListView.builder(
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border.all(
-                        color: Colors.grey[400]!,
-                      ),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                    child: Dismissible(
-                      key: Key(tasks[index]),
-                      onDismissed: (direction) {
-                        setState(() {
-                          tasks.removeAt(index);
-                        });
-                      },
-                      background: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          border: Border.all(
-                            color: Colors.red[600]!,
-                          ),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10),
-                          ),
+            ),
+          ),
+          Column(
+            children: <Widget>[
+              const Spacer(),
+              const Text(
+                'Starter Tasks',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 45.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                '${tasks.length} / 5',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 35.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const Spacer(),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.4,
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black, width: 2.0),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: ListView.builder(
+                  itemCount: tasks.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border.all(
+                          color: Colors.grey[400]!,
+                        ),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10),
                         ),
                       ),
-                      child: ListTile(
-                        title: Text(tasks[index]),
-                        onTap: () {}, // task editing
+                      child: Dismissible(
+                        key: Key(tasks[index]),
+                        onDismissed: (direction) {
+                          setState(() {
+                            tasks.removeAt(index);
+                          });
+                        },
+                        background: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            border: Border.all(
+                              color: Colors.red[600]!,
+                            ),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                        ),
+                        child: ListTile(
+                          title: Text(tasks[index]),
+                          onTap: () {}, // task editing
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 100.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              EditableTextField(
-                key: _editableTextFieldKey,
-                boxWidth: 300,
-                boxHeight: 60,
-                borderColor: Colors.black,
-                borderWidth: 2,
-                borderRadius: 10,
-                edgeInsets: 5,
-                textAlignment: Alignment.centerLeft,
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  EditableTextField(
+                    key: _editableTextFieldKey,
+                    boxWidth: MediaQuery.of(context).size.width * 0.8 - 48.0,
+                    boxHeight: MediaQuery.of(context).size.height * 0.1 - 48.0,
+                    borderColor: Colors.black,
+                    borderWidth: 2,
+                    borderRadius: 10,
+                    edgeInsets: 5,
+                    textAlignment: Alignment.centerLeft,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    color: Colors.black,
+                    onPressed: tasks.length == 5
+                        ? null
+                        : () {
+                            EditableTextFieldState? currentState =
+                                _editableTextFieldKey.currentState;
+                            String currentTask = currentState!.getCurrentText();
+                            if (currentTask.isNotEmpty) {
+                              currentState.resetText();
+                              setState(
+                                () {
+                                  tasks.add(currentTask);
+                                },
+                              );
+                              widget.updateData('tasks', tasks);
+                            }
+                          },
+                  ),
+                ],
               ),
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: tasks.length == 5
-                    ? null
-                    : () {
-                        EditableTextFieldState? currentState =
-                            _editableTextFieldKey.currentState;
-                        String currentTask = currentState!.getCurrentText();
-                        if (currentTask.isNotEmpty) {
-                          currentState.resetText();
-                          setState(
-                            () {
-                              tasks.add(currentTask);
-                            },
-                          );
-                          widget.updateData('tasks', tasks);
-                        }
-                      },
-              ),
+              const Spacer(),
+              widget.navigationWidget,
             ],
-          ), // Row for user to type task and click plus button to add to tasks
-          const Spacer(),
-          widget.navigationWidget,
+          ),
         ],
       ),
     );

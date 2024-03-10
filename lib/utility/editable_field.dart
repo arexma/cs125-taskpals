@@ -113,17 +113,19 @@ class EditableTextFieldState extends State<EditableTextField> {
             alignment: widget.textAlignment ?? Alignment.centerLeft,
             child: _isEditing
                 ? Container(
-                    decoration: BoxDecoration(boxShadow: [
-                      widget.textShadow == null
-                          ? const BoxShadow(
-                              color: Colors.transparent,
-                            )
-                          : BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              offset: const Offset(2.0, 2.0),
-                              blurRadius: 4.0,
-                            )
-                    ]),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        widget.textShadow == null
+                            ? const BoxShadow(
+                                color: Colors.transparent,
+                              )
+                            : BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                offset: const Offset(2.0, 2.0),
+                                blurRadius: 4.0,
+                              )
+                      ],
+                    ),
                     child: TextField(
                       controller: _controller,
                       focusNode: _focusNode,
