@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:health/health.dart';
+import 'package:pixelarticons/pixel.dart';
 import 'profile.dart';
 import 'tasks.dart';
 import 'pets.dart';
 import 'gacha.dart';
 import 'home.dart';
-
 import '../services/user_data.dart';
+import 'package:pixelarticons/pixelarticons.dart';
 
 class HomePage extends StatefulWidget {
   final UserDataFirebase user;
-  const HomePage({super.key, required this.user});
+  final int index;
+  const HomePage({super.key, required this.user, required this.index});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int currentPageIndex = 2;
+  late int currentPageIndex;
 
   // Get daily steps from healthkit
   int dailySteps = 0;
@@ -77,53 +79,52 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    currentPageIndex = widget.index;
     pages = [
       ProfileScreen(user: widget.user),
       TasksPageStarter(user: widget.user),
       Home(user: widget.user),
       Pets(user: widget.user),
-      GachaScreen(user: widget.user)
+      GachaPageStarter(user: widget.user)
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: pages[currentPageIndex],
-        bottomNavigationBar: Container(
-          color: Colors.black,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            child: GNav(
-              selectedIndex: currentPageIndex,
-              backgroundColor: Colors.black,
-              color: Colors.white,
-              activeColor: Colors.white,
-              tabBackgroundColor: Colors.brown.shade900,
-              gap: 8,
-              onTabChange: navigateBottomBar,
-              padding: const EdgeInsets.all(15),
-              tabs: const [
-                GButton(icon: Icons.account_circle, text: 'Profile'),
-                GButton(
-                  icon: Icons.assignment_late,
-                  text: 'Tasks',
-                ),
-                GButton(
-                  icon: Icons.house,
-                  text: 'Home',
-                ),
-                GButton(
-                  icon: Icons.pets,
-                  text: 'Pets',
-                ),
-                GButton(
-                  icon: Icons.credit_card,
-                  text: 'Gacha',
-                ),
-              ],
-            ),
+    return Scaffold(
+      body: pages[currentPageIndex],
+      bottomNavigationBar: Container(
+        color: Colors.black,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          child: GNav(
+            selectedIndex: currentPageIndex,
+            backgroundColor: Colors.black,
+            color: Colors.white,
+            activeColor: Colors.white,
+            tabBackgroundColor: Colors.brown.shade900,
+            gap: 8,
+            onTabChange: navigateBottomBar,
+            padding: const EdgeInsets.all(15),
+            tabs: const [
+              GButton(icon: Pixel.user, text: 'Profile'),
+              GButton(
+                icon: Pixel.clipboard,
+                text: 'Tasks',
+              ),
+              GButton(
+                icon: Pixel.home,
+                text: 'Home',
+              ),
+              GButton(
+                icon: Pixel.downasaur,
+                text: 'Pets',
+              ),
+              GButton(
+                icon: Pixel.dollar,
+                text: 'Gacha',
+              ),
+            ],
           ),
         ),
       ),

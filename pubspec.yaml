@@ -35,12 +35,13 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   google_nav_bar: ^5.0.6
-  ionicons: ^0.2.2
   theme_provider: ^0.6.0
   just_audio: ^0.9.30
   shared_preferences: ^2.2.2
   health: ^9.0.1
   provider: ^6.1.1
+  http: ^1.1.0
+  flutter_dotenv: ^5.0.2
 
   path: ^1.8.0
   firebase_core: ^2.25.2
@@ -48,6 +49,7 @@ dependencies:
   path_provider: ^2.0.5
   device_info_plus: ^9.1.2
   android_id: ^0.3.6
+  pixelarticons: ^0.4.0
   image_picker: ^1.0.7
 
 dev_dependencies:
@@ -72,6 +74,8 @@ flutter:
     - lib/assets/audio/
     - lib/assets/first_time_user/
     - lib/assets/screen_backgrounds/
+    - lib/assets/background/
+    - lib/.env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -108,3 +112,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Minecraft
+      fonts:
+        - asset: lib/assets/fonts/Minecraft.ttf
