@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
-Future<String> pickAndSaveImage() async {
+Future<String> pickAndSaveImage(String currentPath) async {
   final ImagePicker picker = ImagePicker();
   final XFile? pickedImage =
       await picker.pickImage(source: ImageSource.gallery);
@@ -13,7 +13,7 @@ Future<String> pickAndSaveImage() async {
     return documentsPath;
   }
 
-  return 'lib/assets/default_profile.png';
+  return currentPath;
 }
 
 Future<String> saveImageToDocuments(String imagePath) async {

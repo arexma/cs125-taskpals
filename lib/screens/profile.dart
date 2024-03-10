@@ -67,7 +67,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    String newPath = await pickAndSaveImage();
+                    String newPath = await pickAndSaveImage(pfpPath);
                     setState(() {
                       pfpPath = newPath;
                     });

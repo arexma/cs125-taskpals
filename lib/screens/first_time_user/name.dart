@@ -57,7 +57,7 @@ class _Name extends State<Name> {
               const Spacer(),
               GestureDetector(
                 onTap: () async {
-                  String newPath = await pickAndSaveImage();
+                  String newPath = await pickAndSaveImage(pfpPath);
                   setState(() {
                     pfpPath = newPath;
                   });
