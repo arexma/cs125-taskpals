@@ -41,6 +41,8 @@ dependencies:
   shared_preferences: ^2.2.2
   health: ^9.0.1
   provider: ^6.1.1
+  http: ^1.1.0
+  dotenv: ^4.2.0
 
   path: ^1.8.0
   firebase_core: ^2.25.2

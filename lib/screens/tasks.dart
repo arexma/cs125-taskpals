@@ -4,6 +4,8 @@ View of daily tasks to complete
 import 'package:flutter/material.dart';
 import '../services/user_data.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:dotenv/dotenv.dart';
 
 class TasksPageStarter extends StatefulWidget {
   final UserDataFirebase user;
@@ -26,6 +28,7 @@ class TasksPage extends State<TasksPageStarter> {
   int tasksDeleted = 0;
   int _currentIndex = 0;
   int _listItemKey = 0;
+  var env = DotEnv(includePlatformEnvironment: true)..load();
 
   @override
   void initState() {
@@ -35,6 +38,37 @@ class TasksPage extends State<TasksPageStarter> {
     List<dynamic> completedTasks = queryToStringsList('completed_tasks');
     List<dynamic> deletedTasks = queryToStringsList('deleted_tasks');
     queryToTopLists(completedTasks, deletedTasks);
+    addRecommendedTasks();
+  }
+
+  Future<String> sendMessage(String message) async {
+    final response = await http.post(
+      Uri.parse('https://api.openai.com/v1/chat/completions'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${env['OPENAIKEY']}',
+      },
+      body: json.encode({
+        'model': 'gpt-3.5-turbo',
+        'messages': [
+          {
+            'role': 'user',
+            'content': message,
+          }
+        ],
+        'max_tokens': 200,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      print(jsonResponse['choices'][0]['message']['content']);
+      return jsonResponse['choices'][0]['message']['content'].toString();
+    } else {
+      print("Resquest failed with status: ${response.statusCode}");
+      print("Error message: ${response.body}");
+    }
+    return 'Failed to obtain response';
   }
 
   // obtains tasks from database and turns into list (string)
