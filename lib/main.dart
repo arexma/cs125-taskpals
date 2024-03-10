@@ -84,46 +84,46 @@ class _TaskPals extends State<TaskPals> {
   Widget build(BuildContext context) {
     final player = MusicPlayer();
 
-    return MaterialApp(
-      title: 'Task Pals',
-      home: FutureBuilder<void>(
-        future: checkFirstTimeUser(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return isFirstTimeUser
-                ? FirstTimeUser(
-                    updateParent: (Map<String, dynamic> data) {
-                      user.writeToDatabase(data);
-                      setState(() {});
-                    },
-                    user: user,
-                  )
-                : Provider<MusicPlayer>(
-                    create: (_) => player,
-                    builder: (context, child) {
-                      return ThemeProvider(
-                        saveThemesOnChange: true,
-                        loadThemeOnInit: true,
-                        child: ThemeConsumer(
-                          child: Builder(
-                            builder: (themeContext) => MaterialApp(
-                              title: 'Task Pals',
-                              initialRoute: '/login',
-                              theme: ThemeProvider.themeOf(themeContext).data,
-                              routes: {
-                                '/login': (context) =>
-                                    HomePage(user: user, index: 2),
-                              },
+    return Provider<MusicPlayer>(
+      create: (_) => player,
+      builder: (context, child) {
+        return ThemeProvider(
+          saveThemesOnChange: true,
+          loadThemeOnInit: true,
+          child: ThemeConsumer(
+            child: Builder(
+              builder: (themeContext) => FutureBuilder<void>(
+                future: checkFirstTimeUser(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return isFirstTimeUser
+                        ? FirstTimeUser(
+                            updateParent: (Map<String, dynamic> data) {
+                              user.writeToDatabase(data);
+                              setState(() {});
+                            },
+                            user: user,
+                          )
+                        : MaterialApp(
+                            title: 'Task Pals',
+                            theme: ThemeData(
+                              fontFamily: 'Minecraft',
                             ),
-                          ),
-                        ),
-                      );
-                    });
-          } else {
-            return const CircularProgressIndicator();
-          }
-        },
-      ),
+                            initialRoute: '/login',
+                            routes: {
+                              '/login': (context) =>
+                                  HomePage(user: user, index: 2),
+                            },
+                          );
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
