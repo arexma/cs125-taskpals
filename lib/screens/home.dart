@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'profile.dart';
+import 'package:pixelarticons/pixelarticons.dart';
+import 'package:taskpals/screens/home_page.dart';
+import 'package:theme_provider/theme_provider.dart';
 import 'settings.dart';
 import 'tasks.dart';
-
 import '../services/user_data.dart';
 
 class ProfilePictureButton extends StatelessWidget {
@@ -16,7 +17,7 @@ class ProfilePictureButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProfileScreen(user: user),
+            builder: (context) => HomePage(user: user, index: 0),
           ),
         );
       },
@@ -32,7 +33,8 @@ class ProfilePictureButton extends StatelessWidget {
 }
 
 class TasksListButton extends StatelessWidget {
-  const TasksListButton({super.key});
+  final UserDataFirebase user;
+  const TasksListButton({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class TasksListButton extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const TasksPageStarter()));
+                        builder: (context) => TasksPageStarter(user: user)));
               },
               child: ListTile(
                 title: Text('Task $index'),
@@ -72,13 +74,17 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String backgroundPath = ThemeProvider.themeOf(context).data == ThemeData.dark()
+                            ? 'lib/assets/background/night.gif'
+                            : 'lib/assets/background/day.gif';
+
     return Stack(
       children: [
         // Background image for home page
         Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('lib/assets/background.jpg'),
+              image: AssetImage(backgroundPath),
               fit: BoxFit.cover,
             ),
           ),
@@ -88,9 +94,17 @@ class Home extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(30.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ProfilePictureButton(),
-                Padding(padding: EdgeInsets.all(8.0)),
+                ProfilePictureButton(user: user),
+                const Padding(padding: EdgeInsets.all(8.0)),
+                Text(
+                  'Currency: \$${user.queryByUniqueID(['currency'])['currency']}',
+                  style: const TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                  )
+                )
               ],
             ),
           ),
@@ -102,16 +116,16 @@ class Home extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const TasksListButton(),
+                TasksListButton(user: user),
                 const Padding(padding: EdgeInsets.all(8.0)),
                 IconButton(
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SettingsPage()));
+                          builder: (context) => SettingsPage(user: user)));
                   },
-                  icon: const Icon(Icons.settings),
+                  icon: const Icon(Pixel.editbox),
                 ),
               ],
             ),
@@ -119,11 +133,12 @@ class Home extends StatelessWidget {
         ),
         const Align(
           alignment: Alignment.bottomCenter,
-          child: FractionallySizedBox(
-            widthFactor: 0.5,
+          child: SizedBox(
             child: Image(
-              alignment: Alignment.bottomCenter,
               image: AssetImage('lib/assets/pets/Squirtle.gif'),
+              width: 300,
+              height: 300,
+              fit: BoxFit.contain,
             ),
           ),
         ),
