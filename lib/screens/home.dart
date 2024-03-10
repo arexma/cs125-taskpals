@@ -33,13 +33,14 @@ class ProfilePictureButton extends StatelessWidget {
 }
 
 class TasksListButton extends StatelessWidget {
-  const TasksListButton({super.key});
+  final UserDataFirebase user;
+  const TasksListButton({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 150.0,
-      width: 200.0,
+      width: 250.0,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -49,12 +50,9 @@ class TasksListButton extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           itemCount: 3,
           itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {},
-              child: ListTile(
-                title: Text('Task $index'),
-              ),
-            );
+            Map<String, dynamic> query = user.queryByUniqueID(['tasks']);
+
+            return Text(query['tasks'][index]);
           },
         ),
       ),
@@ -88,6 +86,7 @@ class Home extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
+                      flex: 1,
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
@@ -101,12 +100,13 @@ class Home extends StatelessWidget {
                       ),
                     ),
                     Expanded(
+                      flex: 2,
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const TasksListButton(),
+                            TasksListButton(user: user),
                             IconButton(
                               onPressed: () {
                                 Navigator.push(

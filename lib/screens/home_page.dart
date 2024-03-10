@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
       TasksPageStarter(user: widget.user),
       Home(user: widget.user),
       Pets(user: widget.user),
-      GachaScreen(user: widget.user)
+      GachaPageStarter(user: widget.user)
     ];
   }
 
