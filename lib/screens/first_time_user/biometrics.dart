@@ -50,8 +50,9 @@ class _Biometrics extends State<Biometrics> {
                 : widget.savedInfo['age'] == -1
                     ? ''
                     : widget.savedInfo['age'].toString(),
-            boxWidth: 50.0,
-            boxHeight: 30.0,
+            boxWidth: MediaQuery.of(context).size.width * 0.20,
+            boxHeight: MediaQuery.of(context).size.height * 0.05,
+            textSize: 18.0,
             textAlignment: Alignment.center,
             callback: (dynamic value) {
               String key = field == 'lbs' ? 'weight' : 'age';
@@ -78,7 +79,7 @@ class _Biometrics extends State<Biometrics> {
           field,
           style: const TextStyle(
             color: Colors.black,
-            fontSize: 20.0,
+            fontSize: 30.0,
           ),
         ),
       ));
@@ -111,7 +112,7 @@ class _Biometrics extends State<Biometrics> {
                 'Height',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 35.0,
+                  fontSize: 40.0,
                 ),
               ),
               rowGenerator(['ft', 'in']),
@@ -120,7 +121,7 @@ class _Biometrics extends State<Biometrics> {
                 'Weight',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 35.0,
+                  fontSize: 40.0,
                 ),
               ),
               rowGenerator(['lbs']),
@@ -129,7 +130,7 @@ class _Biometrics extends State<Biometrics> {
                 'Age',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 35.0,
+                  fontSize: 40.0,
                 ),
               ),
               rowGenerator(['years']),

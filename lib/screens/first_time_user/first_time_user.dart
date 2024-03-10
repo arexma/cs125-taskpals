@@ -46,6 +46,7 @@ class _FirstTimeUser extends State<FirstTimeUser> {
   Widget build(BuildContext context) {
     return PageView(
       controller: pageController,
+      physics: const NeverScrollableScrollPhysics(),
       children: [
         Name(
           savedInfo: {
