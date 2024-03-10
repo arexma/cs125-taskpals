@@ -1,18 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:provider/provider.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:android_id/android_id.dart';
 import 'package:just_audio/just_audio.dart';
-
 import 'screens/first_time_user/first_time_user.dart';
 import 'screens/home_page.dart';
-
 import 'services/user_data.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -95,33 +91,34 @@ class _TaskPals extends State<TaskPals> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return isFirstTimeUser
-                ? FirstTimeUser(
-                    updateParent: (Map<String, dynamic> data) {
-                      user.writeToDatabase(data);
-                      setState(() {});
-                    },
-                    user: user,
-                  )
-                : Provider<MusicPlayer>(
-                    create: (_) => player,
-                    builder: (context, child) {
-                      return ThemeProvider(
-                        saveThemesOnChange: true,
-                        loadThemeOnInit: true,
-                        child: ThemeConsumer(
-                          child: Builder(
-                            builder: (themeContext) => MaterialApp(
-                              title: 'Task Pals',
-                              initialRoute: '/login',
-                              theme: ThemeProvider.themeOf(themeContext).data,
-                              routes: {
-                                '/login': (context) => HomePage(user: user),
-                              },
-                            ),
-                          ),
+              ? FirstTimeUser(
+                updateParent: (Map<String, dynamic> data) {
+                  user.writeToDatabase(data);
+                  setState(() {});
+                },
+                user: user,
+              )
+              : Provider<MusicPlayer>(
+                create: (_) => player,
+                builder: (context, child) {
+                  return ThemeProvider(
+                    saveThemesOnChange: true,
+                    loadThemeOnInit: true,
+                    child: ThemeConsumer(
+                      child: Builder(
+                        builder: (themeContext) => MaterialApp(
+                          title: 'Task Pals',
+                          initialRoute: '/login',
+                          theme: ThemeProvider.themeOf(themeContext).data,
+                          routes: {
+                            '/login': (context) => HomePage(user: user, index: 2),
+                          },
                         ),
-                      );
-                    });
+                      ),
+                    ),
+                  );
+                }
+              );
           } else {
             return const CircularProgressIndicator();
           }
