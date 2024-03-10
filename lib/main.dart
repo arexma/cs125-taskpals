@@ -97,13 +97,38 @@ class _TaskPals extends State<TaskPals> {
                 future: checkFirstTimeUser(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
+                    return MaterialApp(
+                      initialRoute: isFirstTimeUser ? '/first' : '/login',
+                      theme: ThemeData(
+                        fontFamily: 'Minecraft',
+                      ),
+                      routes: {
+                        '/first': (context) => FirstTimeUser(
+                              updateParent: (Map<String, dynamic> data) {
+                                user.writeToDatabase(data);
+                                setState(() {});
+                              },
+                              user: user,
+                            ),
+                        '/login': (context) => HomePage(user: user, index: 2),
+                      },
+                    );
+                    /*
                     return isFirstTimeUser
-                        ? FirstTimeUser(
-                            updateParent: (Map<String, dynamic> data) {
-                              user.writeToDatabase(data);
-                              setState(() {});
+                        ? MaterialApp(
+                            initialRoute: '/first',
+                            theme: ThemeData(
+                              fontFamily: 'Minecraft',
+                            ),
+                            routes: {
+                              '/first': (context) => FirstTimeUser(
+                                    updateParent: (Map<String, dynamic> data) {
+                                      user.writeToDatabase(data);
+                                      setState(() {});
+                                    },
+                                    user: user,
+                                  ),
                             },
-                            user: user,
                           )
                         : MaterialApp(
                             title: 'Task Pals',
@@ -116,6 +141,7 @@ class _TaskPals extends State<TaskPals> {
                                   HomePage(user: user, index: 2),
                             },
                           );
+                          */
                   } else {
                     return const CircularProgressIndicator();
                   }

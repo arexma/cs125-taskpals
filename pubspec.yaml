@@ -72,7 +72,6 @@ flutter:
     - lib/assets/
     - lib/assets/pets/
     - lib/assets/audio/
-    - lib/assets/first_time_user/
     - lib/assets/screen_backgrounds/
     - lib/assets/background/
     - lib/.env

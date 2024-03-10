@@ -115,7 +115,9 @@ class EditableTextFieldState extends State<EditableTextField> {
                 ? Container(
                     decoration: BoxDecoration(boxShadow: [
                       widget.textShadow == null
-                          ? const BoxShadow()
+                          ? const BoxShadow(
+                              color: Colors.transparent,
+                            )
                           : BoxShadow(
                               color: Colors.black.withOpacity(0.2),
                               offset: const Offset(2.0, 2.0),

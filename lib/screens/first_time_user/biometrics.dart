@@ -93,41 +93,50 @@ class _Biometrics extends State<Biometrics> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(25.0),
-        child: AppBar(),
-      ),
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          const Spacer(),
-          const Text(
-            'Height',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 35.0,
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                    'lib/assets/screen_backgrounds/first_time_user.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          rowGenerator(['ft', 'in']),
-          const Spacer(),
-          const Text(
-            'Weight',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 35.0,
-            ),
+          Column(
+            children: <Widget>[
+              const Spacer(),
+              const Text(
+                'Height',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 35.0,
+                ),
+              ),
+              rowGenerator(['ft', 'in']),
+              const Spacer(),
+              const Text(
+                'Weight',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 35.0,
+                ),
+              ),
+              rowGenerator(['lbs']),
+              const Spacer(),
+              const Text(
+                'Age',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 35.0,
+                ),
+              ),
+              rowGenerator(['years']),
+              const Spacer(),
+              widget.navigationWidget,
+            ],
           ),
-          rowGenerator(['lbs']),
-          const Spacer(),
-          const Text(
-            'Age',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 35.0,
-            ),
-          ),
-          rowGenerator(['years']),
-          const Spacer(),
-          widget.navigationWidget,
         ],
       ),
     );

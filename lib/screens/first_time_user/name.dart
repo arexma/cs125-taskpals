@@ -37,16 +37,13 @@ class _Name extends State<Name> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(88.0),
-        child: AppBar(),
-      ),
       body: Stack(
         children: <Widget>[
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/assets/first_time_user/name.jpg'),
+                image: AssetImage(
+                    'lib/assets/screen_backgrounds/first_time_user.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -64,25 +61,28 @@ class _Name extends State<Name> {
                   widget.updateData('pfp', pfpPath);
                 },
                 child: SizedBox(
-                  width: 200.0,
-                  height: 200.0,
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: MediaQuery.of(context).size.width * 0.5,
                   child: ClipOval(
                       child: pfpPath.startsWith('lib/assets/')
                           ? Image.asset(pfpPath, fit: BoxFit.cover)
                           : Image.file(File(pfpPath), fit: BoxFit.cover)),
                 ),
               ),
-              const SizedBox(height: 25.0),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.025),
               const Text(
                 'What is your name?',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 45.0,
+                  fontSize: 40.0,
                 ),
               ),
-              const SizedBox(height: 25.0),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.025),
               EditableTextField(
                 initialText: savedName,
+                boxWidth: MediaQuery.of(context).size.width * 0.75,
+                boxHeight: MediaQuery.of(context).size.height * 0.05,
+                textSize: 16.0,
                 textAlignment: Alignment.center,
                 callback: (dynamic value) {
                   widget.updateData('name', value);
