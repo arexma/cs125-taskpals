@@ -61,6 +61,13 @@ class _ProfileScreen extends State<ProfileScreen> {
                     'Profile',
                     style: TextStyle(
                       color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black,
+                          offset: Offset(2.0, 2.0),
+                          blurRadius: 4.0,
+                        ),
+                      ],
                       fontSize: 45.0,
                     ),
                   ),
@@ -116,7 +123,15 @@ Widget buildColumn(String label, dynamic initialText, BuildContext context,
           label,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            fontSize: 20.0,
+            color: Colors.white,
+            shadows: [
+              Shadow(
+                color: Colors.black,
+                offset: Offset(2.0, 2.0),
+                blurRadius: 4.0,
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 4.0),
@@ -126,14 +141,28 @@ Widget buildColumn(String label, dynamic initialText, BuildContext context,
                     ? '${List<int>.from(initialText).length} / 151'
                     : initialText.toString(),
                 style: const TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
+                  fontSize: 17.0,
+                  shadows: [
+                    Shadow(
+                        color: Colors.black,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 4.0),
+                  ],
                 ),
               )
             : EditableTextField(
                 initialText: initialText.toString(),
-                textColor: Colors.black,
+                textColor: Colors.white,
                 boxWidth: MediaQuery.of(context).size.height * 0.8,
                 boxHeight: MediaQuery.of(context).size.height * 0.05,
+                boxColor: Colors.black45,
+                textSize: 17.0,
+                textShadow: const Shadow(
+                  color: Colors.black,
+                  offset: Offset(2.0, 2.0),
+                  blurRadius: 4.0,
+                ),
                 textAlignment: Alignment.center,
                 callback: callback,
               ),
