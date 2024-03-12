@@ -65,10 +65,9 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String backgroundPath =
-        ThemeProvider.themeOf(context).data == ThemeData.dark()
-            ? 'lib/assets/background/night.gif'
-            : 'lib/assets/background/day.gif';
+    String backgroundPath = ThemeProvider.themeOf(context).data == ThemeData.dark()
+                          ? 'lib/assets/background/night.gif'
+                          : 'lib/assets/background/day.gif';
 
     return Stack(
       children: [
