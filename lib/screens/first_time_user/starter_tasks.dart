@@ -78,9 +78,9 @@ class _StarterTasks extends State<StarterTasks> {
                   itemBuilder: (context, index) {
                     return Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: Colors.white54,
                         border: Border.all(
-                          color: Colors.grey[400]!,
+                          color: Colors.black,
                         ),
                         borderRadius: const BorderRadius.all(
                           Radius.circular(10),
@@ -122,6 +122,7 @@ class _StarterTasks extends State<StarterTasks> {
                     key: _editableTextFieldKey,
                     boxWidth: MediaQuery.of(context).size.width * 0.8 - 48.0,
                     boxHeight: MediaQuery.of(context).size.height * 0.1 - 48.0,
+                    backgroundColor: Colors.white54,
                     borderColor: Colors.black,
                     borderWidth: 2,
                     borderRadius: 10,

@@ -17,7 +17,7 @@ class EditableTextField extends StatefulWidget {
   final String? initialText;
   final double? boxWidth;
   final double? boxHeight;
-  final Color? boxColor;
+  final Color? backgroundColor;
   final Color? borderColor;
   final double? borderWidth;
   final double? borderRadius;
@@ -33,7 +33,7 @@ class EditableTextField extends StatefulWidget {
     this.initialText,
     this.boxWidth,
     this.boxHeight,
-    this.boxColor,
+    this.backgroundColor,
     this.borderColor,
     this.borderWidth,
     this.borderRadius,
@@ -101,7 +101,7 @@ class EditableTextFieldState extends State<EditableTextField> {
         child: Container(
           constraints: const BoxConstraints.expand(),
           decoration: BoxDecoration(
-            color: widget.boxColor ?? Colors.transparent,
+            color: widget.backgroundColor ?? Colors.transparent,
             border: Border.all(
               color: widget.borderColor ?? Colors.black,
               width: widget.borderWidth ?? 2,
