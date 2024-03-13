@@ -52,7 +52,7 @@ class _Biometrics extends State<Biometrics> {
                     : widget.savedInfo['age'].toString(),
             boxWidth: MediaQuery.of(context).size.width * 0.20,
             boxHeight: MediaQuery.of(context).size.height * 0.05,
-            textSize: 18.0,
+            textSize: 20.0,
             textAlignment: Alignment.center,
             callback: (dynamic value) {
               String key = field == 'lbs' ? 'weight' : 'age';
@@ -74,7 +74,10 @@ class _Biometrics extends State<Biometrics> {
       }
 
       children.add(Padding(
-        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+        padding: const EdgeInsets.only(
+          left: 8.0,
+          right: 8.0,
+        ),
         child: Text(
           field,
           style: const TextStyle(
@@ -177,6 +180,7 @@ class _MenuState extends State<Menu> {
   Widget build(BuildContext context) {
     return DropdownMenu(
       initialSelection: selectedValue,
+      textStyle: const TextStyle(fontSize: 25.0),
       onSelected: (value) {
         setState(() {
           selectedValue = value;
