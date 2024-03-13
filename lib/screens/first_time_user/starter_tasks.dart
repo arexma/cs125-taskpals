@@ -126,7 +126,7 @@ class _StarterTasks extends State<StarterTasks> {
                     borderColor: Colors.black,
                     borderWidth: 2,
                     borderRadius: 10,
-                    padding: 5,
+                    padding: 10,
                     textAlignment: Alignment.centerLeft,
                   ),
                   IconButton(

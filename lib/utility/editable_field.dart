@@ -90,48 +90,50 @@ class EditableTextFieldState extends State<EditableTextField> {
     return _controller.text;
   }
 
+  OutlineInputBorder buildBorder() {
+    return OutlineInputBorder(
+      borderSide: BorderSide(
+        color: widget.borderColor ?? Colors.black,
+        width: widget.borderWidth ?? 2,
+      ),
+      borderRadius: BorderRadius.circular(widget.borderRadius ?? 10),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      // Can use MediaQuery to dynamically resize box based on screen size
       width: widget.boxWidth ?? 250,
       height: widget.boxHeight ?? 40,
       child: GestureDetector(
         onTap: _toggleEdit,
-        child: Container(
-          constraints: const BoxConstraints.expand(),
-          decoration: BoxDecoration(
-            color: widget.backgroundColor ?? Colors.transparent,
-            border: Border.all(
-              color: widget.borderColor ?? Colors.black,
-              width: widget.borderWidth ?? 2,
-            ),
-            borderRadius: BorderRadius.circular(widget.borderRadius ?? 10),
+        child: TextField(
+          controller: _controller,
+          focusNode: _focusNode,
+          autofocus: false,
+          decoration: InputDecoration(
+            border: buildBorder(),
+            enabledBorder: buildBorder(),
+            focusedBorder: buildBorder(),
+            filled: true,
+            fillColor: widget.backgroundColor ?? Colors.transparent,
+            contentPadding: EdgeInsets.all(widget.padding ?? 5),
           ),
-          padding: EdgeInsets.all(widget.padding ?? 5),
-          child: Center(
-            child: TextField(
-              controller: _controller,
-              focusNode: _focusNode,
-              autofocus: false,
-              decoration: const InputDecoration(border: InputBorder.none),
-              onTapOutside: (PointerDownEvent event) {
-                _handleSave(_controller.text);
-              },
-              onSubmitted: (String newText) {
-                _handleSave(newText);
-              },
-              textAlign:
-                  alignments[widget.textAlignment ?? Alignment.centerLeft] ??
-                      TextAlign.left,
-              style: TextStyle(
-                color: widget.textColor ?? Colors.black,
-                fontSize: widget.textSize ?? 14.0,
-                shadows: [
-                  widget.textShadow ?? const Shadow(),
-                ],
-              ),
-            ),
+          onTapOutside: (PointerDownEvent event) {
+            _handleSave(_controller.text);
+          },
+          onSubmitted: (String newText) {
+            _handleSave(newText);
+          },
+          textAlign: alignments[widget.textAlignment ?? Alignment.centerLeft] ??
+              TextAlign.left,
+          textAlignVertical: TextAlignVertical.center,
+          style: TextStyle(
+            color: widget.textColor ?? Colors.black,
+            fontSize: widget.textSize ?? 14.0,
+            shadows: [
+              widget.textShadow ?? const Shadow(),
+            ],
           ),
         ),
       ),
