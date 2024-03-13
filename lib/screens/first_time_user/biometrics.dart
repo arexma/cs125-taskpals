@@ -50,8 +50,9 @@ class _Biometrics extends State<Biometrics> {
                 : widget.savedInfo['age'] == -1
                     ? ''
                     : widget.savedInfo['age'].toString(),
-            boxWidth: 50.0,
-            boxHeight: 30.0,
+            boxWidth: MediaQuery.of(context).size.width * 0.20,
+            boxHeight: MediaQuery.of(context).size.height * 0.05,
+            textSize: 20.0,
             textAlignment: Alignment.center,
             callback: (dynamic value) {
               String key = field == 'lbs' ? 'weight' : 'age';
@@ -73,12 +74,15 @@ class _Biometrics extends State<Biometrics> {
       }
 
       children.add(Padding(
-        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+        padding: const EdgeInsets.only(
+          left: 8.0,
+          right: 8.0,
+        ),
         child: Text(
           field,
           style: const TextStyle(
             color: Colors.black,
-            fontSize: 20.0,
+            fontSize: 30.0,
           ),
         ),
       ));
@@ -93,41 +97,53 @@ class _Biometrics extends State<Biometrics> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(25.0),
-        child: AppBar(),
-      ),
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          const Spacer(),
-          const Text(
-            'Height',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 35.0,
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                    'lib/assets/screen_backgrounds/first_time_user.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          rowGenerator(['ft', 'in']),
-          const Spacer(),
-          const Text(
-            'Weight',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 35.0,
-            ),
+          Column(
+            children: <Widget>[
+              const Spacer(),
+              const Text(
+                'Height',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 40.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              rowGenerator(['ft', 'in']),
+              const Spacer(),
+              const Text(
+                'Weight',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 40.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              rowGenerator(['lbs']),
+              const Spacer(),
+              const Text(
+                'Age',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 40.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              rowGenerator(['years']),
+              const Spacer(),
+              widget.navigationWidget,
+            ],
           ),
-          rowGenerator(['lbs']),
-          const Spacer(),
-          const Text(
-            'Age',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 35.0,
-            ),
-          ),
-          rowGenerator(['years']),
-          const Spacer(),
-          widget.navigationWidget,
         ],
       ),
     );
@@ -164,6 +180,7 @@ class _MenuState extends State<Menu> {
   Widget build(BuildContext context) {
     return DropdownMenu(
       initialSelection: selectedValue,
+      textStyle: const TextStyle(fontSize: 25.0),
       onSelected: (value) {
         setState(() {
           selectedValue = value;

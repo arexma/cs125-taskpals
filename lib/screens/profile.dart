@@ -156,7 +156,7 @@ Widget buildColumn(String label, dynamic initialText, BuildContext context,
                 textColor: Colors.white,
                 boxWidth: MediaQuery.of(context).size.height * 0.8,
                 boxHeight: MediaQuery.of(context).size.height * 0.05,
-                boxColor: Colors.black45,
+                backgroundColor: Colors.black45,
                 textSize: 17.0,
                 textShadow: const Shadow(
                   color: Colors.black,
