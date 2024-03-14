@@ -113,35 +113,6 @@ class _TaskPals extends State<TaskPals> {
                         '/login': (context) => HomePage(user: user, index: 2),
                       },
                     );
-                    /*
-                    return isFirstTimeUser
-                        ? MaterialApp(
-                            initialRoute: '/first',
-                            theme: ThemeData(
-                              fontFamily: 'Minecraft',
-                            ),
-                            routes: {
-                              '/first': (context) => FirstTimeUser(
-                                    updateParent: (Map<String, dynamic> data) {
-                                      user.writeToDatabase(data);
-                                      setState(() {});
-                                    },
-                                    user: user,
-                                  ),
-                            },
-                          )
-                        : MaterialApp(
-                            title: 'Task Pals',
-                            theme: ThemeData(
-                              fontFamily: 'Minecraft',
-                            ),
-                            initialRoute: '/login',
-                            routes: {
-                              '/login': (context) =>
-                                  HomePage(user: user, index: 2),
-                            },
-                          );
-                          */
                   } else {
                     return const CircularProgressIndicator();
                   }

@@ -4,6 +4,7 @@ import 'package:taskpals/screens/home_page.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'settings.dart';
 import '../services/user_data.dart';
+import 'dart:io';
 
 class ProfilePictureButton extends StatelessWidget {
   final UserDataFirebase user;
@@ -61,13 +62,18 @@ class TasksListButton extends StatelessWidget {
 
 class Home extends StatelessWidget {
   final UserDataFirebase user;
-  const Home({super.key, required this.user});
+  final String pfpPath;
+
+  Home({super.key, required this.user})
+      : pfpPath = user.queryByUniqueID(['pfp'])['pfp'] ??
+            'lib/assets/default_profile.png';
 
   @override
   Widget build(BuildContext context) {
-    String backgroundPath = ThemeProvider.themeOf(context).data == ThemeData.dark()
-                          ? 'lib/assets/background/night.gif'
-                          : 'lib/assets/background/day.gif';
+    String backgroundPath =
+        ThemeProvider.themeOf(context).data == ThemeData.dark()
+            ? 'lib/assets/background/night.gif'
+            : 'lib/assets/background/day.gif';
 
     return Stack(
       children: [
@@ -87,7 +93,14 @@ class Home extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ProfilePictureButton(user: user),
+                SizedBox(
+                  width: 80.0,
+                  height: 80.0,
+                  child: ClipOval(
+                      child: pfpPath.startsWith('lib/assets/')
+                          ? Image.asset(pfpPath, fit: BoxFit.cover)
+                          : Image.file(File(pfpPath), fit: BoxFit.cover)),
+                ),
                 const Padding(padding: EdgeInsets.all(8.0)),
                 Text(
                     'Currency: \$${user.queryByUniqueID([
