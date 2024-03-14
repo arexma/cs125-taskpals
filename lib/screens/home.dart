@@ -1,37 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pixelarticons/pixelarticons.dart';
-import 'package:taskpals/screens/home_page.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'settings.dart';
 import '../services/user_data.dart';
 import 'dart:io';
-
-class ProfilePictureButton extends StatelessWidget {
-  final UserDataFirebase user;
-  const ProfilePictureButton({super.key, required this.user});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(user: user, index: 0),
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 30),
-        width: 80,
-        height: 80,
-        clipBehavior: Clip.antiAlias,
-        decoration: const BoxDecoration(shape: BoxShape.circle),
-        child: Image.asset('lib/assets/default_profile.png'),
-      ),
-    );
-  }
-}
 
 class TasksListButton extends StatelessWidget {
   final UserDataFirebase user;
@@ -51,7 +23,7 @@ class TasksListButton extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           itemCount: 3,
           itemBuilder: (context, index) {
-            Map<String, dynamic> query = user.queryByUniqueID(['tasks']);
+            Map<String, dynamic> query = user.queryByField(['tasks']);
             return Text(query['tasks'][index]);
           },
         ),
@@ -65,7 +37,7 @@ class Home extends StatelessWidget {
   final String pfpPath;
 
   Home({super.key, required this.user})
-      : pfpPath = user.queryByUniqueID(['pfp'])['pfp'] ??
+      : pfpPath = user.queryByField(['pfp'])['pfp'] ??
             'lib/assets/default_profile.png';
 
   @override
@@ -103,7 +75,7 @@ class Home extends StatelessWidget {
                 ),
                 const Padding(padding: EdgeInsets.all(8.0)),
                 Text(
-                    'Currency: \$${user.queryByUniqueID([
+                    'Currency: \$${user.queryByField([
                           'currency'
                         ])['currency']}',
                     style: const TextStyle(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import '../services/user_data.dart';
 import 'package:theme_provider/theme_provider.dart';
 
@@ -172,10 +171,12 @@ class _PetsState extends State<Pets> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> userPets = List<String>.from(widget.user.queryByUniqueID(['pals_collected'])['pals_collected']);
-      String backgroundPath = ThemeProvider.themeOf(context).data == ThemeData.dark()
-                            ? 'lib/assets/background/night.gif'
-                            : 'lib/assets/background/day.gif';
+    List<String> userPets = List<String>.from(
+        widget.user.queryByField(['pals_collected'])['pals_collected']);
+    String backgroundPath =
+        ThemeProvider.themeOf(context).data == ThemeData.dark()
+            ? 'lib/assets/background/night.gif'
+            : 'lib/assets/background/day.gif';
 
     print(userPets);
 
@@ -190,70 +191,68 @@ class _PetsState extends State<Pets> {
           ),
         ),
         GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
-            mainAxisSpacing: 4.0,
-            crossAxisSpacing: 4.0,
-          ),
-          itemCount: petNames.length,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                
-              },
-              child: GridTile(
-                child: petSearch(userPets, petNames[index]) == true
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image(
-                          image: AssetImage(
-                            'lib/assets/pets/${petNames[index]}.gif'
-                          ),
-                          width: 80,
-                          height: 80,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 5,
+              mainAxisSpacing: 4.0,
+              crossAxisSpacing: 4.0,
+            ),
+            itemCount: petNames.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {},
+                child: GridTile(
+                  child: petSearch(userPets, petNames[index]) == true
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image(
+                              image: AssetImage(
+                                  'lib/assets/pets/${petNames[index]}.gif'),
+                              width: 80,
+                              height: 80,
+                            ),
+                            Text(
+                              petNames[index],
+                              style: TextStyle(
+                                color: ThemeProvider.themeOf(context)
+                                    .data
+                                    .hintColor,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ShaderMask(
+                              shaderCallback: (Rect bounds) {
+                                return const LinearGradient(
+                                    colors: [Colors.black, Colors.transparent],
+                                    stops: [1.0, 1.0]).createShader(bounds);
+                              },
+                              blendMode: BlendMode.srcIn,
+                              child: Image(
+                                image: AssetImage(
+                                    'lib/assets/pets/${petNames[index]}.gif'),
+                                width: 50,
+                                height: 50,
+                              ),
+                            ),
+                            Text(
+                              petNames[index],
+                              style: TextStyle(
+                                color: ThemeProvider.themeOf(context)
+                                    .data
+                                    .hintColor,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          petNames[index],
-                          style: TextStyle(
-                            color: ThemeProvider.themeOf(context).data.hintColor,
-                          ),
-                        ),
-                      ],
-                    )
-                  : Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ShaderMask(
-                        shaderCallback: (Rect bounds) {
-                          return const LinearGradient(
-                            colors: [Colors.black, Colors.transparent],
-                            stops: [1.0, 1.0]
-                          ).createShader(bounds);
-                        },
-                        blendMode: BlendMode.srcIn,
-                        child: Image(
-                          image: AssetImage(
-                            'lib/assets/pets/${petNames[index]}.gif'
-                          ),
-                          width: 50,
-                          height: 50,
-                        ),
-                      ),
-                      Text(
-                        petNames[index],
-                        style: TextStyle(
-                          color: ThemeProvider.themeOf(context).data.hintColor,
-                        ),
-                      ),
-                    ],
-                  ),
-              ),
-            );
-          }
-        ),
+                ),
+              );
+            }),
       ],
     );
   }

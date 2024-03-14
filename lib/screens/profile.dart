@@ -32,7 +32,7 @@ class _ProfileScreen extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    pfpPath = widget.user.queryByUniqueID(['pfp'])['pfp'] ??
+    pfpPath = widget.user.queryByField(['pfp'])['pfp'] ??
         'lib/assets/default_profile.png';
   }
 
@@ -94,7 +94,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                       .map(
                         (entry) => buildColumn(
                           entry.value,
-                          widget.user.queryByUniqueID([entry.key])[entry.key],
+                          widget.user.queryByField([entry.key])[entry.key],
                           context,
                           (dynamic value) {
                             widget.user.updateDatabase({entry.key: value});
@@ -138,7 +138,7 @@ Widget buildColumn(String label, dynamic initialText, BuildContext context,
         label == 'Pals Collected' || label == 'Currency'
             ? Text(
                 label == 'Pals Collected'
-                    ? '${List<int>.from(initialText).length} / 151'
+                    ? '${List<String>.from(initialText).length} / 151'
                     : initialText.toString(),
                 style: const TextStyle(
                   color: Colors.white,

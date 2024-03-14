@@ -76,7 +76,7 @@ class TasksPage extends State<TasksPageStarter> {
 
   // obtains tasks from database and turns into list (string)
   List<dynamic> queryToStringsList(String field) {
-    Map<String, dynamic> query = widget.user.queryByUniqueID([field]);
+    Map<String, dynamic> query = widget.user.queryByField([field]);
     return query[field] ?? [];
   }
 
@@ -127,7 +127,7 @@ class TasksPage extends State<TasksPageStarter> {
       tasksList.add(
           buildListElement(_listItemKey, tasksList.length, taskDescription));
       _listItemKey += 1;
-      List<dynamic> tasks = widget.user.queryByUniqueID(['tasks'])['tasks'];
+      List<dynamic> tasks = widget.user.queryByField(['tasks'])['tasks'];
       tasks.add(taskDescription);
       widget.user.updateDatabase({'tasks': tasks});
     });
@@ -147,7 +147,7 @@ class TasksPage extends State<TasksPageStarter> {
       if (addPoints) {
         tasksCompletedList.add(taskDescription);
         Map<String, dynamic> tasks =
-            widget.user.queryByUniqueID(['completed_tasks', 'tasks']);
+            widget.user.queryByField(['completed_tasks', 'tasks']);
         if (tasks['completed_tasks'] == null) {
           tasks['completed_tasks'] = [taskDescription];
         } else {
@@ -158,7 +158,7 @@ class TasksPage extends State<TasksPageStarter> {
       } else {
         tasksDeletedList.add(taskDescription);
         Map<String, dynamic> tasks =
-            widget.user.queryByUniqueID(['deleted_tasks', 'tasks']);
+            widget.user.queryByField(['deleted_tasks', 'tasks']);
         if (tasks['deleted_tasks'] == null) {
           tasks['deleted_tasks'] = [taskDescription];
         } else {

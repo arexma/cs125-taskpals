@@ -97,7 +97,7 @@ class UserDataFirebase {
   }
 
   // Returns user data if fields not specified
-  Map<String, dynamic> queryByUniqueID([List<String>? fields]) {
+  Map<String, dynamic> queryByField([List<String>? fields]) {
     Map<String, dynamic> res = fields == null ? data : {};
     if (fields != null) {
       for (String field in fields) {
