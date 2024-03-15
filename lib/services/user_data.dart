@@ -17,6 +17,7 @@
 // {
 //    name --> string
 //    hunger --> int (out of 10)
+//    status --> bool (true/alive, false/dead)
 // }
 
 // TODO

@@ -10,7 +10,7 @@ class TimerService with ChangeNotifier {
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(const Duration(minutes: 10), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       callback();
     });
   }

@@ -47,6 +47,7 @@ class HomeState extends State<Home> {
   late String pfpPath;
   late TimerService timerService;
   late String currentPal;
+  late int hunger;
 
   @override
   void initState() {
@@ -55,19 +56,40 @@ class HomeState extends State<Home> {
         'lib/assets/default_profile.png';
     currentPal = widget.user.queryByField(['current_pal'])['current_pal'];
 
+    for (Map<String, dynamic> pal in List<Map<String, dynamic>>.from(
+        widget.user.queryByField(['pals_collected'])['pals_collected'])) {
+      if (pal['name'] == currentPal) {
+        hunger = pal['hunger'];
+      }
+    }
+
     timerService = TimerService(() {
       // Need something for when hunger reaches 0
       updateHunger(false);
     });
   }
 
-  void updateHunger(bool flag) {
+  void updateHunger(bool flag) async {
     List<Map<String, dynamic>> pals = List<Map<String, dynamic>>.from(
         widget.user.queryByField(['pals_collected'])['pals_collected']);
 
     for (Map<String, dynamic> pal in pals) {
       if (pal['name'] == currentPal) {
-        flag ? pal['hunger'] += 1 : pal['hunger'] -= 1;
+        // Temporary code for 0 hunger handling
+        if (pal['hunger'] == 0) {
+          pal['hunger'] = 11;
+        }
+
+        if (flag) {
+          if (pal['hunger'] != 10) {
+            pal['hunger'] += 1;
+          }
+        } else {
+          pal['hunger'] -= 1;
+        }
+        setState(() {
+          hunger = pal['hunger'];
+        });
       }
     }
 
@@ -150,13 +172,13 @@ class HomeState extends State<Home> {
             child: const Text('Feed me!'),
           ),
         ),
-        const Align(
+        Align(
           alignment: Alignment.bottomCenter,
           child: SizedBox(
             child: Image(
-              image: AssetImage('lib/assets/pets/Squirtle.gif'),
-              width: 300,
-              height: 300,
+              image: const AssetImage('lib/assets/pets/Squirtle.gif'),
+              width: hunger * 30,
+              height: hunger * 30,
               fit: BoxFit.contain,
             ),
           ),
