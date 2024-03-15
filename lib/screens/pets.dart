@@ -166,7 +166,6 @@ class _PetsState extends State<Pets> {
     if (userPets.contains(pet)) {
       return !owns;
     }
-
     return owns;
   }
 
@@ -176,8 +175,6 @@ class _PetsState extends State<Pets> {
       String backgroundPath = ThemeProvider.themeOf(context).data == ThemeData.dark()
                             ? 'lib/assets/background/night.gif'
                             : 'lib/assets/background/day.gif';
-
-    print(userPets);
 
     return Stack(
       children: [
@@ -199,7 +196,52 @@ class _PetsState extends State<Pets> {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                
+                if (petSearch(userPets, petNames[index]) == true) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext dialogContext) {
+                      return AlertDialog(
+                        title: Text(petNames[index]),
+                        content: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image(
+                              image: AssetImage(
+                                'lib/assets/pets/${petNames[index]}.gif'
+                              ),
+                            ),
+                            const Text(
+                              'Change Pets?'
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    widget.user.updateDatabase({'current_pal': petNames[index]});
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    'Yes'
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    'No'
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  );
+                }
               },
               child: GridTile(
                 child: petSearch(userPets, petNames[index]) == true
@@ -218,6 +260,7 @@ class _PetsState extends State<Pets> {
                           petNames[index],
                           style: TextStyle(
                             color: ThemeProvider.themeOf(context).data.hintColor,
+                            fontSize: 12.0,
                           ),
                         ),
                       ],
@@ -238,14 +281,15 @@ class _PetsState extends State<Pets> {
                           image: AssetImage(
                             'lib/assets/pets/${petNames[index]}.gif'
                           ),
-                          width: 50,
-                          height: 50,
+                          width: 80,
+                          height: 80,
                         ),
                       ),
                       Text(
                         petNames[index],
                         style: TextStyle(
                           color: ThemeProvider.themeOf(context).data.hintColor,
+                          fontSize: 12.0,
                         ),
                       ),
                     ],

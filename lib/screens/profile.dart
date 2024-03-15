@@ -138,7 +138,7 @@ Widget buildColumn(String label, dynamic initialText, BuildContext context,
         label == 'Pals Collected' || label == 'Currency'
             ? Text(
                 label == 'Pals Collected'
-                    ? '${List<int>.from(initialText).length} / 151'
+                    ? '${List<String>.from(initialText).length} / 145'
                     : initialText.toString(),
                 style: const TextStyle(
                   color: Colors.white,

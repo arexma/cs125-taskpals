@@ -136,11 +136,11 @@ class Home extends StatelessWidget {
             ),
           ),
         ),
-        const Align(
+        Align(
           alignment: Alignment.bottomCenter,
           child: SizedBox(
             child: Image(
-              image: AssetImage('lib/assets/pets/Squirtle.gif'),
+              image: AssetImage('lib/assets/pets/${user.queryByUniqueID(['current_pal'])['current_pal']}.gif'),
               width: 300,
               height: 300,
               fit: BoxFit.contain,
