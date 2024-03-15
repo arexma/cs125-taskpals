@@ -5,6 +5,7 @@ Where the user can use in-app currency to roll for pets after earning their wage
 import 'package:flutter/material.dart';
 import '../services/user_data.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'dart:math' as math;
 
 class GachaPageStarter extends StatefulWidget {
   final UserDataFirebase user;
@@ -74,7 +75,7 @@ class GachaPage extends State<GachaPageStarter> {
     "Hypno",
     "Ivysaur",
     "Jigglypuff",
-    "Jolteo",
+    "Jolteon",
     "Jynx",
     "Kabuto",
     "Kabutops",
@@ -167,8 +168,7 @@ class GachaPage extends State<GachaPageStarter> {
   @override
   void initState() {
     super.initState();
-    String temp = queryCoins();
-    coins = int.parse(temp);
+    coins = queryCoins();
   }
 
   @override
@@ -184,9 +184,12 @@ class GachaPage extends State<GachaPageStarter> {
                 flex: 1,
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Text(
-                    "$coins Coins",
-                    style: const TextStyle(fontSize: 20, color: Colors.red),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: Text(
+                      "$coins Coins",
+                      style: const TextStyle(fontSize: 20, color: Colors.red),
+                    ),
                   ),
                 ),
               ),
@@ -220,15 +223,17 @@ class GachaPage extends State<GachaPageStarter> {
                         child: Row(children: [
                           Image.asset('lib/assets/coin.png',
                               height: 40, fit: BoxFit.cover),
-                          const Text("5"),
+                          const Text(" 5 "),
                           const Text("Summon x1"),
                         ]),
                         onPressed: () {
                           if (coins >= 5) {
-                            print("summoning 1 time(s) -- $coins");
+                            debugPrint("summoning 1 time(s) -- $coins");
+                            summonPals(1);
                             subtractCoins(5);
+                          } else {
+                            debugPrint("failed to summon 1 time(s) -- $coins");
                           }
-                          print("failed to summon 1 time(s) -- $coins");
                         },
                       ),
                     ),
@@ -252,15 +257,17 @@ class GachaPage extends State<GachaPageStarter> {
                         child: Row(children: [
                           Image.asset('lib/assets/coin.png',
                               height: 40, fit: BoxFit.cover),
-                          const Text("50"),
+                          const Text(" 50 "),
                           const Text("Summon x10"),
                         ]),
                         onPressed: () {
                           if (coins >= 50) {
-                            print("summoning 10 time(s) -- $coins");
+                            debugPrint("summoning 10 time(s) -- $coins");
+                            summonPals(10);
                             subtractCoins(50);
+                          } else {
+                            debugPrint("failed to summon 10 time(s) -- $coins");
                           }
-                          print("failed to summon 10 time(s) -- $coins");
                         },
                       ),
                     ),
@@ -274,18 +281,96 @@ class GachaPage extends State<GachaPageStarter> {
     );
   }
 
-  // obtains tasks from database and turns into list (string)
-  String queryCoins() {
-    Map<String, dynamic> query = widget.user.queryByField(["coins"]);
-    return query["coins"] ?? "0";
+  int queryCoins() {
+    return widget.user.queryByField(['currency'])['currency'];
+  }
+
+  String getRandomPal() {
+    math.Random random = math.Random();
+    int index = random.nextInt(allPals.length);
+    String randomPal = allPals[index];
+
+    return randomPal;
+  }
+
+  void summonPals(int amount) {
+    Map<String, dynamic> db = widget.user.queryByField(['pals_collected']);
+    List<String> summonedList = [];
+    int i = 0;
+    for (i; i < amount; i++) {
+      String tempPal = getRandomPal();
+      while (db['pals_collected'].contains(tempPal)) {
+        tempPal = getRandomPal();
+      }
+      db['pals_collected'].add(tempPal);
+      summonedList.add(tempPal);
+      debugPrint(tempPal);
+    }
+
+    widget.user.updateDatabase(db);
+    showSummonedPals(summonedList);
   }
 
   void subtractCoins(int amount) {
-    Map<String, dynamic> db = widget.user.queryByField(['coins']);
-    String tempCoinsString = db["coins"];
-    int tempCoins = int.parse(tempCoinsString);
+    Map<String, dynamic> db = widget.user.queryByField(['currency']);
+    int tempCoins = db['currency'];
     tempCoins -= amount;
-    db["coins"] = tempCoins;
+    db['currency'] = tempCoins;
     widget.user.updateDatabase(db);
+    setState(() {
+      coins = tempCoins;
+    });
+  }
+
+  void showSummonedPals(List<String> summonedPals) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Summoned Pals'),
+          content: SizedBox(
+            width: 300,
+            height: 400,
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 4.0,
+                crossAxisSpacing: 4.0,
+              ),
+              itemCount: summonedPals.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GridTile(
+                  child: Column(
+                    children: [
+                      Image(
+                        image: AssetImage(
+                            'lib/assets/pets/${summonedPals[index]}.gif'),
+                        width: 80,
+                        height: 80,
+                      ),
+                      Text(
+                        summonedPals[index],
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

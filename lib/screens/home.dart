@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:pixelarticons/pixelarticons.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'settings.dart';
 import '../services/user_data.dart';
 import '../services/timer.dart';
 import 'dart:io';
+import 'dart:math';
 
 class TasksListButton extends StatelessWidget {
   final UserDataFirebase user;
@@ -12,21 +14,28 @@ class TasksListButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> query = user.queryByField(['tasks']);
+    int queryCount = min(3, query['tasks'].length);
     return SizedBox(
       height: 150.0,
       width: 250.0,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
+          color: Colors.white.withOpacity(0.5),
         ),
         child: ListView.builder(
           padding: const EdgeInsets.all(8.0),
-          itemCount: 3,
           itemBuilder: (context, index) {
-            Map<String, dynamic> query = user.queryByField(['tasks']);
-            return Text(query['tasks'][index]);
+            return Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(query['tasks'][index]),
+              ),
+            );
           },
+          itemCount: queryCount,
         ),
       ),
     );

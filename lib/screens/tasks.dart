@@ -10,6 +10,7 @@ import '../services/user_data.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import './lifestyle_score/health_service.dart';
 
 class TasksPageStarter extends StatefulWidget {
   final UserDataFirebase user;
@@ -28,9 +29,8 @@ class TasksPage extends State<TasksPageStarter> {
   List<String> tasksCompletedList = [];
   List<String> tasksDeletedList = [];
   List<String> recommendedTasksList = [];
-  int _currentIndex = 0;
   int _listItemKey = 0;
-  //var env = DotEnv(includePlatformEnvironment: true)..load();
+  int? totalSteps;
 
   @override
   void initState() {
@@ -41,10 +41,10 @@ class TasksPage extends State<TasksPageStarter> {
     List<dynamic> deletedTasks = queryToStringsList('deleted_tasks');
     queryToTopLists(completedTasks, deletedTasks);
     addRecommendedTasks();
+    getSteps();
   }
 
   Future<String> sendMessage(String message) async {
-    print(dotenv.env['OPENAIKEY']);
     final response = await http.post(
       Uri.parse('https://api.openai.com/v1/chat/completions'),
       headers: {
@@ -65,13 +65,29 @@ class TasksPage extends State<TasksPageStarter> {
 
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
-      print(jsonResponse['choices'][0]['message']['content']);
+      debugPrint(jsonResponse['choices'][0]['message']['content']);
       return jsonResponse['choices'][0]['message']['content'].toString();
     } else {
-      print("Resquest failed with status: ${response.statusCode}");
-      print("Error message: ${response.body}");
+      debugPrint("Resquest failed with status: ${response.statusCode}");
+      debugPrint("Error message: ${response.body}");
     }
     return 'Failed to obtain response';
+  }
+
+  Future getSteps() async {
+    int? steps;
+    try {
+      steps = await HealthService().getSteps();
+      if (steps == -1) {
+        debugPrint("Authorization not granted");
+      }
+    } catch (e) {
+      debugPrint("Error message::::$e");
+    }
+    debugPrint("Total number of steps:::: $steps");
+    setState(() {
+      totalSteps = steps ?? 0;
+    });
   }
 
   // obtains tasks from database and turns into list (string)
@@ -122,6 +138,14 @@ class TasksPage extends State<TasksPageStarter> {
     setState(() {});
   }
 
+  void changeCurrency() {
+    int currency = widget.user.queryByField(['currency'])['currency'];
+    // int currencyInt = int.parse(currency);
+    currency += 5;
+    // currency = currencyInt.toString();
+    widget.user.updateDatabase({'currency': currency});
+  }
+
   addListItem(String taskDescription, {bool initialize = false}) {
     setState(() {
       tasksList.add(
@@ -145,6 +169,7 @@ class TasksPage extends State<TasksPageStarter> {
     setState(() {
       tasksList.removeWhere((item) => item.key == key);
       if (addPoints) {
+        changeCurrency();
         tasksCompletedList.add(taskDescription);
         Map<String, dynamic> tasks =
             widget.user.queryByField(['completed_tasks', 'tasks']);
@@ -189,20 +214,20 @@ class TasksPage extends State<TasksPageStarter> {
                 child: PageView.builder(
                   // controller: _pageController,
                   onPageChanged: (index) {
-                    setState(() {
-                      _currentIndex = index;
-                    });
+                    setState(() {});
                   },
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return recommendedTasksViewer(recommendedTasksList);
                     } else if (index == 1) {
                       return tasksCompletedViewer(tasksCompletedList);
-                    } else {
+                    } else if (index == 2) {
                       return tasksDeletedViewer(tasksDeletedList);
+                    } else {
+                      return healthDataViewer();
                     }
                   },
-                  itemCount: 3,
+                  itemCount: 4,
                 ),
               ),
               Expanded(
@@ -358,6 +383,31 @@ class TasksPage extends State<TasksPageStarter> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget healthDataViewer() {
+    return Container(
+      color: Colors.amberAccent,
+      child: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: Colors.amber,
+              child: const Center(
+                child: Text("Health Tracker"),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 5,
+            child: Container(
+                padding: const EdgeInsets.only(top: 28, bottom: 28),
+                child: Text("Total steps taken today: $totalSteps")),
+          ),
+        ],
+      ),
     );
   }
 

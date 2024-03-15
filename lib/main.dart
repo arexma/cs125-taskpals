@@ -12,10 +12,17 @@ import 'services/user_data.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:health/health.dart';
+
+late HealthFactory healthFactory;
+
+void initializeDependencies() {
+  WidgetsFlutterBinding.ensureInitialized();
+  healthFactory = HealthFactory(useHealthConnectIfAvailable: true);
+}
 
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
+  initializeDependencies();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
