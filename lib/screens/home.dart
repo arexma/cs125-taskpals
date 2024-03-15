@@ -48,16 +48,22 @@ class HomeState extends State<Home> {
   late TimerService timerService;
   late String currentPal;
   late int hunger;
+  late int currency;
 
   @override
   void initState() {
     super.initState();
     pfpPath = widget.user.queryByField(['pfp'])['pfp'] ??
         'lib/assets/default_profile.png';
-    currentPal = widget.user.queryByField(['current_pal'])['current_pal'];
 
-    for (Map<String, dynamic> pal in List<Map<String, dynamic>>.from(
-        widget.user.queryByField(['pals_collected'])['pals_collected'])) {
+    Map<String, dynamic> data =
+        widget.user.queryByField(['current_pal', 'pals_collected', 'currency']);
+
+    currentPal = data['current_pal'];
+    currency = data['currency'];
+
+    for (Map<String, dynamic> pal
+        in List<Map<String, dynamic>>.from(data['pals_collected'])) {
       if (pal['name'] == currentPal) {
         hunger = pal['hunger'];
       }
@@ -73,27 +79,37 @@ class HomeState extends State<Home> {
     List<Map<String, dynamic>> pals = List<Map<String, dynamic>>.from(
         widget.user.queryByField(['pals_collected'])['pals_collected']);
 
-    for (Map<String, dynamic> pal in pals) {
-      if (pal['name'] == currentPal) {
-        // Temporary code for 0 hunger handling
-        if (pal['hunger'] == 0) {
-          pal['hunger'] = 11;
-        }
+    setState(() {
+      currency = widget.user.queryByField(['currency'])['currency'];
+    });
 
-        if (flag) {
-          if (pal['hunger'] != 10) {
-            pal['hunger'] += 1;
+    if (currency >= 5) {
+      widget.user.updateDatabase({
+        'currency': widget.user.queryByField(['currency'])['currency'] -= 5
+      });
+
+      for (Map<String, dynamic> pal in pals) {
+        if (pal['name'] == currentPal) {
+          // Temporary code for 0 hunger handling
+          if (pal['hunger'] == 0) {
+            pal['hunger'] = 9;
           }
-        } else {
-          pal['hunger'] -= 1;
-        }
-        setState(() {
-          hunger = pal['hunger'];
-        });
-      }
-    }
 
-    widget.user.updateDatabase({'pals_collected': pals});
+          if (flag) {
+            if (pal['hunger'] != 10) {
+              pal['hunger'] += 1;
+            }
+          } else {
+            pal['hunger'] -= 1;
+          }
+          setState(() {
+            hunger = pal['hunger'];
+          });
+        }
+      }
+
+      widget.user.updateDatabase({'pals_collected': pals});
+    }
   }
 
   @override
@@ -168,7 +184,8 @@ class HomeState extends State<Home> {
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
-            onPressed: hunger == 10 ? null : () => updateHunger(true),
+            onPressed:
+                hunger == 10 || currency < 5 ? null : () => updateHunger(true),
             child: const Text('Feed me!'),
           ),
         ),
@@ -187,5 +204,3 @@ class HomeState extends State<Home> {
     );
   }
 }
-
-// Max size: 300 x 300
