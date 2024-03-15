@@ -6,13 +6,19 @@
 //    height --> int (inches)
 //    weight --> int
 //    age --> int
-//    pals_collected --> [strings] (pal names)
+//    pals_collected --> [PetData]
 //    tasks --> [string] (task descriptions)
 //    tasks_completed --> [string]
 //    tasks_deleted --> [string]
 //    goals --> [string]
 //    pfp --> string
 
+// PetData
+// {
+//    name --> string
+//    hunger --> int (out of 10)
+//
+// }
 // TODO
 //  Error handling
 

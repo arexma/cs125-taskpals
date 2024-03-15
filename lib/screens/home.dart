@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pixelarticons/pixelarticons.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:provider/provider.dart';
 import 'settings.dart';
 import '../services/user_data.dart';
+import '../services/timer.dart';
 import 'dart:io';
 
 class TasksListButton extends StatelessWidget {
@@ -32,13 +34,29 @@ class TasksListButton extends StatelessWidget {
   }
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   final UserDataFirebase user;
-  final String pfpPath;
 
-  Home({super.key, required this.user})
-      : pfpPath = user.queryByField(['pfp'])['pfp'] ??
-            'lib/assets/default_profile.png';
+  const Home({super.key, required this.user});
+
+  @override
+  HomeState createState() => HomeState();
+}
+
+class HomeState extends State<Home> {
+  late String pfpPath;
+  late TimerService timerService;
+
+  @override
+  void initState() {
+    super.initState();
+    pfpPath = widget.user.queryByField(['pfp'])['pfp'] ??
+        'lib/assets/default_profile.png';
+    timerService = Provider.of<TimerService>(context, listen: false);
+    timerService.startTimer();
+  }
+
+  void feedPet() {}
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +93,7 @@ class Home extends StatelessWidget {
                 ),
                 const Padding(padding: EdgeInsets.all(8.0)),
                 Text(
-                    'Currency: \$${user.queryByField([
+                    'Currency: \$${widget.user.queryByField([
                           'currency'
                         ])['currency']}',
                     style: const TextStyle(
@@ -93,19 +111,29 @@ class Home extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                TasksListButton(user: user),
+                TasksListButton(user: widget.user),
                 const Padding(padding: EdgeInsets.all(8.0)),
                 IconButton(
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SettingsPage(user: user)));
+                            builder: (context) =>
+                                SettingsPage(user: widget.user)));
                   },
                   icon: const Icon(Pixel.editbox),
                 ),
               ],
             ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: ElevatedButton(
+            onPressed: () {
+              feedPet();
+            },
+            child: const Text('Feed me!'),
           ),
         ),
         const Align(
@@ -123,3 +151,5 @@ class Home extends StatelessWidget {
     );
   }
 }
+
+// Max size: 300 x 300
