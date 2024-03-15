@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pixelarticons/pixelarticons.dart';
 import 'package:theme_provider/theme_provider.dart';
-import 'package:provider/provider.dart';
 import 'settings.dart';
 import '../services/user_data.dart';
 import '../services/timer.dart';
@@ -46,10 +45,13 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   late String pfpPath;
   late TimerService timerService;
+
+  late List<Map<String, dynamic>> pals;
   late String currentPal;
-  late int hunger;
   late int currency;
+
   late bool status;
+  late int hunger;
 
   @override
   void initState() {
@@ -58,16 +60,16 @@ class HomeState extends State<Home> {
         'lib/assets/default_profile.png';
 
     Map<String, dynamic> data = widget.user
-        .queryByField(['current_pal', 'pals_collected', 'currency', 'status']);
+        .queryByField(['pals_collected', 'current_pal', 'currency', 'status']);
 
+    pals = List<Map<String, dynamic>>.from(data['pals_collected']);
     currentPal = data['current_pal'];
     currency = data['currency'];
 
-    for (Map<String, dynamic> pal
-        in List<Map<String, dynamic>>.from(data['pals_collected'])) {
+    for (Map<String, dynamic> pal in pals) {
       if (pal['name'] == currentPal) {
-        hunger = pal['hunger'];
         status = pal['status'];
+        hunger = pal['hunger'];
       }
     }
 
@@ -79,18 +81,9 @@ class HomeState extends State<Home> {
   }
 
   void updateHunger(bool flag) async {
-    List<Map<String, dynamic>> pals = List<Map<String, dynamic>>.from(
-        widget.user.queryByField(['pals_collected'])['pals_collected']);
-
-    if (currency >= 5) {
-      widget.user.updateDatabase({
-        'currency': widget.user.queryByField(['currency'])['currency'] -= 5
-      });
+    if (flag) {
+      chargeCurrency(5);
     }
-
-    setState(() {
-      currency = widget.user.queryByField(['currency'])['currency'];
-    });
 
     for (Map<String, dynamic> pal in pals) {
       if (pal['name'] == currentPal) {
@@ -121,7 +114,35 @@ class HomeState extends State<Home> {
     widget.user.updateDatabase({'pals_collected': pals});
   }
 
-  void revivePet() {}
+  void revivePet() {
+    chargeCurrency(10);
+
+    for (Map<String, dynamic> pal in pals) {
+      if (pal['name'] == currentPal) {
+        pal['status'] = true;
+        pal['hunger'] = 5;
+
+        setState(() {
+          hunger = pal['hunger'];
+          status = pal['status'];
+        });
+      }
+    }
+
+    widget.user.updateDatabase({'pals_collected': pals});
+  }
+
+  void chargeCurrency(int price) {
+    // What to do if user doesn't have enough currency?
+    int newCurrency =
+        widget.user.queryByField(['currency'])['currency'] -= price;
+
+    widget.user.updateDatabase({'currency': newCurrency});
+
+    setState(() {
+      currency = newCurrency;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +220,9 @@ class HomeState extends State<Home> {
                 ? hunger == 10 || currency < 5
                     ? null
                     : () => updateHunger(true)
-                : () => revivePet(),
+                : currency < 10
+                    ? null
+                    : () => revivePet(),
             child: Text(status == true ? 'Feed me!' : 'Revive me!'),
           ),
         ),
