@@ -168,7 +168,7 @@ class HomeState extends State<Home> {
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
-            onPressed: () => updateHunger(true),
+            onPressed: hunger == 10 ? null : () => updateHunger(true),
             child: const Text('Feed me!'),
           ),
         ),

@@ -9,6 +9,7 @@ class TimerService with ChangeNotifier {
     _startTimer();
   }
 
+  // Change to 10 seconds for demo
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       callback();
