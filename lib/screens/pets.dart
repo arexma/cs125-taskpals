@@ -165,7 +165,6 @@ class _PetsState extends State<Pets> {
     if (userPets.contains(pet)) {
       return !owns;
     }
-
     return owns;
   }
 
@@ -178,8 +177,6 @@ class _PetsState extends State<Pets> {
             ? 'lib/assets/background/night.gif'
             : 'lib/assets/background/day.gif';
 
-    print(userPets);
-
     return Stack(
       children: [
         Container(
@@ -191,64 +188,109 @@ class _PetsState extends State<Pets> {
           ),
         ),
         GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
-              mainAxisSpacing: 4.0,
-              crossAxisSpacing: 4.0,
-            ),
-            itemCount: petNames.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {},
-                child: GridTile(
-                  child: petSearch(userPets, petNames[index]) == true
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 5,
+            mainAxisSpacing: 4.0,
+            crossAxisSpacing: 4.0,
+          ),
+          itemCount: petNames.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                if (petSearch(userPets, petNames[index]) == true) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext dialogContext) {
+                      return AlertDialog(
+                        title: Text(petNames[index]),
+                        content: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Image(
                               image: AssetImage(
-                                  'lib/assets/pets/${petNames[index]}.gif'),
-                              width: 80,
-                              height: 80,
-                            ),
-                            Text(
-                              petNames[index],
-                              style: TextStyle(
-                                color: ThemeProvider.themeOf(context)
-                                    .data
-                                    .hintColor,
+                                'lib/assets/pets/${petNames[index]}.gif'
                               ),
+                            ),
+                            const Text(
+                              'Change Pets?'
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    widget.user.updateDatabase({'current_pal': petNames[index]});
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    'Yes'
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    'No'
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ShaderMask(
-                              shaderCallback: (Rect bounds) {
-                                return const LinearGradient(
-                                    colors: [Colors.black, Colors.transparent],
-                                    stops: [1.0, 1.0]).createShader(bounds);
-                              },
-                              blendMode: BlendMode.srcIn,
-                              child: Image(
-                                image: AssetImage(
-                                    'lib/assets/pets/${petNames[index]}.gif'),
-                                width: 50,
-                                height: 50,
-                              ),
-                            ),
-                            Text(
-                              petNames[index],
-                              style: TextStyle(
-                                color: ThemeProvider.themeOf(context)
-                                    .data
-                                    .hintColor,
-                              ),
-                            ),
-                          ],
+                        ),
+                      );
+                    }
+                  );
+                }
+              },
+              child: GridTile(
+                child: petSearch(userPets, petNames[index]) == true
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image(
+                          image: AssetImage(
+                            'lib/assets/pets/${petNames[index]}.gif'
+                          ),
+                          width: 80,
+                          height: 80,
+                        ),
+                        Text(
+                          petNames[index],
+                          style: TextStyle(
+                            color: ThemeProvider.themeOf(context).data.hintColor,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ShaderMask(
+                        shaderCallback: (Rect bounds) {
+                          return const LinearGradient(
+                            colors: [Colors.black, Colors.transparent],
+                            stops: [1.0, 1.0]
+                          ).createShader(bounds);
+                        },
+                        blendMode: BlendMode.srcIn,
+                        child: Image(
+                          image: AssetImage(
+                            'lib/assets/pets/${petNames[index]}.gif'
+                          ),
+                          width: 80,
+                          height: 80,
+                        ),
+                      ),
+                      Text(
+                        petNames[index],
+                        style: TextStyle(
+                          color: ThemeProvider.themeOf(context).data.hintColor,
+                          fontSize: 12.0,
                         ),
                 ),
               );

@@ -12,6 +12,7 @@
 //    tasks_deleted --> [string]
 //    goals --> [string]
 //    pfp --> string
+//    current_pal --> string
 
 // PetData
 // {
@@ -44,6 +45,7 @@ const userFields = [
   "tasks_deleted",
   "goals",
   "pfp",
+  "current_pal",
 ];
 
 // Access user data from Firebase database

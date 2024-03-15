@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'dart:math';
 import '../../services/user_data.dart';
 
 // Subscreens
@@ -27,10 +27,17 @@ class FirstTimeUser extends StatefulWidget {
 class _FirstTimeUser extends State<FirstTimeUser> {
   final PageController pageController = PageController();
   Map<String, dynamic> data = {};
+  int randomIndex = Random().nextInt(3);
+  List<String> starterPals = [
+    "Bulbasaur",
+    "Charmander",
+    "Squirtle",
+  ];
 
   void writeToDatabase() {
     data['currency'] = 0;
     data['pals_collected'] = [];
+    data['current_pal'] = starterPals[randomIndex];
     widget.updateParent(data);
   }
 
