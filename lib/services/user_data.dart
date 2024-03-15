@@ -6,13 +6,20 @@
 //    height --> int (inches)
 //    weight --> int
 //    age --> int
-//    pals_collected --> [strings] (pal names)
+//    pals_collected --> [PetData]
 //    tasks --> [string] (task descriptions)
 //    tasks_completed --> [string]
 //    tasks_deleted --> [string]
 //    goals --> [string]
 //    pfp --> string
 //    current_pal --> string
+
+// PetData
+// {
+//    name --> string
+//    hunger --> int (out of 10)
+//    status --> bool (true/alive, false/dead)
+// }
 
 // TODO
 //  Error handling
@@ -99,7 +106,7 @@ class UserDataFirebase {
   }
 
   // Returns user data if fields not specified
-  Map<String, dynamic> queryByUniqueID([List<String>? fields]) {
+  Map<String, dynamic> queryByField([List<String>? fields]) {
     Map<String, dynamic> res = fields == null ? data : {};
     if (fields != null) {
       for (String field in fields) {

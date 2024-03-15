@@ -1,37 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pixelarticons/pixelarticons.dart';
-import 'package:taskpals/screens/home_page.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'settings.dart';
 import '../services/user_data.dart';
+import '../services/timer.dart';
 import 'dart:io';
-
-class ProfilePictureButton extends StatelessWidget {
-  final UserDataFirebase user;
-  const ProfilePictureButton({super.key, required this.user});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(user: user, index: 0),
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 30),
-        width: 80,
-        height: 80,
-        clipBehavior: Clip.antiAlias,
-        decoration: const BoxDecoration(shape: BoxShape.circle),
-        child: Image.asset('lib/assets/default_profile.png'),
-      ),
-    );
-  }
-}
 
 class TasksListButton extends StatelessWidget {
   final UserDataFirebase user;
@@ -51,7 +24,7 @@ class TasksListButton extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           itemCount: 3,
           itemBuilder: (context, index) {
-            Map<String, dynamic> query = user.queryByUniqueID(['tasks']);
+            Map<String, dynamic> query = user.queryByField(['tasks']);
             return Text(query['tasks'][index]);
           },
         ),
@@ -60,13 +33,116 @@ class TasksListButton extends StatelessWidget {
   }
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   final UserDataFirebase user;
-  final String pfpPath;
 
-  Home({super.key, required this.user})
-      : pfpPath = user.queryByUniqueID(['pfp'])['pfp'] ??
-            'lib/assets/default_profile.png';
+  const Home({super.key, required this.user});
+
+  @override
+  HomeState createState() => HomeState();
+}
+
+class HomeState extends State<Home> {
+  late String pfpPath;
+  late TimerService timerService;
+
+  late List<Map<String, dynamic>> pals;
+  late String currentPal;
+  late int currency;
+
+  late bool status;
+  late int hunger;
+
+  @override
+  void initState() {
+    super.initState();
+    pfpPath = widget.user.queryByField(['pfp'])['pfp'] ??
+        'lib/assets/default_profile.png';
+
+    Map<String, dynamic> data = widget.user
+        .queryByField(['pals_collected', 'current_pal', 'currency', 'status']);
+
+    pals = List<Map<String, dynamic>>.from(data['pals_collected']);
+    currentPal = data['current_pal'];
+    currency = data['currency'];
+
+    for (Map<String, dynamic> pal in pals) {
+      if (pal['name'] == currentPal) {
+        status = pal['status'];
+        hunger = pal['hunger'];
+      }
+    }
+
+    timerService = TimerService(() {
+      if (status) {
+        updateHunger(false);
+      }
+    });
+  }
+
+  void updateHunger(bool flag) async {
+    if (flag) {
+      chargeCurrency(5);
+    }
+
+    for (Map<String, dynamic> pal in pals) {
+      if (pal['name'] == currentPal) {
+        if (flag) {
+          if (pal['hunger'] != 10) {
+            pal['hunger'] += 1;
+          }
+        } else {
+          pal['hunger'] -= 1;
+
+          if (pal['hunger'] == 0) {
+            pal['status'] = false;
+
+            setState(() {
+              status = false;
+            });
+          }
+        }
+
+        setState(() {
+          hunger = pal['hunger'];
+        });
+
+        break;
+      }
+    }
+
+    widget.user.updateDatabase({'pals_collected': pals});
+  }
+
+  void revivePet() {
+    chargeCurrency(10);
+
+    for (Map<String, dynamic> pal in pals) {
+      if (pal['name'] == currentPal) {
+        pal['status'] = true;
+        pal['hunger'] = 5;
+
+        setState(() {
+          hunger = pal['hunger'];
+          status = pal['status'];
+        });
+      }
+    }
+
+    widget.user.updateDatabase({'pals_collected': pals});
+  }
+
+  void chargeCurrency(int price) {
+    // What to do if user doesn't have enough currency?
+    int newCurrency =
+        widget.user.queryByField(['currency'])['currency'] -= price;
+
+    widget.user.updateDatabase({'currency': newCurrency});
+
+    setState(() {
+      currency = newCurrency;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +179,7 @@ class Home extends StatelessWidget {
                 ),
                 const Padding(padding: EdgeInsets.all(8.0)),
                 Text(
-                    'Currency: \$${user.queryByUniqueID([
+                    'Currency: \$${widget.user.queryByField([
                           'currency'
                         ])['currency']}',
                     style: const TextStyle(
@@ -121,14 +197,15 @@ class Home extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                TasksListButton(user: user),
+                TasksListButton(user: widget.user),
                 const Padding(padding: EdgeInsets.all(8.0)),
                 IconButton(
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SettingsPage(user: user)));
+                            builder: (context) =>
+                                SettingsPage(user: widget.user)));
                   },
                   icon: const Icon(Pixel.editbox),
                 ),
@@ -137,15 +214,32 @@ class Home extends StatelessWidget {
           ),
         ),
         Align(
-          alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            child: Image(
-              image: AssetImage('lib/assets/pets/${user.queryByUniqueID(['current_pal'])['current_pal']}.gif'),
-              width: 300,
-              height: 300,
-              fit: BoxFit.contain,
-            ),
+          alignment: Alignment.center,
+          child: ElevatedButton(
+            onPressed: status == true
+                ? hunger == 10 || currency < 5
+                    ? null
+                    : () => updateHunger(true)
+                : currency < 10
+                    ? null
+                    : () => revivePet(),
+            child: Text(status == true ? 'Feed me!' : 'Revive me!'),
           ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: status == true
+              ? SizedBox(
+                  child: Image(
+                    image: const AssetImage('lib/assets/pets/Squirtle.gif'),
+                    width: hunger * 30,
+                    height: hunger * 30,
+                    fit: BoxFit.contain,
+                  ),
+                )
+              : const Image(
+                  image: AssetImage('lib/assets/death.png'),
+                ),
         ),
       ],
     );

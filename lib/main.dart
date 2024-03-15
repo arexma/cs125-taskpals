@@ -15,11 +15,20 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   await dotenv.load(fileName: 'lib/.env');
-  runApp(const TaskPals());
+
+  runApp(
+    Provider<MusicPlayer>(
+      create: (_) => MusicPlayer(),
+      dispose: (_, player) => player.dispose(),
+      child: const TaskPals(),
+    ),
+  );
 }
 
 // MusicPlayer class to pass down to all future widgets to inherit
@@ -54,6 +63,13 @@ class _TaskPals extends State<TaskPals> {
   late UserDataFirebase user;
   late bool isFirstTimeUser;
   late String deviceID;
+  late MusicPlayer player;
+
+  @override
+  void initState() {
+    super.initState();
+    player = Provider.of<MusicPlayer>(context, listen: false);
+  }
 
   Future<void> _initializeUser() async {
     await _getDeviceID();
@@ -83,45 +99,38 @@ class _TaskPals extends State<TaskPals> {
 
   @override
   Widget build(BuildContext context) {
-    final player = MusicPlayer();
-
-    return Provider<MusicPlayer>(
-      create: (_) => player,
-      builder: (context, child) {
-        return ThemeProvider(
-          saveThemesOnChange: true,
-          loadThemeOnInit: true,
-          child: ThemeConsumer(
-            child: Builder(
-              builder: (themeContext) => FutureBuilder<void>(
-                future: checkFirstTimeUser(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return MaterialApp(
-                      initialRoute: isFirstTimeUser ? '/first' : '/login',
-                      theme: ThemeData(
-                        fontFamily: 'Minecraft',
-                      ),
-                      routes: {
-                        '/first': (context) => FirstTimeUser(
-                              updateParent: (Map<String, dynamic> data) {
-                                user.writeToDatabase(data);
-                                setState(() {});
-                              },
-                              user: user,
-                            ),
-                        '/login': (context) => HomePage(user: user, index: 2),
-                      },
-                    );
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                },
-              ),
-            ),
+    return ThemeProvider(
+      saveThemesOnChange: true,
+      loadThemeOnInit: true,
+      child: ThemeConsumer(
+        child: Builder(
+          builder: (themeContext) => FutureBuilder<void>(
+            future: checkFirstTimeUser(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return MaterialApp(
+                  initialRoute: isFirstTimeUser ? '/first' : '/login',
+                  theme: ThemeData(
+                    fontFamily: 'Minecraft',
+                  ),
+                  routes: {
+                    '/first': (context) => FirstTimeUser(
+                          updateParent: (Map<String, dynamic> data) {
+                            user.writeToDatabase(data);
+                            setState(() {});
+                          },
+                          user: user,
+                        ),
+                    '/login': (context) => HomePage(user: user, index: 2),
+                  },
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            },
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

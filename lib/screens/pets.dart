@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import '../services/user_data.dart';
 import 'package:theme_provider/theme_provider.dart';
 
@@ -171,10 +170,12 @@ class _PetsState extends State<Pets> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> userPets = List<String>.from(widget.user.queryByUniqueID(['pals_collected'])['pals_collected']);
-      String backgroundPath = ThemeProvider.themeOf(context).data == ThemeData.dark()
-                            ? 'lib/assets/background/night.gif'
-                            : 'lib/assets/background/day.gif';
+    List<String> userPets = List<String>.from(
+        widget.user.queryByField(['pals_collected'])['pals_collected']);
+    String backgroundPath =
+        ThemeProvider.themeOf(context).data == ThemeData.dark()
+            ? 'lib/assets/background/night.gif'
+            : 'lib/assets/background/day.gif';
 
     return Stack(
       children: [
@@ -291,13 +292,9 @@ class _PetsState extends State<Pets> {
                           color: ThemeProvider.themeOf(context).data.hintColor,
                           fontSize: 12.0,
                         ),
-                      ),
-                    ],
-                  ),
-              ),
-            );
-          }
-        ),
+                ),
+              );
+            }),
       ],
     );
   }

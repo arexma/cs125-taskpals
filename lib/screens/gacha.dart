@@ -276,12 +276,12 @@ class GachaPage extends State<GachaPageStarter> {
 
   // obtains tasks from database and turns into list (string)
   String queryCoins() {
-    Map<String, dynamic> query = widget.user.queryByUniqueID(["coins"]);
+    Map<String, dynamic> query = widget.user.queryByField(["coins"]);
     return query["coins"] ?? "0";
   }
 
   void subtractCoins(int amount) {
-    Map<String, dynamic> db = widget.user.queryByUniqueID(['coins']);
+    Map<String, dynamic> db = widget.user.queryByField(['coins']);
     String tempCoinsString = db["coins"];
     int tempCoins = int.parse(tempCoinsString);
     tempCoins -= amount;
