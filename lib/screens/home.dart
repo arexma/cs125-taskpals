@@ -46,17 +46,33 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   late String pfpPath;
   late TimerService timerService;
+  late String currentPal;
 
   @override
   void initState() {
     super.initState();
     pfpPath = widget.user.queryByField(['pfp'])['pfp'] ??
         'lib/assets/default_profile.png';
-    timerService = Provider.of<TimerService>(context, listen: false);
-    timerService.startTimer();
+    currentPal = widget.user.queryByField(['current_pal'])['current_pal'];
+
+    timerService = TimerService(() {
+      // Need something for when hunger reaches 0
+      updateHunger(false);
+    });
   }
 
-  void feedPet() {}
+  void updateHunger(bool flag) {
+    List<Map<String, dynamic>> pals = List<Map<String, dynamic>>.from(
+        widget.user.queryByField(['pals_collected'])['pals_collected']);
+
+    for (Map<String, dynamic> pal in pals) {
+      if (pal['name'] == currentPal) {
+        flag ? pal['hunger'] += 1 : pal['hunger'] -= 1;
+      }
+    }
+
+    widget.user.updateDatabase({'pals_collected': pals});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,9 +146,7 @@ class HomeState extends State<Home> {
         Align(
           alignment: Alignment.center,
           child: ElevatedButton(
-            onPressed: () {
-              feedPet();
-            },
+            onPressed: () => updateHunger(true),
             child: const Text('Feed me!'),
           ),
         ),

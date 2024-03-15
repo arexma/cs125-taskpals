@@ -17,8 +17,8 @@
 // {
 //    name --> string
 //    hunger --> int (out of 10)
-//
 // }
+
 // TODO
 //  Error handling
 

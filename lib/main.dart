@@ -12,28 +12,23 @@ import 'services/user_data.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'services/timer.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   await dotenv.load(fileName: 'lib/.env');
+
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => TimerService()),
-        Provider<MusicPlayer>(
-          create: (_) => MusicPlayer(),
-          dispose: (_, player) => player.dispose(),
-        ),
-      ],
+    Provider<MusicPlayer>(
+      create: (_) => MusicPlayer(),
+      dispose: (_, player) => player.dispose(),
       child: const TaskPals(),
     ),
   );
-
-  // runApp(const TaskPals());
 }
 
 // MusicPlayer class to pass down to all future widgets to inherit
