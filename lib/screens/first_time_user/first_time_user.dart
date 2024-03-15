@@ -36,7 +36,13 @@ class _FirstTimeUser extends State<FirstTimeUser> {
 
   void writeToDatabase() {
     data['currency'] = 0;
-    data['pals_collected'] = [];
+    data['pals_collected'] = [
+      {
+        'name': starterPals[randomIndex],
+        'hunger': 10,
+        'status': true,
+      }
+    ];
     data['current_pal'] = starterPals[randomIndex];
     widget.updateParent(data);
   }

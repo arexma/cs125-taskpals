@@ -16,7 +16,7 @@ class TimerService with ChangeNotifier {
     });
   }
 
-  void _cancelTimer() {
+  void cancelTimer() {
     _timer.cancel();
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:pixelarticons/pixelarticons.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'settings.dart';
@@ -15,7 +14,7 @@ class TasksListButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> query = user.queryByField(['tasks']);
-    int queryCount = min(3, query['tasks'].length);
+    int queryCount = min(3, query['tasks'] == null ? 0 : query['tasks'].length);
     return SizedBox(
       height: 150.0,
       width: 250.0,
@@ -106,15 +105,19 @@ class HomeState extends State<Home> {
           if (pal['hunger'] == 0) {
             pal['status'] = false;
 
-            setState(() {
-              status = false;
-            });
+            if (mounted) {
+              setState(() {
+                status = false;
+              });
+            }
           }
         }
 
-        setState(() {
-          hunger = pal['hunger'];
-        });
+        if (mounted) {
+          setState(() {
+            hunger = pal['hunger'];
+          });
+        }
 
         break;
       }
@@ -151,6 +154,12 @@ class HomeState extends State<Home> {
     setState(() {
       currency = newCurrency;
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timerService.cancelTimer();
   }
 
   @override
