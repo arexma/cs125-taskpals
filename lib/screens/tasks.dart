@@ -31,6 +31,11 @@ class TasksPage extends State<TasksPageStarter> {
   List<String> recommendedTasksList = [];
   int _listItemKey = 0;
   int? totalSteps;
+  double kilograms = 0.0;
+  double meters = 0.0;
+  int feet = 0;
+  double inches = 0.0;
+  double pounds = 0.0;
 
   @override
   void initState() {
@@ -41,7 +46,20 @@ class TasksPage extends State<TasksPageStarter> {
     List<dynamic> deletedTasks = queryToStringsList('deleted_tasks');
     queryToTopLists(completedTasks, deletedTasks);
     addRecommendedTasks();
-    getSteps();
+    getData();
+  }
+
+  void _convertMetersToFeetAndInches(double meters) {
+    setState(() {
+      feet = (meters * 3.28084).floor();
+      inches = (meters * 39.3701) % 12;
+    });
+  }
+
+  void _convertKilometersToPounds(double kilograms) {
+    setState(() {
+      pounds = kilograms * 2.20462;
+    });
   }
 
   Future<String> sendMessage(String message) async {
@@ -74,10 +92,13 @@ class TasksPage extends State<TasksPageStarter> {
     return 'Failed to obtain response';
   }
 
-  Future getSteps() async {
+  Future getData() async {
     int? steps;
+    List<dynamic> temp = [];
     try {
       steps = await HealthService().getSteps();
+      temp.add(await HealthService().getWeightAndHeight(1));
+      temp.add(await HealthService().getWeightAndHeight(2));
       if (steps == -1) {
         debugPrint("Authorization not granted");
       }
@@ -87,6 +108,10 @@ class TasksPage extends State<TasksPageStarter> {
     debugPrint("Total number of steps:::: $steps");
     setState(() {
       totalSteps = steps ?? 0;
+      kilograms = double.parse(temp[1][0].toJson()['value']['numericValue']);
+      meters = double.parse(temp[0][0].toJson()['value']['numericValue']);
+      _convertMetersToFeetAndInches(meters);
+      _convertKilometersToPounds(kilograms);
     });
   }
 
@@ -392,7 +417,7 @@ class TasksPage extends State<TasksPageStarter> {
       child: Column(
         children: [
           Expanded(
-            flex: 1,
+            flex: 3,
             child: Container(
               color: Colors.amber,
               child: const Center(
@@ -403,7 +428,20 @@ class TasksPage extends State<TasksPageStarter> {
           Expanded(
             flex: 5,
             child: Container(
-                padding: const EdgeInsets.only(top: 28, bottom: 28),
+                padding: const EdgeInsets.only(top: 22, bottom: 22),
+                child:
+                    Text("Height: $feet ft ${inches.toStringAsFixed(2)} in")),
+          ),
+          Expanded(
+            flex: 5,
+            child: Container(
+                padding: const EdgeInsets.only(top: 22, bottom: 22),
+                child: Text("Weight: ${pounds.toStringAsFixed(2)} lbs")),
+          ),
+          Expanded(
+            flex: 5,
+            child: Container(
+                padding: const EdgeInsets.only(top: 22, bottom: 22),
                 child: Text("Total steps taken today: $totalSteps")),
           ),
         ],

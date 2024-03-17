@@ -2,9 +2,8 @@ import "package:health/health.dart";
 
 const dataTypesIos = [
   HealthDataType.STEPS,
-  HealthDataType.MINDFULNESS,
-  HealthDataType.WATER,
-  HealthDataType.SLEEP_ASLEEP,
+  HealthDataType.HEIGHT,
+  HealthDataType.WEIGHT,
 ];
 const permissions = [HealthDataAccess.READ];
 final currentDate = DateTime.now();
