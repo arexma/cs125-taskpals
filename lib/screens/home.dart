@@ -7,6 +7,8 @@ import '../services/timer.dart';
 import 'dart:io';
 import 'dart:math';
 
+// Display hunger, move tombstone image up a bit
+
 class TasksListButton extends StatelessWidget {
   final UserDataFirebase user;
   const TasksListButton({super.key, required this.user});
@@ -255,8 +257,11 @@ class HomeState extends State<Home> {
                     fit: BoxFit.contain,
                   ),
                 )
-              : const Image(
-                  image: AssetImage('lib/assets/death.png'),
+              : const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Image(
+                    image: AssetImage('lib/assets/death.png'),
+                  ),
                 ),
         ),
       ],

@@ -2,10 +2,10 @@
 // Current user info template:
 
 //    name --> string
-//    id --> string
 //    height --> int (inches)
 //    weight --> int
 //    age --> int
+//    currency --> int
 //    pals_collected --> [PetData]
 //    tasks --> [string] (task descriptions)
 //    tasks_completed --> [string]
@@ -18,7 +18,7 @@
 // {
 //    name --> string
 //    hunger --> int (out of 10)
-//    status --> bool (true/alive, false/dead)
+//    status --> bool (true/false, alive/dead)
 // }
 
 // TODO
