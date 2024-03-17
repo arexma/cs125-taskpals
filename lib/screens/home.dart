@@ -83,11 +83,14 @@ class HomeState extends State<Home> {
       }
     }
 
-    timerService = TimerService(() {
-      if (status) {
-        updateHunger(false);
-      }
-    });
+    if (status) {
+      timerService = TimerService(() {
+        if (status) {
+          updateHunger(false);
+        }
+        return status;
+      });
+    }
   }
 
   void updateHunger(bool flag) async {
@@ -141,6 +144,17 @@ class HomeState extends State<Home> {
           status = pal['status'];
         });
       }
+    }
+
+    if (mounted) {
+      setState(() {
+        timerService = TimerService(() {
+          if (status) {
+            updateHunger(false);
+          }
+          return status;
+        });
+      });
     }
 
     widget.user.updateDatabase({'pals_collected': pals});

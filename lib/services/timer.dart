@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class TimerService with ChangeNotifier {
   late Timer _timer;
-  late void Function() callback;
+  late bool Function() callback;
 
   TimerService(this.callback) {
     _startTimer();
@@ -12,7 +12,9 @@ class TimerService with ChangeNotifier {
   // Change to 10 seconds for demo
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      callback();
+      if (!callback()) {
+        cancelTimer();
+      }
     });
   }
 
