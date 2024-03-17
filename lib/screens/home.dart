@@ -7,7 +7,7 @@ import '../services/timer.dart';
 import 'dart:io';
 import 'dart:math';
 
-// Display hunger, move tombstone image up a bit
+// Display hunger
 
 class TasksListButton extends StatelessWidget {
   final UserDataFirebase user;
@@ -147,7 +147,6 @@ class HomeState extends State<Home> {
   }
 
   void chargeCurrency(int price) {
-    // What to do if user doesn't have enough currency?
     int newCurrency =
         widget.user.queryByField(['currency'])['currency'] -= price;
 
@@ -235,15 +234,21 @@ class HomeState extends State<Home> {
         ),
         Align(
           alignment: Alignment.center,
-          child: ElevatedButton(
-            onPressed: status == true
-                ? hunger == 10 || currency < 5
-                    ? null
-                    : () => updateHunger(true)
-                : currency < 10
-                    ? null
-                    : () => revivePet(),
-            child: Text(status == true ? 'Feed me!' : 'Revive me!'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: status == true
+                    ? hunger == 10 || currency < 5
+                        ? null
+                        : () => updateHunger(true)
+                    : currency < 10
+                        ? null
+                        : () => revivePet(),
+                child: Text(status == true ? 'Feed me!' : 'Revive me!'),
+              ),
+              Text('Hunger: $hunger/10'),
+            ],
           ),
         ),
         Align(
