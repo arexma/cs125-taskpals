@@ -190,7 +190,7 @@ class _PetsState extends State<Pets> {
         ),
         GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
+              crossAxisCount: 4,
               mainAxisSpacing: 4.0,
               crossAxisSpacing: 4.0,
             ),
