@@ -296,15 +296,21 @@ class GachaPage extends State<GachaPageStarter> {
   void summonPals(int amount) {
     Map<String, dynamic> db = widget.user.queryByField(['pals_collected']);
     List<String> summonedList = [];
+    Map<String, dynamic> tempPalData = {};
+
     int i = 0;
     for (i; i < amount; i++) {
       String tempPal = getRandomPal();
       while (db['pals_collected'].contains(tempPal)) {
         tempPal = getRandomPal();
       }
-      db['pals_collected'].add(tempPal);
+      tempPalData = {
+        'name': tempPal,
+        'hunger': 10,
+        'status': true,
+      };
+      db['pals_collected'].add(tempPalData);
       summonedList.add(tempPal);
-      debugPrint(tempPal);
     }
 
     widget.user.updateDatabase(db);
