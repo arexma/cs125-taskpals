@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import '../services/user_data.dart';
 import 'package:theme_provider/theme_provider.dart';
 
@@ -160,10 +159,10 @@ class _PetsState extends State<Pets> {
     "Zubat"
   ];
 
-  bool petSearch(List<String> userPets, String pet) {
+  bool petSearch(Map<String, dynamic> userPets, String pet) {
     bool owns = false;
 
-    if (userPets.contains(pet)) {
+    if (userPets['pals_collected'].any((x) => x['name'] == pet)) {
       return !owns;
     }
     return owns;
@@ -171,8 +170,9 @@ class _PetsState extends State<Pets> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> userPets = List<String>.from(
-        widget.user.queryByField(['pals_collected'])['pals_collected']);
+    Map<String, dynamic> userPets =
+        widget.user.queryByField(['pals_collected']);
+
     String backgroundPath =
         ThemeProvider.themeOf(context).data == ThemeData.dark()
             ? 'lib/assets/background/night.gif'

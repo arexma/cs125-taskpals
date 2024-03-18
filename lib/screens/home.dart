@@ -267,11 +267,14 @@ class HomeState extends State<Home> {
           alignment: Alignment.bottomCenter,
           child: status == true
               ? SizedBox(
-                  child: Image(
-                    image: const AssetImage('lib/assets/pets/Squirtle.gif'),
-                    width: hunger * 30,
-                    height: hunger * 30,
-                    fit: BoxFit.contain,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: Image(
+                      image: const AssetImage('lib/assets/pets/Squirtle.gif'),
+                      width: hunger * 30,
+                      height: hunger * 30,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 )
               : const Padding(

@@ -301,7 +301,7 @@ class GachaPage extends State<GachaPageStarter> {
     int i = 0;
     for (i; i < amount; i++) {
       String tempPal = getRandomPal();
-      while (db['pals_collected'].contains(tempPal)) {
+      while (db['pals_collected'].any((x) => x['name'] == tempPal)) {
         tempPal = getRandomPal();
       }
       tempPalData = {
