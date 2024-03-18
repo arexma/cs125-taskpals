@@ -270,7 +270,7 @@ class HomeState extends State<Home> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 40),
                     child: Image(
-                      image: const AssetImage('lib/assets/pets/Squirtle.gif'),
+                      image: AssetImage('lib/assets/pets/$currentPal.gif'),
                       width: hunger * 30,
                       height: hunger * 30,
                       fit: BoxFit.contain,

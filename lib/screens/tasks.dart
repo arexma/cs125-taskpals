@@ -153,6 +153,7 @@ class TasksPage extends State<TasksPageStarter> {
         "these are some starter goals the user wants to improve on but you do not have to adhere to only these goals: $goalsListString "
         "the following is a list of tasks they have completed: $tasksCompletedListString "
         "the following is a  list of tasks they have deleted: $tasksDeletedListString "
+        "here is the time if you want to recommend tasks based on the time too: ${DateTime.now()}"
         "i want you to return 5 to 10 tasks in the format of comma separated values in code like 'task1','task2','task3'";
 
     String response = await sendMessage(prompt);
