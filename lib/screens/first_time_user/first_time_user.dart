@@ -44,7 +44,6 @@ class _FirstTimeUser extends State<FirstTimeUser> {
       }
     ];
     data['current_pal'] = starterPals[randomIndex];
-    // data['weight'] = data['weight'] ??
     widget.updateParent(data);
   }
 

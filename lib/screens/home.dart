@@ -7,8 +7,6 @@ import '../services/timer.dart';
 import 'dart:io';
 import 'dart:math';
 
-// Display hunger
-
 class TasksListButton extends StatelessWidget {
   final UserDataFirebase user;
   const TasksListButton({super.key, required this.user});
